@@ -1,9 +1,10 @@
 var path = require('path');
 
 module.exports = function(app, express, passport) {
+	var path =__dirname + '/../app/controllers';
 
-    var path =__dirname + '/../app/controllers';
-
+	var users = app.get('users');
+	var groups = app.get('groups');
     app.use(function (req, res, next){console.log("%s %s %s %s",req.method,req.url,res.statusCode,req.ip); next();});
 
     app.get(['/','/index'], function(req, res) {
@@ -51,50 +52,10 @@ function(req, res){
         //return callController(app, req, res, 'user.js').login;
     //});
 	app.post('/Videos/login', function (req, res){
-		sha1Auth(req.param('username'), req.param('strcrypt'), function(result) { if( result !== null) res.json(result);else res.redirect('/'); });
+		var user = require(path + '/' + 'user.js');
+		user.sha1Auth(app, req.param('username'), req.param('strcrypt'), function(result) { if( result !== null) { res.json(result);req.session.user = result; } else res.redirect('/'); });
 	}); 
 
-function sha1Auth(user, hash, callback)
-{	
-	if( userFindOne(user) && userValidPassword(user, hash, 'sha1') )	
-	{
-		var result = { userid: userGetId(user), username: user };
-		callback(result);
-	}
-	else
-		callback(null);
-}
-
-function userFindOne(username)
-{
-	return true;
-}
-
-function userValidPassword(user, hash, algo)
-{
-	var crypto = require('crypto')
-  , shasum = crypto.createHash(algo);
-shasum.update(userGetPassword(user));
-var digest = shasum.digest('hex');
-console.log(digest);
-if( digest === hash )
-	return true;
-else
-	return false;
-}
-
-function userGetPassword(user)
-{
-        return 'pass';
-}
-
-function userGetId(user)
-{
-	return 1;
-}
-/*
-	app.get('/login', user.login);
-	app.get('/logout', user.logout);*/
 };
 
 function callController(app, req, res, name) {

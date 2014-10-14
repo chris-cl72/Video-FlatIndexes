@@ -125,7 +125,7 @@ $('#form_login').on('submit', function(){
 	if( data.userid !== 'undefined' && data.userid >= 0 )
 		{
 		$('#form_login').hide();
-		$('#text_login').html('<font color="white">Connecté en tant que <b>Chris.</b> - </font><a href="Videos/logout">Se déconnecter</a>');
+		$('#text_login').html('<font color="white">Connecté en tant que <b>' + data.username + '</b> - </font><a href="Videos/logout">Se déconnecter</a>');
 		}
 });
 	return false;
