@@ -1,10 +1,3 @@
-/*exports.login = function(app, req, res){
-    auth.check(req, res, function(email){
-        req.session.authenticated = true;
-        //res.end("Hello "+JSON.stringify(req.headers));
-    });
-};*/
-
 exports.sha1Auth = function(app, username, hash, callback)
 {
 	var users = app.get('users');
@@ -13,7 +6,7 @@ exports.sha1Auth = function(app, username, hash, callback)
         if( (user !== null) && userValidPassword(user, hash, 'sha1') )
         {
                 var result = { userid: user.id, username: user.username };
-		console.log( getAuthorizedRoutes(user) );
+		//console.log( getAuthorizedRoutes(user) );
                 callback(result);
         }
         else
@@ -33,22 +26,29 @@ function userFindOne(username)
 
 function userValidPassword(user, hash, algo)
 {
-        console.log(users[0].ingroups[0]);
+        //console.log(users[0].ingroups[0]);
         var crypto = require('crypto');
 	var shasum = crypto.createHash(algo);
 	shasum.update(user.password);
 	var digest = shasum.digest('hex');
-	console.log(digest);
+	//console.log(digest);
 	if( digest === hash )
         	return true;
 	else
         	return false;
 }
 
-function getAuthorizedRoutes(user)
+exports.AuthorizedRoutes = function(userid)
 {
 	var routes = new Array();
 	var pos = 0;
+	var user = null;
+	for( var i = 0, len = users.length ; i < len; i++) {
+		if( users[i].id === userid ) { user = users[i]; break; }
+	}
+
+	if( user !== null )
+	{
 	for( var i = 0, len = user.ingroups.length; i < len; i++) {
 		var groupname = user.ingroups[i];
 		var localroutes = null;
@@ -64,6 +64,7 @@ function getAuthorizedRoutes(user)
 				pos++;		
 			}
 		}
+	}
 	}
 	return routes;
 }

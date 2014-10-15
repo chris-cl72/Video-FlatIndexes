@@ -1,65 +1,64 @@
 var path = require('path');
 
 module.exports = function(app, express, passport) {
-	var path =__dirname + '/../app/controllers';
+    var path =__dirname + '/../app/controllers';
+    var users = app.get('users');
+    var groups = app.get('groups');
+    var http = require('follow-redirects').http;
+    var startTime = new Date().getTime();
 
-	var users = app.get('users');
-	var groups = app.get('groups');
-    app.use(function (req, res, next){console.log("%s %s %s %s",req.method,req.url,res.statusCode,req.ip); next();});
+    var modRewrite = require('connect-modrewrite');
 
-    app.get(['/','/index'], function(req, res) {
-	callController(app, req, res, 'index.js');
-    });
+    app.use(modRewrite([ '^/$ /Videos', '^$ /Videos [L]']));
+
 
     app.get('/Videos', function(req, res) {
         callController(app, req, res, 'Videos.js');
+	
     });
 
     app.post('/search', function(req, res) {
         callController(app, req, res, 'Videos.js');
     });
 
-/*app.router.post('/signup', passport.authenticate('signup', {
-    successRedirect: '/home',
-    failureRedirect: '/signup',
-    failureFlash : true 
-  }));
-*/
-/*app.post('/login', passport.authenticate('digest', {
-	session: false,
-    successRedirect: '/loginSuccess',
-    failureRedirect: '/loginFailure'
-    //failureFlash : true 
-  }));
+    app.post('/Videos/login', function (req, res){
+	var user = require(path + '/' + 'user.js');
+	user.sha1Auth(app, req.param('username'),
+	                   req.param('strcrypt'),
+	                   function(result) {
+				if( result !== null) {
+				//console.log(result);
+				res.json(result);
+				req.session.userid = result.userid;
+				req.session.username = result.username; }
+				else {
+				//console.log(result); 
+				/*res.redirect('http://192.168.0.107:3000/Videos/toto')*/
+			//	res.header('Location', '/#/home');
+				//res.writeHead(302, {'Location': '/'}); 
+     				//res.end();
+				//modRewrite(['^/Videos/login$ /Videos']);
+				}
+				log(app, req, res);
+			   });
+    }); 
 
-
-app.get('/loginFailure', function(req, res, next) {
-  res.send('Failed to authenticate');
-});
- 
-app.get('/loginSuccess', function(req, res, next) {
-  res.send('Successfully authenticated');
-});
-
-app.all('/Videos/perso',
-// Authenticate using HTTP Digest credentials, with session support disabled.
-passport.authenticate('digest', { session: false }),
-function(req, res){
-//res.json({ username: req.user.username, email: req.user.email });
-});*/
-	/*app.get('/login', function(req, res) {
-	require(path + '/' + 'user.js').login(app, req, res);*/
-        //return callController(app, req, res, 'user.js').login;
-    //});
-	app.post('/Videos/login', function (req, res){
-		var user = require(path + '/' + 'user.js');
-		user.sha1Auth(app, req.param('username'), req.param('strcrypt'), function(result) { if( result !== null) { res.json(result);req.session.user = result; } else res.redirect('/'); });
-	}); 
-
+    app.use(function (req, res, next){ res.statusCode = 404; log(app, req, res)});
 };
-
+	
 function callController(app, req, res, name) {
-	var path =__dirname + '/../app/controllers';
-	require(path + '/' + name)(app, req, res);
+	//var startTime = new Date().getTime();
+        var path =__dirname + '/../app/controllers';
+        require(path + '/' + name)(app, req, res);
+	log(app, req, res);
 };
+
+function log(app, req, res )
+{
+	/*var endTime = new Date().getTime();
+        var respTime = endTime - startTime;*/
+        console.log("%s %s %s %s",req.method,req.url,res.statusCode,req.ip );
+};
+
+
 
