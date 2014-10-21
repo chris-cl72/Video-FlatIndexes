@@ -15,7 +15,9 @@ app.engine('html', twig.__express);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
- secret: 'ilyHLKJgfjkdek467JKRDh', cookie: { maxAge: 900000, secure: true },
+ //path: '/',
+ secret: 'ilyHLKJgfjkdek467JKRDh',
+// cookie: { maxAge: 900000, secure: true },
  resave: true,
  saveUninitialized: true
 }));

@@ -1,7 +1,13 @@
 module.exports = function(app, req, res) {
 	callEntity(app, req, 'searchOnline.js',function(data)
 	{
-		res.render('test.twig', { searchResult : data });
+		var user = null;
+		if( typeof req.session.userid !== 'undefined' && req.session.userid !== null )
+			{
+			user = { userid: req.session.userid, username: req.session.username };
+			}
+
+		res.render('test.twig', { user : user, searchResult : data });
 	}
 );
 

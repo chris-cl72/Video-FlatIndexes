@@ -1,8 +1,22 @@
-exports.sha1Auth = function(app, username, hash, callback)
+exports.Connect = function(app, req, res)
+{
+	       sha1Auth(app, req.param('username'),
+                           req.param('strcrypt'),
+                           function(result) {
+                                if( result !== null) {
+                                        req.session.userid = result.userid;
+                                        req.session.username = result.username;
+                                        res.json(result);
+                                        }
+                                });
+
+};
+
+function sha1Auth(app, username, hash, callback)
 {
 	var users = app.get('users');
 	var groups = app.get('groups');
-	var user = userFindOne(username);
+	var user = userFindOne(users, username);
         if( (user !== null) && userValidPassword(user, hash, 'sha1') )
         {
                 var result = { userid: user.id, username: user.username };
@@ -11,9 +25,9 @@ exports.sha1Auth = function(app, username, hash, callback)
         }
         else
                 callback(null);
+};
 
-
-function userFindOne(username)
+function userFindOne(users, username)
 {
 	for (var i = 0, len = users.length; i < len; i++) {
 		var user = users[i];
@@ -22,27 +36,62 @@ function userFindOne(username)
 		}
 	}
 	return null;
-}
+};
 
 function userValidPassword(user, hash, algo)
 {
         //console.log(users[0].ingroups[0]);
-        var crypto = require('crypto');
-	var shasum = crypto.createHash(algo);
-	shasum.update(user.password);
-	var digest = shasum.digest('hex');
+	var digest = null;
+	if( user.config.mode === 'clear' )
+	{
+        	var crypto = require('crypto');
+		var shasum = crypto.createHash(algo);
+		shasum.update(user.password);
+
+		digest = shasum.digest('hex');
+	}
+	else if ( user.config.mode === 'crypt' )
+		digest = user.password;
 	//console.log(digest);
 	if( digest === hash )
         	return true;
 	else
         	return false;
-}
+};
 
-exports.AuthorizedRoutes = function(userid)
+exports.Disconnect = function(req, res)
+{
+	req.session.destroy(function(err) {
+        // cannot access session here
+        });
+	res.redirect('/Videos');
+};
+
+
+exports.VerifyRoutes = function(app, req)
+{
+	var isAuthorized = false
+	if( typeof req.session !== 'undefined' && req.session !== null )
+	{
+	var routes = extractRoutes(app, req.session.userid);
+	for( var i = 0, len = routes.length ; i < len; i++) {
+		var reg=new RegExp(routes[i]);
+		if( reg.test(req.path) )
+		{
+			isAuthorized = true;
+			break;
+		}
+	}
+	}
+	return isAuthorized;
+};
+
+function extractRoutes(app, userid)
 {
 	var routes = new Array();
 	var pos = 0;
 	var user = null;
+	var users = app.get('users');
 	for( var i = 0, len = users.length ; i < len; i++) {
 		if( users[i].id === userid ) { user = users[i]; break; }
 	}
@@ -67,6 +116,5 @@ exports.AuthorizedRoutes = function(userid)
 	}
 	}
 	return routes;
-}
-
 };
+

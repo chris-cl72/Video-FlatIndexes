@@ -23,8 +23,9 @@
   </head>
 
     <body>
-
+	{% block top %}{% endblock %}
         {% block content %}{% endblock %}
+	{% block bottom %}{% endblock %}
         {% block footer %} {% endblock %}
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
