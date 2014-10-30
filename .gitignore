@@ -1,2 +1,4 @@
 node_modules
 *.swp
+config/user_default.js
+config/user_chris.js
