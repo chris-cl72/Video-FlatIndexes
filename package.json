@@ -1,21 +1,32 @@
 {
-    "name": "Chris-app",
-    "version": "0.1.0",
-    "description": "My first node.json app",
-    "author": "chris <your.name@example.org>",
-    "dependencies": {
-	"twig": "~0.7.2",
-	"express": "~4.9.5",
-	"console-stamp": "~0.1.3",
-	"path": "~0.4.9",
-	"body-parser": "~1.9.0",
-	"allocine-api": "*",
-	"async": "~0.9.0",
-	"errorhandler": "~1.2.1",
-	"util": "~0.10.3",
-	"crypto": "~0.0.3",
-	"express-session": "~1.8.2",
-	"connect-modrewrite": "~0.7.9",
-	"follow-redirects": "~0.0.3"
-    }
+    	"name": "Video-FlatIndexes",
+    	"version": "0.1.0",
+    	"description": "Micro PaaS that makes indexes in flat files for your videos-hosting",
+    	"author": "chris-cl72 <christophe.lambert.cl72@gmail.com>",
+	"licenses": [
+	{
+		"type": "AGPLv3",
+	"url": "https://github.com/chris-cl72/Video-FlatIndexes/blob/master/LICENSE"
+	}
+	],
+    		"dependencies": {
+		"twig": "~0.7.2",
+		"express": "~4.9.5",
+		"console-stamp": "~0.1.3",
+		"path": "~0.4.9",
+		"body-parser": "~1.9.0",
+		"allocine-api": "*",
+		"async": "~0.9.0",
+		"errorhandler": "~1.2.1",
+		"util": "~0.10.3",
+		"crypto": "~0.0.3",
+		"express-session": "~1.8.2",
+		"connect-modrewrite": "~0.7.9",
+		"follow-redirects": "~0.0.3"
+    		},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/chris-cl72/Video-FlatIndexes.git"
+	},
+	"optionalDependencies": {}
 }
