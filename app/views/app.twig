@@ -20,10 +20,7 @@
           <a class="navbar-brand" href="Videos">Chris Vidéos</a>
         </div>
         <div class="navbar-collapse collapse">
-{% if  (user != null) and (user.id != 0) %}
-<div id="text_login" class="navbar-right"><font color="white">Connecté en tant que <b>{{ user.username }}</b> - </font><a href="Videos/logout">Se déconnecter</a></div>
-{% else %}
-	<div id="text_login" class="navbar-right"></div>
+<div id="text_login" userid="{{ userAuth.user.id }}" username="{{ userAuth.user.username }}" class="navbar-right"></div>
 <form id="form_login" class="navbar-form navbar-right" >
             <div class="form-group">
               <input type="text" name="username" id="username" placeholder="Utilisateur" class="form-control" size="20">
@@ -34,7 +31,6 @@
             </div>
 		<button id="button_post" class="btn btn-success">Connexion</button>
           </form>
-{% endif %}
         </div><!--/.navbar-collapse -->
       </div>
     </div>
@@ -137,42 +133,49 @@ $.ajax({
        withCredentials: true
     },
     crossDomain: true,
-success: function (data) {
-        if( data.userid !== 'undefined' && data.userid >= 0 )
+success: function (user) {
+        if( user != null && user.id >= 0 )
                 {
-                $('#form_login').hide();
-                $('#text_login').html('<font color="white">Connecté en tant que <b>' + data.username + '</b> - </font><a href="Videos/logout">Se déconnecter</a>');
+		$('#text_login').attr('userid', user.id);
+		$('#text_login').attr('username', user.username);
+		refreshAuthent();
+                //$('#form_login').hide();
+                //$('#text_login').html('<font color="white">Connecté en tant que <b>' + user.username + '</b> - </font><a href="Videos/logout">Se déconnecter</a>');
                 }
+
 
 }
 });
-/*	$.post( "Videos/login", $( "#form_login" ).serialize(), function( data ) {
-	if( data.userid !== 'undefined' && data.userid >= 0 )
-		{
-		$('#form_login').hide();
-		$('#text_login').html('<font color="white">Connecté en tant que <b>' + data.username + '</b> - </font><a href="Videos/logout">Se déconnecter</a>');
-		}
-});*/
 	return false;
 });
+
+function refreshAuthent()
+{
+var userid = $('#text_login').attr('userid');
+//alert(userid);
+//if( userid === parseInt(userid, 10) )
+//	alert("is integer");
+//if( userid === parseInt(userid, 10) && userid > 0 )
+if( userid > 0 )
+{
+	var username = $('#text_login').attr('username');
+        //var userid = $('#accueil').attr('userid')
+	$('#form_login').hide();
+	$('#text_login').html('<font color="white">Connecté en tant que <b>' + username + '</b> - </font><a href="Videos/logout">Se déconnecter</a>');
+        $('#accueil').html('<p>Vous êtes maintenant authentifié, accèder à vos <a href="Videos/perso">vidéos perso</a>.</p>');
+	$('#text_login').show();
+	$('#bienvenue').html('<h1>Bienvenue ' + username + '</h1>');
+}
+else
+{
+	$('#form_login').show();
+	$('#text_login').hide();
+        $('#accueil').html('<p>Veuillez-vous authentifier pour accèder rapidement à toutes vos vidéos.</p>');
+	$('#bienvenue').html('<h1>Bienvenue à tous</h1>');
+}	
+};
+refreshAuthent();
 $( "#password" ).keypress(function( event ) {
-	//alert("");
-	//event.preventDefault();
-
-/*if ( event.which == 13 ) {
-	alert("");
-	event.preventDefault();
-}*/
-	//$( "#strcypt" ).value = SHA1( $( "#password" ).value);
-	// .val("fgg");
-	//$( "#strcypt" ).val(SHA1( $("#password").val() ));
-	//var passwd = $("#password").val() + String.fromCharCode(event.which);
-	//alert( passwd );
-	//var encrypt =  SHA1(passwd) ;
-	//alert(encrypt);
-	//$("#strcrypt").val(encrypt);
-	//event.preventDefault();
-
 });
 </script>
 

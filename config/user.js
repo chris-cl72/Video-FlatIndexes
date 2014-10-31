@@ -1,14 +1,14 @@
 module.exports = function(app, express) {
 	app.set('port', process.env.PORT || 80);
 	var users = [
-	{ id: 2, username: 'test', password: 'test', email: 'test@example.com', ingroups: [ 'guest','admin' ], config: { mode: 'clear' } }
+	{ id: 2, username: 'test', password: 'test', email: 'test@example.com', inroles: [ 'ROLE_GUEST','ROLE_ADMIN' ], config: { mode: 'clear' } }
 	];
 
-	var groups = [
-	{ name: 'admin', routes: [ '/Videos/*' ] },
-	{ name: 'guest', routes: [ '/Videos/perso' ] }
+	var roles = [
+	{ name: 'ROLE_ADMIN', routes: [ '/Videos/*' ] },
+	{ name: 'ROLE_GUEST', routes: [ '/Videos/perso' ] }
 	];
 
 	app.set('users', users);
-	app.set('groups', groups);
+	app.set('roles', roles);
 };

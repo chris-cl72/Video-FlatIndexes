@@ -1,33 +1,79 @@
-exports.Connect = function(app, req, res)
-{
-	       sha1Auth(app, req.param('username'),
-                           req.param('strcrypt'),
-                           function(result) {
-                                if( result !== null) {
-                                        req.session.userid = result.userid;
-                                        req.session.username = result.username;
-                                        res.json(result);
-                                        }
-                                });
+// Constructor
+// var user = new userAuth(app.get('users'), app.get('roles') );
+// user.is_granted_user(req.param('username'), req.param('strcrypt'));
+// user.is_granted_route(req.path); //req.session.userid
+// user.is_granted_role('ROLE_ADMIN');
 
+var UserAuth = function(users, roles) {
+  this.user = null;
+  this.users = users;
+  this.roles = roles;
+
+
+//UserAuth.prototype.is_granted_user = function(username, passwd) {
+this.is_granted_user = function(username, passwd) {
+	this.user = sha1Auth( username, passwd, this.users );
+	if( this.user !== null )
+		return true;
+	else
+		return false;
 };
 
-function sha1Auth(app, username, hash, callback)
+// class methods
+//UserAuth.prototype.is_granted_route = function(path) {
+this.is_granted_route = function(path) {
+	console.log('is_granted_route: ' + path);
+        var isAuthorized = false;
+	if( this.user !== null ) {
+        	var routes = extractRoutes(this.user, this.roles);
+        	for( var i = 0, len = routes.length ; i < len; i++) {
+                	var reg=new RegExp(routes[i]);
+                	if( reg.test(path) ) {
+                        	isAuthorized = true;
+                        	break;
+               		}
+        	}
+	}
+        return isAuthorized;
+};
+
+//UserAuth.prototype.is_granted_role = function(role){
+this.is_granted_role = function(role){
+	console.log('is_granted_role: ' + role);
+	var isAuthorized = false;
+	if( this.user !== null ) {
+		for( var i = 0, len = this.user.inroles.length ; i < len; i++) {		
+			if( this.user.inroles[i] === role ) {
+				isAuthorized = true;
+                                break;
+			}
+		}
+	}
+	return isAuthorized;
+};
+
+//UserAuth.prototype.getUserName = function() {
+this.getUserName = function() {
+	return this.user.username;
+};
+
+//UserAuth.prototype.getUserId = function() {
+this.getUserId = function() {
+        return this.user.userid;
+};
+
+function sha1Auth(username, passwd, users)
 {
-	var users = app.get('users');
-	var groups = app.get('groups');
-	var user = userFindOne(users, username);
-        if( (user !== null) && userValidPassword(user, hash, 'sha1') )
+	var user = userFindOne(username,users);
+        if( (user !== null) && isValidPassword(user, passwd, 'sha1') )
         {
-                var result = { userid: user.id, username: user.username };
-		//console.log( getAuthorizedRoutes(user) );
-                callback(result);
+		return user;
         }
         else
-                callback(null);
+		return null;
 };
 
-function userFindOne(users, username)
+function userFindOne(username, users)
 {
 	for (var i = 0, len = users.length; i < len; i++) {
 		var user = users[i];
@@ -38,7 +84,7 @@ function userFindOne(users, username)
 	return null;
 };
 
-function userValidPassword(user, hash, algo)
+function isValidPassword(user, hash, algo)
 {
         //console.log(users[0].ingroups[0]);
 	var digest = null;
@@ -59,51 +105,36 @@ function userValidPassword(user, hash, algo)
         	return false;
 };
 
-exports.Disconnect = function(req, res)
+/*exports.Disconnect = function(req, res)
 {
 	req.session.destroy(function(err) {
         // cannot access session here
         });
 	res.redirect('/Videos');
-};
+};*/
 
 
-exports.VerifyRoutes = function(app, req)
+
+function extractRoutes(user, roles)
 {
-	var isAuthorized = false
-	if( typeof req.session !== 'undefined' && req.session !== null )
-	{
-	var routes = extractRoutes(app, req.session.userid);
-	for( var i = 0, len = routes.length ; i < len; i++) {
-		var reg=new RegExp(routes[i]);
-		if( reg.test(req.path) )
-		{
-			isAuthorized = true;
-			break;
-		}
-	}
-	}
-	return isAuthorized;
-};
+	//var users = app.get('users');
+        //var roles = app.get('roles');
 
-function extractRoutes(app, userid)
-{
 	var routes = new Array();
 	var pos = 0;
-	var user = null;
-	var users = app.get('users');
+/*	var user = null;
 	for( var i = 0, len = users.length ; i < len; i++) {
 		if( users[i].id === userid ) { user = users[i]; break; }
-	}
+	}*/
 
 	if( user !== null )
 	{
-	for( var i = 0, len = user.ingroups.length; i < len; i++) {
-		var groupname = user.ingroups[i];
+	for( var i = 0, len = user.inroles.length; i < len; i++) {
+		var rolename = user.inroles[i];
 		var localroutes = null;
-		for( var j = 0, len = groups.length; j < len; j++) {
-			if( groups[j].name === groupname ) {
-				localroutes = groups[j].routes
+		for( var j = 0, len = roles.length; j < len; j++) {
+			if( roles[j].name === rolename ) {
+				localroutes = roles[j].routes
 				break;
 			}
 		}
@@ -117,4 +148,6 @@ function extractRoutes(app, userid)
 	}
 	return routes;
 };
-
+}
+// export the class
+module.exports = UserAuth;

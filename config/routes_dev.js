@@ -4,23 +4,6 @@ var path = require('path');
 
 module.exports = function(app, express, passport) {
     var path =__dirname + '/../app/controllers';
-    //var users = app.get('users');
-    //var groups = app.get('groups');
-    //var http = require('follow-redirects').http;
-    //var startTime = new Date().getTime();
-
-   // var modRewrite = require('connect-modrewrite');
-
-    //app.use(modRewrite([ '^/$ /Videos', '^$ /Videos [L]']));
-
-
-    /*app.get('/favicon.ico', function (req, res) {
-	res.redirect('/favicon.ico');	
-	//var img = fs.readFileSync('./favicon.ico');
-	//response.writeHead(200, {"Content-Type": "image/x-icon"});
-	//response.end(img,'binary');
-	log(app, req, res);
-	});*/
 
     app.get('/Videos', function(req, res) {
         callController('Videos.js')(app, req, res);
@@ -28,7 +11,12 @@ module.exports = function(app, express, passport) {
     });
 
     app.get('/Videos/logout', function(req, res) {
-	callController('user.js').Disconnect(req, res);
+        app.set(req.sessionID + '.data', null);
+	req.session.destroy(function(err) {
+        // cannot access session here
+        });
+        res.redirect('/Videos');
+	//callController('user.js').Disconnect(req, res);
 	log(app, req, res);
     });
 
@@ -38,15 +26,34 @@ module.exports = function(app, express, passport) {
     });
 
     app.post('/Videos/login', function (req, res){
-	callController('user.js').Connect(app,req, res);
+	var UserAuth = callController('user.js');
+	var userAuth = new UserAuth(app.get('users'), app.get('roles') );
+	if( userAuth.is_granted_user(req.param('username'), req.param('strcrypt')) ) {
+		var arrayData = {};
+		if( typeof app.get(req.sessionID + '.data') !== 'undefined'  && app.get(req.sessionID + '.data') !== null)
+			arrayData = app.get(req.sessionID + '.data');
+		arrayData['userAuth'] = userAuth;
+		app.set(req.sessionID + '.data', arrayData);
+		
+		res.json(userAuth.user);
+	}
 	log(app, req, res);
     });
 
     app.get('/Videos/perso', function(req, res) {
-        if( callController('user.js').VerifyRoutes(app, req) )
+	var userAuth = null;
+        if(  typeof app.get(req.sessionID + '.data') !== 'undefined' && app.get(req.sessionID + '.data') != null && app.get(req.sessionID + '.data').hasOwnProperty('userAuth'))
+        	userAuth = app.get(req.sessionID + '.data')['userAuth'];
+
+	if( userAuth !=  null && userAuth.is_granted_route(req.path) ) {
+		res.redirect('/Videos');
+	}
+	else
+		res.redirect('/');
+        /*if( callController('user.js').VerifyRoutes(app, req) )
 		callController('Videos.js')(app, req, res);
 	else
-		callController('Videos.js')(app, req, res);
+		callController('Videos.js')(app, req, res);*/
         log(app, req, res);
     });
 
