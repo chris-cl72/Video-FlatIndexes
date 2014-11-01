@@ -11,16 +11,13 @@ module.exports = function(app, express, passport) {
     });
 
     app.get('/Videos/logout', function(req, res) {
-        app.set(req.sessionID + '.data', null);
-	req.session.destroy(function(err) {
-        // cannot access session here
-        });
+	deleteSession(app, req);
         res.redirect('/Videos');
 	//callController('user.js').Disconnect(req, res);
 	log(app, req, res);
     });
 
-    app.post('/search', function(req, res) {
+    app.post('/Videos/search', function(req, res) {
         callController('Videos.js')(app, req, res);
 	log(app, req, res);
     });
@@ -29,27 +26,18 @@ module.exports = function(app, express, passport) {
 	var UserAuth = callController('user.js');
 	var userAuth = new UserAuth(app.get('users'), app.get('roles') );
 	if( userAuth.is_granted_user(req.param('username'), req.param('strcrypt')) ) {
-		var arrayData = {};
-		if( typeof app.get(req.sessionID + '.data') !== 'undefined'  && app.get(req.sessionID + '.data') !== null)
-			arrayData = app.get(req.sessionID + '.data');
-		arrayData['userAuth'] = userAuth;
-		app.set(req.sessionID + '.data', arrayData);
-		
+		setSessionData(app, req, 'userAuth', userAuth);
 		res.json(userAuth.user);
 	}
 	log(app, req, res);
     });
 
     app.get('/Videos/perso', function(req, res) {
-	var userAuth = null;
-        if(  typeof app.get(req.sessionID + '.data') !== 'undefined' && app.get(req.sessionID + '.data') != null && app.get(req.sessionID + '.data').hasOwnProperty('userAuth'))
-        	userAuth = app.get(req.sessionID + '.data')['userAuth'];
-
-	if( userAuth !=  null && userAuth.is_granted_route(req.path) ) {
-		res.redirect('/Videos');
-	}
+	var userAuth = getSessionData(app, req, 'userAuth');
+	if( userAuth !=  null && userAuth.is_granted_route(req.path) ) 
+		callController('Videos.perso.js')(app, req, res);
 	else
-		res.redirect('/');
+		res.redirect('/Videos');
         /*if( callController('user.js').VerifyRoutes(app, req) )
 		callController('Videos.js')(app, req, res);
 	else
@@ -70,5 +58,38 @@ function log(app, req, res )
         console.log("%s %s %s %s",req.method,req.url,res.statusCode,req.ip );
 };
 
+function getSessionData( app, req, objectName )
+{
+	var object = null;
+        if(  typeof app.get(req.sessionID + '.data') !== 'undefined' && app.get(req.sessionID + '.data') != null && app.get(req.sessionID + '.data').hasOwnProperty(objectName))
+                object = app.get(req.sessionID + '.data')[objectName];
 
+	return object;
+};
 
+function setSessionData( app, req, objectName, object )
+{
+	var arrayData = {};
+        if( typeof app.get(req.sessionID + '.data') !== 'undefined'  && app.get(req.sessionID + '.data') !== null)
+        	arrayData = app.get(req.sessionID + '.data');
+        arrayData[objectName] = object;
+        app.set(req.sessionID + '.data', arrayData);
+};
+
+function deleteSessionData( app, req, objectName )
+{
+	var arrayData = {};
+	if(  typeof app.get(req.sessionID + '.data') !== 'undefined' && app.get(req.sessionID + '.data') != null && app.get(req.sessionID + '.data').hasOwnProperty(objectName))
+	{
+		arrayData = app.get(req.sessionID + '.data');
+		delete arrayData[objectName];
+	}
+};
+
+function deleteSession(app, req)
+{
+        app.set(req.sessionID + '.data', null);
+	req.session.destroy(function(err) {
+        // cannot access session here
+        });
+};

@@ -17,7 +17,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="Videos">Chris Vidéos</a>
+          <a class="navbar-brand" href="/Videos">Chris Vidéos</a>
         </div>
         <div class="navbar-collapse collapse">
 <div id="text_login" userid="{{ userAuth.user.id }}" username="{{ userAuth.user.username }}" class="navbar-right"></div>
@@ -102,7 +102,7 @@
  {% endblock %}
 {% block bottom %}
 <script src="http://api.jquery.cmm/resources/events.js"></script>
-<script src="js/sha1.js"></script>
+<script src="/js/sha1.js"></script>
 <script type="text/javascript"><!--
 function SHA1(msg){function rotate_left(n,s){var t4=(n<<s)|(n>>>(32-s));return t4;};function lsb_hex(val){var str="";var i;var vh;var vl;for(i=0;i<=6;i+=2){vh=(val>>>(i*4+4))&0x0f;vl=(val>>>(i*4))&0x0f;str+=vh.toString(16)+vl.toString(16);}
 return str;};function cvt_hex(val){var str="";var i;var v;for(i=7;i>=0;i--){v=(val>>>(i*4))&0x0f;str+=v.toString(16);}
@@ -126,7 +126,7 @@ $('#form_login').on('submit', function(){
 	$("#strcrypt").val(SHA1($("#password").val()));
 $.ajax({
     type: "POST",    
-    url: "Videos/login",
+    url: "/Videos/login",
     data: $( "#form_login" ).serialize(),	
     //dataType: 'json',
     xhrFields: {
@@ -161,8 +161,8 @@ if( userid > 0 )
 	var username = $('#text_login').attr('username');
         //var userid = $('#accueil').attr('userid')
 	$('#form_login').hide();
-	$('#text_login').html('<font color="white">Connecté en tant que <b>' + username + '</b> - </font><a href="Videos/logout">Se déconnecter</a>');
-        $('#accueil').html('<p>Vous êtes maintenant authentifié, accèder à vos <a href="Videos/perso">vidéos perso</a>.</p>');
+	$('#text_login').html('<font color="white">Connecté en tant que <b>' + username + '</b> - </font><a href="/Videos/logout">Se déconnecter</a>');
+        $('#accueil').html('<p>Vous êtes maintenant authentifié, accèder à vos <a href="/Videos/perso">vidéos perso</a>.</p>');
 	$('#text_login').show();
 	$('#bienvenue').html('<h1>Bienvenue ' + username + '</h1>');
 }
