@@ -10,85 +10,95 @@
   {{ parent() }}
 {% endblock %}
 {% block content %}    
-	<!-- Main jumbotron for a primary marketing message or call to action -->
+	<!-- Main jumbotron for a primary marketing message or call to action 
     <div class="jumbotron">
-      <div class="container">
-	<div class="row">
-		<div id="bienvenue" class="col-md-6"></div> 
-		<div class="col-md-6">
-		</div>
-	</div>
-	<div class="row">
-                <div id="accueil" class="col-md-7"></div>
-		<div class="col-md-5">
-                        <br/>
-                        <div class="navbar-collapse collapse">
-                        <form class="navbar-form navbar-left" role="form" method=post action="/Videos/search">
-                        <div class="form-group">
-                        <input type="text" name="search" placeholder="Entrer des mots clés" class="form-control">
-                        </div>
-                        <!-- <button type="submit" class="btn btn-primary">Rechercher une vidéo</button> -->
-			<div class="btn-group">
-  <button class="btn btn-primary">Rechercher une Vidéo</button>
-  <button id="search_option" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span> </button>
-  <ul class="dropdown-menu">
-    <li><a href="#"> Sur le Web</a></li>
-    <li><a href="#"> En local</a></li>
-  </ul>
-</div>
-                        </form>
-                        </div>
-                </div>
-	</div>	
-        <!-- <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p> -->
-      </div>
-    </div>
+    </div> -->
+<div><br/><br/><br/></div>
 <div class="container">
 
-     <!--  <div class="page-header">
-        <h1>Chris Videos</h1>
-        <p class="lead">Accèder rapidement à toutes vos vidéos.</p>
-      </div> -->
+<div class="bs-example bs-example-tabs">
+    <ul id="myTab" class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Nouveautés </a></li>
+      <li class="" role="presentation"><a aria-expanded="false" href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">Series </a></li>
+      <li role="presentation" class="dropdown">
+        <a aria-expanded="false" href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown" aria-controls="myTabDrop1-contents">Films <span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1" id="myTabDrop1-contents">
+          <li><a href="#dropdown1" tabindex="-1" role="tab" id="dropdown1-tab" data-toggle="tab" aria-controls="dropdown1">genre</a></li>
+          <li><a href="#dropdown2" tabindex="-1" role="tab" id="dropdown2-tab" data-toggle="tab" aria-controls="dropdown2">date</a></li>
+        </ul>
+      </li>
+    </ul>
+<style>
+  #fixedcarousel .slider-size {
+    height: 400px; //This is your slider height
+    width: 100%;
+  }
+</style>
 
-{% if searchResult != null %}
-{% if searchResult.movies|length > 0 %}
-<h2>Films</h2>
-      <div class="row">
-	 {% for film in searchResult.movies %}
+    <div id="myTabContent" class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
 
-        <div class="col-md-3">
-		<p><img src="{{ film.imageWebpath }}" class="img-thumbnail" alt="image absente" /><br/><a href="{{ film.href }}" title="Genre: {{ film.genre }}&#10;Pays: {{ film.nationality }}">{{ film.title }} 
-		{% if film.productionYear != '' %}
-			({{ film.productionYear }})
-		{% endif %}
-		</a>
-		</p>
-        </div>
-	{% endfor %}
+<div class="row">
+<div class="col-md-7">
 
+ <div id="fixedcarousel" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#fixedcarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#fixedcarousel" data-slide-to="1"></li>
+    <li data-target="#fixedcarousel" data-slide-to="2"></li>
+  </ol>	
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div id="itemactive" class="item active" synopsis="Histoire de Terminator.">
+      <div style="background:url(http://images.allocine.fr/r_320_480/b_1_d6d6d6/medias/nmedia/18/35/91/09/19255618.jpg) top center; background-size:cover; background-position: 0px -100px; " class="slider-size">
+      <div class="carousel-caption">
+        <H2>Terminator</H2>
       </div>
-<hr>
-{% endif %}
-
-{% if searchResult.tvseries|length > 0 %}
-
-<h2>Series</h2>
-      <div class="row">
-	{% for film in searchResult.tvseries %}
-
-        <div class="col-md-3">
-                <p><img src="{{ film.imageWebpath }}" class="img-thumbnail" alt="image absente"/><br/>{{ film.title }} 
-		{% if film.productionYear != '' %}
-                        ({{ film.productionYear }})
-                {% endif %}
-		</p>
-        </div>
-	{% endfor %}
-
       </div>
-<hr>
-{% endif %}
-{% endif %}
+    </div>
+    <div class="item" synopsis="Histoire de Terminator 2.">
+      <div style="background:url(http://images.allocine.fr/r_320_480/b_1_d6d6d6/medias/nmedia/18/66/88/13/19095352.jpg) top center; background-size:cover; background-position: 0px -100px;" class="slider-size">
+      <div class="carousel-caption">
+        <H2>Termnator 2</H2>
+      </div>
+      </div>
+    </div>
+    <div class="item" synopsis="Histoire de Terminator 3.">
+      <div style="background:url(http://images.allocine.fr/r_300_400/b_1_d6d6d6/medias/nmedia/00/02/57/86/affiche.jpg) top center; background-size:cover; background-position: 0px -100px;" class="slider-size">
+      <div class="carousel-caption">
+        <H2>Terminator 3</H2>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="javascript:void(0)" data-slide="prev" data-target="#fixed">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+  </a>
+  <a class="right carousel-control" href="javascript:void(0)" data-slide="next" data-target="#fixed">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+</div>
+
+</div>
+<div id="newSynopsis" class="col-md-5"></div>
+
+</div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="dropdown1" aria-labelledby="dropdown1-tab">
+        <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="dropdown2" aria-labelledby="dropdown2-tab">
+        <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan, sartorial keffiyeh echo park vegan.</p>
+      </div>
+    </div>
+  </div><!-- /example -->
+
 <!--
 {% if  (userAuth != null) and (userAuth.is_granted_role('ROLE_ADMIN') ) %}
 
@@ -107,6 +117,27 @@
 
 <br/>
 <br/>
+
+<script>
+
+$('#newSynopsis').html('<h2>Synopsis</h2>' + $('#itemactive').attr('synopsis'));
+
+$('#myTab a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+
+$('#fixedcarousel').bind('slide.bs.carousel', function (e) {
+	var newDiv = $(e.relatedTarget);
+	$('#newSynopsis').html('<h2>Synopsis</h2>' + newDiv.attr('synopsis'));
+});
+/*
+$('#myTab a[href="#profile"]').tab('show') // Select tab by name
+$('#myTab a:first').tab('show') // Select first tab
+$('#myTab a:last').tab('show') // Select last tab
+$('#myTab li:eq(2) a').tab('show') // Select third tab (0-indexed)
+*/
+</script>
 {% endblock %}
 
 {% block bottom %}
