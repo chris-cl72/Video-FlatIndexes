@@ -1,12 +1,14 @@
 {
 	"films":
 	{
-		"path": "/home/chris/Vidéos/films"
+		"path": "/home/chris/Vidéos/films",
+		"urlpath": "/files/films"
 	}
 	,
 	"series": 
 	{
-                "path": "/home/chris/Vidéos/series"
+                "path": "/home/chris/Vidéos/series",
+		"urlpath": "/files/series"
         },
 	"files":
 	{

@@ -4,6 +4,7 @@
 var path = require('path');
 var fs = require('fs');
 var Finder = require('fs-finder');
+var url = require('url');
 
 function readConf(configFile)
 {
@@ -24,34 +25,29 @@ var myObj = null;
 var Videos = function(conf) {
 	//var videos = readConf(path.join(__dirname, 'videos.json'));
 	this.path = conf.path;
+	this.urlpath = conf.urlpath;	
 	var list = new Array();
-	//if( filter === "genre" ) {
-	// var files = Finder.from(baseDir).date('>', {minutes: 10}).date('<', {minutes: 1}).findFiles()
         var files = Finder.from(this.path.toString()).findFiles('*.avi');
         for (var i = 0, len = files.length; i < len; i++) {
-                var film = new Film(files[i]);
+                var film = new Film(files[i], this.path, this.urlpath);
 		list[list.length] = film;
-		//console.log(film);
-		//if( film.genre === "Action" )
-		//	console.log( film.title );
         }
 	files = Finder.from(this.path.toString()).findFiles('*.mkv');
 	for (var i = 0, len = files.length; i < len; i++) {
-                var film = new Film(files[i]);
+		var urlfilename = files[i].replace(this.path, this.urlpath);
+                var film = new Film(files[i], this.path, this.urlpath);
 		list[list.length] = film;
-                //if( film.genre === "Action" )
-                //        console.log( film.title );
         }
 
 	this.list =list;
-
-       // }
-
-
-		
 };
 
-var Film = function(filename) {
+var Film = function(filename, filmsPath, urlfilmsPath) {
+
+var urlFile = url.format(filename.replace(filmsPath, urlfilmsPath));
+//console.log('this.urlfile : ' + urlFile);
+                //urlfilename = urlfilename.replace(' ','\%20');
+this.urlfile = urlFile;
 this.imagefile=null;
 this.file=null;
 this.descfile=null;
@@ -61,6 +57,7 @@ this.file = filename;
 var imageFile = path.join( path.dirname(filename), '.' + path.basename(filename) + '.jpg');
 if( fs.existsSync(imageFile) ) {
 	this.imagefile = imageFile;
+	this.urlimagefile = url.format(imageFile.replace(filmsPath, urlfilmsPath));
 	//console.log('this.imagefile : ' + this.imagefile);
 }
 var index = 1;
@@ -85,6 +82,7 @@ var lines = fs.readFileSync(descFile).toString().split('\n'); //.forEach(
 			case 'Image':
                                 this.originalimage = arr[1];
 				this.originalimage_large = this.originalimage.replace('r_160_240','r_640_960'); //this.originalimage.replace('r_160_240','r_320_480');
+				this.originalimage_large = this.originalimage.replace('b_1_d6d6d6','b_4_dffdffdff');
                                 //console.log('this.originalimage : ' + this.originalimage);
                                 break;
 			case 'Titre':
@@ -114,6 +112,10 @@ var lines = fs.readFileSync(descFile).toString().split('\n'); //.forEach(
 			case 'Pays':
                                 this.country = arr[1];
                                 //console.log('this.country : ' + this.country);
+                                break;
+			case 'Runtime':
+                                this.runtime = arr[1];
+                                //console.log('this.runtime : ' + this.runtime);
                                 break;
     			default:
 		} 

@@ -51,19 +51,12 @@
 	<li data-target="#fixedcarousel" data-slide-to="{{ key }}"></li>
     {% endif %}
     {% endfor %}
-    <!-- <li data-target="#fixedcarousel" data-slide-to="0" class="active"></li>
-    <li data-target="#fixedcarousel" data-slide-to="1"></li>
-    <li data-target="#fixedcarousel" data-slide-to="2"></li> -->
   </ol>	
   <!-- Wrapper for slides -->
   <div class="carousel-inner">
   {% for key,value in lastFilms %}
-	{% if key == 0 %}
-		<div id="itemactive" class="item active" title="{{ value.title }}" synopsis="{{ value.synopsis }}" genre="{{ value.genre }}" file="{{ value.file }}" >
-	{% else %}
-		<div class="item" title="{{ value.title }}" synopsis="{{ value.synopsis }}" genre="{{ value.genre }}" file="{{ value.file }}">
-	{% endif %}
-		<div style="background:url({{ value.originalimage_large }}) top center; background-size:cover; background-position: 0px -100px; " class="slider-size">
+		<div {% if key == 0 %} id="itemactive" class="item active" {% else %} class="item" {% endif %} title="{{ value.title|escape('html') }}" synopsis="{{ value.synopsis|escape('html') }}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" director="{{ value.director|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" >
+		<div style="background:url({{ value.urlimagefile }}) top center; background-size:cover; background-position: 0px -100px; " class="slider-size" >
       <!-- <div class="carousel-caption">
         <H2>{{ value.title }}</H2>
       </div> -->
@@ -71,28 +64,6 @@
     </div>
 
   {% endfor %}
-   <!-- <div id="itemactive" class="item active" synopsis="Histoire de Terminator.">
-      <div style="background:url(http://images.allocine.fr/r_320_480/b_1_d6d6d6/medias/nmedia/18/35/91/09/19255618.jpg) top center; background-size:cover; background-position: 0px -100px; " class="slider-size">
-      <div class="carousel-caption">
-        <H2>Terminator</H2>
-      </div>
-      </div>
-    </div>
-    <div class="item" synopsis="Histoire de Terminator 2.">
-      <div style="background:url(http://images.allocine.fr/r_320_480/b_1_d6d6d6/medias/nmedia/18/66/88/13/19095352.jpg) top center; background-size:cover; background-position: 0px -100px;" class="slider-size">
-      <div class="carousel-caption">
-        <H2>Termnator 2</H2>
-      </div>
-      </div>
-    </div>
-    <div class="item" synopsis="Histoire de Terminator 3.">
-      <div style="background:url(http://images.allocine.fr/r_300_400/b_1_d6d6d6/medias/nmedia/00/02/57/86/affiche.jpg) top center; background-size:cover; background-position: 0px -100px;" class="slider-size">
-      <div class="carousel-caption">
-        <H2>Terminator 3</H2>
-      </div>
-      </div>
-    </div>
-	-->
   </div>
 
   <!-- Controls -->
@@ -128,7 +99,38 @@
 
 function updateNews( selectdiv )
 {
-	$('#newSynopsis').html( '<h1>' + selectdiv.attr('title') + '</h1><h2>Genre</h2>' + selectdiv.attr('genre') + '<h2>Synopsis</h2>' + selectdiv.attr('synopsis') +'<h3><a href="' + selectdiv.attr('file') + '">' + selectdiv.attr('file') + '</a></h3>' );
+	var textYear = '';
+	if( selectdiv.attr('year') !== '' )
+		textYear = ' (' + selectdiv.attr('year') + ')';
+
+	var textFile = '#';
+	if( selectdiv.attr('file') !== '' )
+		textFile = selectdiv.attr('file');			
+
+	var textTitle = '';
+	if( selectdiv.attr('title') !== '' )
+                textTitle = selectdiv.attr('title')
+	else
+		textTitle = textFile;
+
+	var textGenre = 'Non classé';
+	if( selectdiv.attr('genre') !== '' )
+                textGenre = selectdiv.attr('genre');
+	var textDirector = '';
+        if( selectdiv.attr('director') !== '' )
+                textDirector = '<U><h4>De</h4></U>' + selectdiv.attr('director');
+
+	var textActors = '';
+        if( selectdiv.attr('actors') !== '' )
+                textActors = '<U><h4>Avec</h4></U>' + selectdiv.attr('actors');
+
+	var textSynopsis = '';
+        if( selectdiv.attr('synopsis') !== '' && selectdiv.attr('runtime') !== '' )
+                textSynopsis = '<U><h4>Synopsis [' + selectdiv.attr('runtime') + ']</h4></U>' + selectdiv.attr('synopsis');
+	else if( selectdiv.attr('synopsis') !== '' )
+		textSynopsis = '<U><h4>Synopsis</h4></U>' + selectdiv.attr('synopsis');
+
+	$('#newSynopsis').html( '<a href="' + textFile  + '"><h1>' + textTitle + '</h1></a>' + '<h3>' + textGenre + textYear + '</h3>' + textDirector + textActors + textSynopsis );
 };
 
 $(document).ready( function () {
