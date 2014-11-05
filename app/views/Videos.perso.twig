@@ -44,13 +44,34 @@
  <div id="fixedcarousel" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
-    <li data-target="#fixedcarousel" data-slide-to="0" class="active"></li>
+    {% for key,value in lastFilms %}
+    {% if key == 0 %}
+	<li data-target="#fixedcarousel" data-slide-to="0" class="active"></li>
+    {% else %}
+	<li data-target="#fixedcarousel" data-slide-to="{{ key }}"></li>
+    {% endif %}
+    {% endfor %}
+    <!-- <li data-target="#fixedcarousel" data-slide-to="0" class="active"></li>
     <li data-target="#fixedcarousel" data-slide-to="1"></li>
-    <li data-target="#fixedcarousel" data-slide-to="2"></li>
+    <li data-target="#fixedcarousel" data-slide-to="2"></li> -->
   </ol>	
   <!-- Wrapper for slides -->
   <div class="carousel-inner">
-    <div id="itemactive" class="item active" synopsis="Histoire de Terminator.">
+  {% for key,value in lastFilms %}
+	{% if key == 0 %}
+		<div id="itemactive" class="item active" title="{{ value.title }}" synopsis="{{ value.synopsis }}" genre="{{ value.genre }}" file="{{ value.file }}" >
+	{% else %}
+		<div class="item" title="{{ value.title }}" synopsis="{{ value.synopsis }}" genre="{{ value.genre }}" file="{{ value.file }}">
+	{% endif %}
+		<div style="background:url({{ value.originalimage_large }}) top center; background-size:cover; background-position: 0px -100px; " class="slider-size">
+      <!-- <div class="carousel-caption">
+        <H2>{{ value.title }}</H2>
+      </div> -->
+      </div>
+    </div>
+
+  {% endfor %}
+   <!-- <div id="itemactive" class="item active" synopsis="Histoire de Terminator.">
       <div style="background:url(http://images.allocine.fr/r_320_480/b_1_d6d6d6/medias/nmedia/18/35/91/09/19255618.jpg) top center; background-size:cover; background-position: 0px -100px; " class="slider-size">
       <div class="carousel-caption">
         <H2>Terminator</H2>
@@ -71,13 +92,14 @@
       </div>
       </div>
     </div>
+	-->
   </div>
 
   <!-- Controls -->
-  <a class="left carousel-control" href="javascript:void(0)" data-slide="prev" data-target="#fixed">
+  <a class="left carousel-control" href="javascript:void(0)" data-slide="prev" data-target="#fixedcarousel">
     <span class="glyphicon glyphicon-chevron-left"></span>
   </a>
-  <a class="right carousel-control" href="javascript:void(0)" data-slide="next" data-target="#fixed">
+  <a class="right carousel-control" href="javascript:void(0)" data-slide="next" data-target="#fixedcarousel">
     <span class="glyphicon glyphicon-chevron-right"></span>
   </a>
 </div>
@@ -99,28 +121,20 @@
     </div>
   </div><!-- /example -->
 
-<!--
-{% if  (userAuth != null) and (userAuth.is_granted_role('ROLE_ADMIN') ) %}
-
-<div class="row">
-<div class="col-md-3" align="center">
-                <p><img src="images/film-reel.jpg" width="150" class="img-thumbnail" /></p>
-		<button class="btn btn-success">Voir les Films</button>
-</div>
-<div class="col-md-3" align="center">
-                <p><img src="images/film-reel.jpg" width="150" class="img-thumbnail" /></p>
-		<button class="btn btn-success">Voir les Séries</button>
-</div>
-</div>
-{% endif %}
--->
-
 <br/>
 <br/>
 
 <script>
 
-$('#newSynopsis').html('<h2>Synopsis</h2>' + $('#itemactive').attr('synopsis'));
+function updateNews( selectdiv )
+{
+	$('#newSynopsis').html( '<h1>' + selectdiv.attr('title') + '</h1><h2>Genre</h2>' + selectdiv.attr('genre') + '<h2>Synopsis</h2>' + selectdiv.attr('synopsis') +'<h3><a href="' + selectdiv.attr('file') + '">' + selectdiv.attr('file') + '</a></h3>' );
+};
+
+$(document).ready( function () {
+	updateNews($('#itemactive'));
+//	$('#newSynopsis').html('<h2>Synopsis</h2>' + $('#itemactive').attr('synopsis'));
+});
 
 $('#myTab a').click(function (e) {
   e.preventDefault()
@@ -128,8 +142,9 @@ $('#myTab a').click(function (e) {
 })
 
 $('#fixedcarousel').bind('slide.bs.carousel', function (e) {
-	var newDiv = $(e.relatedTarget);
-	$('#newSynopsis').html('<h2>Synopsis</h2>' + newDiv.attr('synopsis'));
+	updateNews( $(e.relatedTarget) );
+	//var newDiv = $(e.relatedTarget);
+	//$('#newSynopsis').html('<h2>Synopsis</h2>' + newDiv.attr('synopsis'));
 });
 /*
 $('#myTab a[href="#profile"]').tab('show') // Select tab by name

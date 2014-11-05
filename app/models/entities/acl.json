@@ -1,0 +1,26 @@
+{
+	"users":
+	[
+		{
+		"id":1,
+                "username":"admin",
+                "password":"d033e22ae348aeb5660fc2140aec35850c4da997",
+                "email":"admin@example.com",
+                "inroles":["ROLE_ADMIN","ROLE_GUEST"],
+                "config":{"mode":"crypt"}
+		},
+		{
+		"id":2,
+		"username":"test",
+		"password":"test",
+		"email":"test@example.com",
+		"inroles":["ROLE_GUEST"],
+		"config":{"mode":"clear"}
+		}
+	],
+	"roles": 
+	[
+		{"name":"ROLE_ADMIN","routes":["/Videos/*"]},
+		{"name":"ROLE_GUEST","routes":["/Videos/perso"]}
+	]
+}

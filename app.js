@@ -32,8 +32,9 @@ app.use(session({
  resave: true,
  saveUninitialized: true
 }));
-require('./config/system.js')(app,express);
-require('./config/user.js')(app,express);
+//require('./config/system.js')(app,express);
+//require('./config/user.js')(app,express);
+require('./config/settings.js')(app,express);
 require('./config/environment.js')(app, express);
 
 //app.set(req.sessionID + '.data', []);

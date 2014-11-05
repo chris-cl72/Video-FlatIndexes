@@ -20,7 +20,7 @@
           <a class="navbar-brand" href="/Videos">Chris Vidéos</a>
         </div>
         <div class="navbar-collapse collapse">
-<div id="text_login" userid="{{ userAuth.user.id }}" username="{{ userAuth.user.username }}" class="navbar-right"></div>
+	<div id="text_login" userid="{{ userAuth.user.id }}" username="{{ userAuth.user.username }}" class="navbar-right"></div>
 <form id="form_login" class="navbar-form navbar-right" >
             <div class="form-group">
               <input type="text" name="username" id="username" placeholder="Utilisateur" class="form-control" size="20">
@@ -134,14 +134,12 @@ $.ajax({
     },
     crossDomain: true,
 success: function (user) {
-        if( user != null && user.id >= 0 )
-                {
+        //if( user != null && user.id >= 0 )
+        //        {
 		$('#text_login').attr('userid', user.id);
 		$('#text_login').attr('username', user.username);
 		refreshAuthent();
-                //$('#form_login').hide();
-                //$('#text_login').html('<font color="white">Connecté en tant que <b>' + user.username + '</b> - </font><a href="Videos/logout">Se déconnecter</a>');
-                }
+              //  }
 
 
 }
@@ -152,10 +150,6 @@ success: function (user) {
 function refreshAuthent()
 {
 var userid = $('#text_login').attr('userid');
-//alert(userid);
-//if( userid === parseInt(userid, 10) )
-//	alert("is integer");
-//if( userid === parseInt(userid, 10) && userid > 0 )
 if( userid > 0 )
 {
 	var username = $('#text_login').attr('username');
@@ -174,8 +168,8 @@ else
 	$('#bienvenue').html('<h1>Bienvenue à tous</h1>');
 }	
 };
-refreshAuthent();
-$( "#password" ).keypress(function( event ) {
+$(document).ready( function () {
+	refreshAuthent();
 });
 </script>
 

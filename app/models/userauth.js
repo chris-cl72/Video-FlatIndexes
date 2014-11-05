@@ -3,11 +3,13 @@
 // user.is_granted_user(req.param('username'), req.param('strcrypt'));
 // user.is_granted_route(req.path); //req.session.userid
 // user.is_granted_role('ROLE_ADMIN');
+var path = require('path');
+var acl = require(path.join(__dirname, 'entities/acl.js'));
 
-var UserAuth = function(users, roles) {
+var UserAuth = function() {
   this.user = null;
-  this.users = users;
-  this.roles = roles;
+  this.users = acl.users
+  this.roles = acl.roles;
 
 
 //UserAuth.prototype.is_granted_user = function(username, passwd) {
@@ -39,16 +41,19 @@ this.is_granted_route = function(path) {
 
 //UserAuth.prototype.is_granted_role = function(role){
 this.is_granted_role = function(role){
-	console.log('is_granted_role: ' + role);
 	var isAuthorized = false;
 	if( this.user !== null ) {
 		for( var i = 0, len = this.user.inroles.length ; i < len; i++) {		
+			console.log(this.user.inroles[i]);
 			if( this.user.inroles[i] === role ) {
 				isAuthorized = true;
+				console.log('User id ' + this.user.id + ' has granted role ' + role + '.');
                                 break;
 			}
 		}
 	}
+	if( !isAuthorized )
+		console.log('User id ' + this.user.id + ' has not granted role ' + role + '!');
 	return isAuthorized;
 };
 

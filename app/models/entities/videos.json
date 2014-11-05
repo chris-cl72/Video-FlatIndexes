@@ -1,0 +1,15 @@
+{
+	"films":
+	{
+		"path": "/home/chris/Vidéos/films"
+	}
+	,
+	"series": 
+	{
+                "path": "/home/chris/Vidéos/series"
+        },
+	"files":
+	{
+		"path": "/home/chris/Téléchargements"
+	}
+}

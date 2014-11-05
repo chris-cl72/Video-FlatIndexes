@@ -1,63 +1,48 @@
 var path = require('path');
+//var http = require('follow-redirects').http;
+//var modRewrite = require('connect-modrewrite');
 
 module.exports = function(app, express, passport) {
-
     var path =__dirname + '/../app/controllers';
 
-    app.use(function (req, res, next){console.log("%s %s %s %s",req.method,req.url,res.statusCode,req.ip); next();});
-
-    app.get(['/','/index'], function(req, res) {
-	callController(app, req, res, 'index.js');
-    });
-
     app.get('/Videos', function(req, res) {
-        callController(app, req, res, 'Videos.js');
+        callController('Videos.js')(app, req, res);
+	log(app, req, res);
     });
 
-    app.post('/search', function(req, res) {
-        callController(app, req, res, 'Videos.js');
+    app.get('/Videos/logout', function(req, res) {
+	callController('userauth.js').logout(app, req, res);
+	log(app, req, res);
     });
 
-/*app.router.post('/signup', passport.authenticate('signup', {
-    successRedirect: '/home',
-    failureRedirect: '/signup',
-    failureFlash : true 
-  }));
-*/
-/*app.post('/login', passport.authenticate('digest', {
-	session: false,
-    successRedirect: '/loginSuccess',
-    failureRedirect: '/loginFailure'
-    //failureFlash : true 
-  }));
+    app.post('/Videos/search', function(req, res) {
+        callController('Videos.js')(app, req, res);
+	log(app, req, res);
+    });
 
+    app.post('/Videos/login', function (req, res){
+	callController('userauth.js').login(app, req, res);
+	log(app, req, res);
+    });
 
-app.get('/loginFailure', function(req, res, next) {
-  res.send('Failed to authenticate');
-});
- 
-app.get('/loginSuccess', function(req, res, next) {
-  res.send('Successfully authenticated');
-});
+    app.get('/Videos/perso', function(req, res) {
+	if( callController('userauth.js').is_granted(app, req, res) )
+		callController('Videos.perso.js')(app, req, res);
+	else
+		res.redirect('/Videos');
+        log(app, req, res);
+    });
 
-app.all('/Videos/perso',
-// Authenticate using HTTP Digest credentials, with session support disabled.
-passport.authenticate('digest', { session: false }),
-function(req, res){
-//res.json({ username: req.user.username, email: req.user.email });
-});*/
-	/*app.get('/login', function(req, res) {
-	require(path + '/' + 'user.js').login(app, req, res);*/
-        //return callController(app, req, res, 'user.js').login;
-    //});
-
-/*
-	app.get('/login', user.login);
-	app.get('/logout', user.logout);*/
+    app.use(function (req, res, next){ res.statusCode = 404; log(app, req, res)});
 };
 
-function callController(app, req, res, name) {
-	var path =__dirname + '/../app/controllers';
-	require(path + '/' + name)(app, req, res);
+function callController(name) {
+        var path =__dirname + '/../app/controllers';
+        return require(path + '/' + name); //(app, req, res);
+};
+
+function log(app, req, res )
+{
+        console.log("%s %s %s %s",req.method,req.url,res.statusCode,req.ip );
 };
 
