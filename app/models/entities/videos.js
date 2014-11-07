@@ -22,10 +22,13 @@ var myObj = null;
 };
 
 
-var Videos = function(conf) {
+var Videos = function(staticdir,conf) {
 	//var videos = readConf(path.join(__dirname, 'videos.json'));
 	this.path = conf.path;
 	this.urlpath = conf.urlpath;	
+	if( fs.existsSync(path.join(staticdir,this.urlpath)) ) 
+		fs.unlinkSync(path.join(staticdir,this.urlpath));
+	fs.symlinkSync(this.path, path.join(staticdir,this.urlpath));	
 	var list = new Array();
         var files = Finder.from(this.path.toString()).findFiles('*.avi');
         for (var i = 0, len = files.length; i < len; i++) {
@@ -128,6 +131,6 @@ var lines = fs.readFileSync(descFile).toString().split('\n'); //.forEach(
 
 };
 
-module.exports.films = new Videos(readConf(path.join(__dirname, 'videos.json')).films);
-module.exports.files = new Videos(readConf(path.join(__dirname, 'videos.json')).files);
-module.exports.series = new Videos(readConf(path.join(__dirname, 'videos.json')).series);
+module.exports.films = function(staticdir) { return new Videos(staticdir,readConf(path.join(__dirname, 'videos.json')).films) };
+//module.exports.files = new Videos(readConf(path.join(__dirname, 'videos.json')).files);
+//module.exports.series = new Videos(readConf(path.join(__dirname, 'videos.json')).series);

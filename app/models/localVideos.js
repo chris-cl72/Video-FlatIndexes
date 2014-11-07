@@ -3,9 +3,9 @@
 var path = require('path');
 var fs = require('fs');
 
-var LocalVideos = function() {
+var LocalVideos = function(staticdir) {
 
-	var films = require(path.join(__dirname, 'entities/videos.js')).films;
+	var films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir);
 	this.path = films.path;
 	
 this.getLastFilms = function(number) {

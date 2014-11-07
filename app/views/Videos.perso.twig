@@ -1,6 +1,6 @@
 {% extends "app.twig" %}
 
-{% block title %}Index{% endblock %}
+{% block title %}Perso{% endblock %}
 {% block sitename %}chris Vidéos{% endblock %}
 
 {% block head %}
@@ -10,16 +10,15 @@
   {{ parent() }}
 {% endblock %}
 {% block content %}    
-	<!-- Main jumbotron for a primary marketing message or call to action 
-    <div class="jumbotron">
-    </div> -->
-<div><br/><br/><br/></div>
+
+<!-- Main jumbotron for a primary marketing message or call to action <div class="jumbotron"> </div> -->
+<div><br/><br/><br/><br/></div>
+
 <div class="container">
 
 <div class="bs-example bs-example-tabs">
     <ul id="myTab" class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Nouveautés </a></li>
-      <li class="" role="presentation"><a aria-expanded="false" href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">Series </a></li>
+      <li role="presentation" class="active"><a href="#home" id="news-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Nouveautés </a></li>
       <li role="presentation" class="dropdown">
         <a aria-expanded="false" href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown" aria-controls="myTabDrop1-contents">Films <span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1" id="myTabDrop1-contents">
@@ -27,73 +26,78 @@
           <li><a href="#dropdown2" tabindex="-1" role="tab" id="dropdown2-tab" data-toggle="tab" aria-controls="dropdown2">date</a></li>
         </ul>
       </li>
+<li class="" role="presentation"><a aria-expanded="false" href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">Series </a></li>
     </ul>
-<style>
+<style >
+<!-- @media (max-width: 425px) {
+  #fixedcarousel .slider-size {
+    height: 400px; //This is your slider height
+    width: 250px;
+  }
+}
+@media (min-width: 425px) {
   #fixedcarousel .slider-size {
     height: 400px; //This is your slider height
     width: 100%;
   }
+-->
+
+#fixedcarousel .slider-size {
+    height: 500px; //This is your slider height
+    width: 100%;
+  }
+
+}
+
 </style>
 
     <div id="myTabContent" class="tab-content">
-      <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
-
-<div class="row">
-<div class="col-md-7">
-
- <div id="fixedcarousel" class="carousel slide" data-ride="carousel">
-  <!-- Indicators -->
-  <ol class="carousel-indicators">
-    {% for key,value in lastFilms %}
-    {% if key == 0 %}
-	<li data-target="#fixedcarousel" data-slide-to="0" class="active"></li>
-    {% else %}
-	<li data-target="#fixedcarousel" data-slide-to="{{ key }}"></li>
-    {% endif %}
-    {% endfor %}
-  </ol>	
-  <!-- Wrapper for slides -->
-  <div class="carousel-inner">
-  {% for key,value in lastFilms %}
-		<div {% if key == 0 %} id="itemactive" class="item active" {% else %} class="item" {% endif %} title="{{ value.title|escape('html') }}" synopsis="{{ value.synopsis|escape('html') }}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" director="{{ value.director|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" >
-		<div style="background:url({{ value.urlimagefile }}) top center; background-size:cover; background-position: 0px -100px; " class="slider-size" >
-      <!-- <div class="carousel-caption">
-        <H2>{{ value.title }}</H2>
-      </div> -->
+      <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="news-tab">
+	<div class="row">
+		<div class="col-md-7" style="min-width: 410px">
+ 			<div id="fixedcarousel" class="carousel slide" data-ride="carousel">
+  			<!-- Indicators -->
+  			<ol class="carousel-indicators">
+    			{% for key,value in lastFilms %}
+				<li data-target="#fixedcarousel" data-slide-to="{{ key }}" {% if key == 0 %} class="active" {% endif %} ></li>
+    			{% endfor %}
+  			</ol>	
+  			<!-- Wrapper for slides -->
+  			<div class="carousel-inner">
+  			{% for key,value in lastFilms %}
+				<div {% if key == 0 %} id="itemactive" class="item active" {% else %} class="item" {% endif %} title="{{ value.title|escape('html') }}" synopsis="{{ value.synopsis|escape('html') }}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" director="{{ value.director|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" country="{{ value.country|escape('html') }}" >
+					<div style="background:url({{ value.urlimagefile }}) top center; background-size:cover; background-position: 0px -100px; background-repeat:no-repeat;" class="slider-size" >
+      					<!-- <div class="carousel-caption"><H2>{{ value.title }}</H2></div> -->
+      					</div>
+    				</div>
+  			{% endfor %}
+  			</div>
+  			<!-- Controls -->
+  			<a class="left carousel-control" href="javascript:void(0)" data-slide="prev" data-target="#fixedcarousel">
+    				<span class="glyphicon glyphicon-chevron-left"></span>
+  			</a>
+  			<a class="right carousel-control" href="javascript:void(0)" data-slide="next" data-target="#fixedcarousel">
+    				<span class="glyphicon glyphicon-chevron-right"></span>
+  			</a>
+			</div>
+		</div>
+		<div id="newSynopsis" class="col-md-5"></div>
+	</div>
       </div>
-    </div>
 
-  {% endfor %}
-  </div>
-
-  <!-- Controls -->
-  <a class="left carousel-control" href="javascript:void(0)" data-slide="prev" data-target="#fixedcarousel">
-    <span class="glyphicon glyphicon-chevron-left"></span>
-  </a>
-  <a class="right carousel-control" href="javascript:void(0)" data-slide="next" data-target="#fixedcarousel">
-    <span class="glyphicon glyphicon-chevron-right"></span>
-  </a>
-</div>
-
-</div>
-<div id="newSynopsis" class="col-md-5"></div>
-
-</div>
-      </div>
       <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
         <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
       </div>
+
       <div role="tabpanel" class="tab-pane fade" id="dropdown1" aria-labelledby="dropdown1-tab">
         <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
       </div>
+
       <div role="tabpanel" class="tab-pane fade" id="dropdown2" aria-labelledby="dropdown2-tab">
         <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan, sartorial keffiyeh echo park vegan.</p>
       </div>
     </div>
   </div><!-- /example -->
-
-<br/>
-<br/>
 
 <script>
 
@@ -101,7 +105,7 @@ function updateNews( selectdiv )
 {
 	var textYear = '';
 	if( selectdiv.attr('year') !== '' )
-		textYear = ' (' + selectdiv.attr('year') + ')';
+		textYear = '<p style="display:inline; padding-right:1em;">[' + selectdiv.attr('year') + ']</p>';
 
 	var textFile = '#';
 	if( selectdiv.attr('file') !== '' )
@@ -109,13 +113,19 @@ function updateNews( selectdiv )
 
 	var textTitle = '';
 	if( selectdiv.attr('title') !== '' )
-                textTitle = selectdiv.attr('title')
+                textTitle = '<h1 style="display:inline;">' + selectdiv.attr('title') + '</h1>'
 	else
-		textTitle = textFile;
+		textTitle = '<h3>' + textFile + '</h3>';
+
+	var textCountry = '';
+	if( selectdiv.attr('country') !== '' )
+                textCountry = '<p style="display:inline; padding-right:1em;">(' + selectdiv.attr('country') + ')</p>'
 
 	var textGenre = 'Non classé';
 	if( selectdiv.attr('genre') !== '' )
-                textGenre = selectdiv.attr('genre');
+		textGenre = '<h3 style="display:inline;">' + selectdiv.attr('genre') + '</h3>&nbsp;';
+                //textGenre = '<h3 style="display:inline; padding-left:1em; padding-right:1em;">' + selectdiv.attr('genre') + '</h3>';
+
 	var textDirector = '';
         if( selectdiv.attr('director') !== '' )
                 textDirector = '<U><h4>De</h4></U>' + selectdiv.attr('director');
@@ -124,13 +134,15 @@ function updateNews( selectdiv )
         if( selectdiv.attr('actors') !== '' )
                 textActors = '<U><h4>Avec</h4></U>' + selectdiv.attr('actors');
 
+	var textRuntime = '';
+	if( selectdiv.attr('runtime') !== '' )
+		textRuntime = '<p style="display:inline; padding-right:1em;">Durée: ' + selectdiv.attr('runtime') + '</p>';
+
 	var textSynopsis = '';
-        if( selectdiv.attr('synopsis') !== '' && selectdiv.attr('runtime') !== '' )
-                textSynopsis = '<U><h4>Synopsis [' + selectdiv.attr('runtime') + ']</h4></U>' + selectdiv.attr('synopsis');
-	else if( selectdiv.attr('synopsis') !== '' )
+	if( selectdiv.attr('synopsis') !== '' )
 		textSynopsis = '<U><h4>Synopsis</h4></U>' + selectdiv.attr('synopsis');
 
-	$('#newSynopsis').html( '<a href="' + textFile  + '"><h1>' + textTitle + '</h1></a>' + '<h3>' + textGenre + textYear + '</h3>' + textDirector + textActors + textSynopsis );
+	$('#newSynopsis').html( '<a href="' + textFile  + '">' + textTitle + '</a>&nbsp;' + textCountry + '<br/><br/>' + textGenre + textYear + textRuntime + textDirector + textActors + textSynopsis );
 };
 
 $(document).ready( function () {

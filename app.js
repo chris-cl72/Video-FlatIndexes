@@ -24,6 +24,7 @@ app.set('views',__dirname + '/app/views');
 app.set('view engine', 'html');
 app.engine('html', twig.__express);
 app.use(express.static(path.join(__dirname, 'public'),{ dotfiles: 'allow' }));
+app.set('staticdir',path.join(__dirname, 'public'));
 //app.use(express.static('/home/chris/Vidéos'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({

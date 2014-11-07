@@ -6,10 +6,10 @@ for (var i = 0, len = list.length; i < len; i++) {
         console.log(list[i].title);
 */
 	var LocalVideos = callDataModel('localVideos.js');
-	var localVideos = new(LocalVideos);
+	var localVideos = new LocalVideos(app.get('staticdir'));
 	console.log(localVideos.path);
 	//app.use(express.static(localVideos.path));
-	var list = localVideos.getLastFilms(20);
+	var list = localVideos.getLastFilms(15);
 	/*for (var i = 0, len = list.length; i < len; i++) {
         	console.log(list[i].title);
 	}*/
