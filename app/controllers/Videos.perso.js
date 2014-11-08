@@ -7,14 +7,25 @@ for (var i = 0, len = list.length; i < len; i++) {
 */
 	var LocalVideos = callDataModel('localVideos.js');
 	var localVideos = new LocalVideos(app.get('staticdir'));
-	console.log(localVideos.path);
-	//app.use(express.static(localVideos.path));
-	var list = localVideos.getLastFilms(15);
-	/*for (var i = 0, len = list.length; i < len; i++) {
-        	console.log(list[i].title);
-	}*/
+	//console.log(localVideos.path);
 	var userAuth = getSessionData( app, req, 'userAuth' );
-        res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list });
+
+	if( req.param('type') === 'films' ) {
+		if( req.param('order') === 'news' ) {
+			var list = localVideos.getLastFilms(15);
+        		res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list });
+		}
+		if( req.param('order') === 'genre' ) {
+			var list = localVideos.getLastFilmsbyGenre(req.param('value'));
+			res.json(list);
+			//console.log(list[0]);
+		}
+	}
+	if( req.param('type') === 'listgenres' ) {
+		console.log('listgenres');
+		var list = localVideos.getListGenres();		
+		res.json(list);		
+	}
 };
 
 function callDataModel(name) {
