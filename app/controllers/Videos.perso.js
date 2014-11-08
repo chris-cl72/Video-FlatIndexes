@@ -15,17 +15,21 @@ for (var i = 0, len = list.length; i < len; i++) {
 			var list = localVideos.getLastFilms(15);
         		res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list });
 		}
-		if( req.param('order') === 'genre' ) {
+		else if( req.param('order') === 'genre' ) {
 			var list = localVideos.getLastFilmsbyGenre(req.param('value'));
 			res.json(list);
 			//console.log(list[0]);
 		}
+		else
+			res.redirect('/Videos');
 	}
-	if( req.param('type') === 'listgenres' ) {
-		console.log('listgenres');
+	else if( req.param('type') === 'listgenres' ) {
+		//console.log('listgenres');
 		var list = localVideos.getListGenres();		
 		res.json(list);		
 	}
+	else
+		res.redirect('/Videos');
 };
 
 function callDataModel(name) {

@@ -89,9 +89,6 @@
 		<div class="tabbable nav-tabs" style="border-bottom: 0;">
                 <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3" style="min-width: 150px">
 			<ul class="nav nav-pills nav-stacked" id="nav-genre">
-  			<!-- 	<li class="active" id="films-genre-action"><a href="#films-genreaction" data-toggle="tab">Action</a></li>
-  				<li><a href="#films-genreaventure" data-toggle="tab">Aventure</a></li>
-  				<li><a href="#films-genresciencefiction" data-toggle="tab">Science fiction</a></li> -->
 			</ul>
 		</div>
 		<div class="col-xs-5 col-sm-7 col-md-9 col-lg-9">
@@ -125,7 +122,7 @@ function updateNews( selectdiv )
 
 	var textTitle = '';
 	if( selectdiv.attr('title') !== '' )
-                textTitle = '<h1 style="display:inline;">' + selectdiv.attr('title') + '</h1>'
+                textTitle = '<h1 style="display:inline;" title="' + textFile + '">' + selectdiv.attr('title') + '</h1>'
 	else
 		textTitle = '<h3>' + textFile + '</h3>';
 
@@ -157,8 +154,12 @@ function updateNews( selectdiv )
 	$('#newSynopsis').html( '<a href="' + textFile  + '">' + textTitle + '</a>&nbsp;' + textCountry + '<br/><br/>' + textGenre + textYear + textRuntime + textDirector + textActors + textSynopsis );
 };
 
-function updateGenreType(type)
+function updateGenreType(type, force)
 {
+var genre = type;
+var trimgenre = type.replace(/ /g, '');
+var genreselected = $('#nav-genre .active').text();
+if( $('#films-genre' + trimgenre).html() === '' ) { //(genreselected !== genre  || force) ) {
 $.ajax({
     type: "GET",
     url: "/Videos/perso",
@@ -167,25 +168,20 @@ $.ajax({
     xhrFields: { withCredentials: true },
     crossDomain: true,
         success: function (data) {
-                var genre = type;
-                var trimgenre = type.replace(/ /g, '');
-                var tabhtmldatahtml = '';
+                var tabhtmldatahtml = '<TABLE border="0" WIDTH="100%" cellpadding="0">';
                 for (var i = 0, len = data.length; i < len; i++) {
                         var value = data[i];
-                        tabhtmldatahtml += value.urlimagefile + ' ' + value.title + ' ' + value.synopsis + ' ' + value.urlfile + ' ' + value.year + ' ' + value.actors + ' ' + value.director + ' ' + value.runtime + ' ' + value.country + '<br/>';
+			tabhtmldatahtml += '<TR><TD class="simple" COLSPAN=2><hr><h2>' + value.title + '</h2></TD></TR><TR><TD><B>Genre :</B> ' + value.genre + ' (' + value.year + ') </TD><TD ROWSPAN=6><img class="img-thumbnail" src="' + value.urlimagefile + '" width="160"/></TD></TR><TR><TD><B>De :</B> ' + value.director + '</TD></TR><TR></TR><TR><TD><B>Pays :</B> ' + value.country + '</TD></TR><TR><TD><a href="' + value.urlfile + '">Fichier: ' + value.urlfile + '</a>&nbsp;(' + value.runtime + ')</TD></TR><TR><TD style="padding-right:1em;"><BR/>' + value.synopsis + '</TD></TR>';
                 }
 
+		tabhtmldatahtml += '</TABLE>';
                 $('#films-genre' + trimgenre).html(tabhtmldatahtml);
 		window.location = $('#titleGenre').attr('href');
-		//$('#titleGenre').trigger("click");
-		//$('#titleGenre').click();
-		//window.location.hash = $('#titleGenre');
-                //alert(data);
         }
-	//window.location.hash = $('#titleGenre');
-	//$('#titleGenre').trigger("click");
 });
-
+}
+else
+	window.location = $('#titleGenre').attr('href');
 };
 
 
@@ -193,12 +189,6 @@ $.ajax({
 $(document).ready( function () {
 	updateNews($('#itemactive'));
 
-
-/*$('#myTab a').click(function (e) {
-  e.preventDefault();
-  //alert( e.html() ):
-  $(this).tab('show')
-});*/
 
 $('#fixedcarousel').bind('slide.bs.carousel', function (e) {
 	updateNews( $(e.relatedTarget) );
@@ -208,6 +198,9 @@ $('#fixedcarousel').bind('slide.bs.carousel', function (e) {
 
 function updateGenre()
 {
+var genreselected = $('#nav-genre .active').text();
+
+if( genreselected === '') {
 $.ajax({
     type: "GET",
     url: "/Videos/perso",
@@ -223,7 +216,7 @@ $.ajax({
                         var genre = data[i];
                         var trimgenre = data[i].replace(/ /g, '');
                         if( i === 0 ) {
-                                navhtmldata += '<li class="active" id="films-genre-' + trimgenre  +'" onclick="updateGenreType(\'' + genre  + '\')"><a href="#films-genre' + trimgenre  + '" data-toggle="tab">' + genre + '</a></li>';
+                                navhtmldata += '<li class="active" id="films-genre-' + trimgenre  +'" onclick="updateGenreType(\'' + genre  + ',false\')"><a href="#films-genre' + trimgenre  + '" data-toggle="tab">' + genre + '</a></li>';
 				tabhtmldata += '<div class="tab-pane active" id="films-genre' + trimgenre  + '"></div>';
 			}
                         else {
@@ -235,34 +228,21 @@ $.ajax({
                 }
                 $('#nav-genre').html(navhtmldata);
 		$('#tab-content-genre').html(tabhtmldata);
-                //alert(data);
+		genreselected = $('#nav-genre .active').text();
+        	updateGenreType(genreselected, true);
         }
 });
+}
 
 };
 
 $('#films-genre-tab').on('click', function (e) {
 	updateGenre();	
-	updateGenreType('Action');
-});
-
-
-$('#navfilms-genreAction').on('click', function (e) {
- alert('click genre action 1');
-});
-
-$('#films-genreAction').on('click', function (e) {
- alert('click genre action 2');
-});
-
-$('#films-genreaction').on('click', function (e) {
- alert('click genre action 3');
 });
 
 });
 
 </script>
-<div id="dynscript"></div>
 
 {% endblock %}
 
