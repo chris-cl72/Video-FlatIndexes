@@ -10,88 +10,64 @@
   {{ parent() }}
 {% endblock %}
 {% block content %}    
+<style>
+.bg {
+  background: url('/images/bg2.jpg') no-repeat center center;
+  position: fixed;
+  width: 100%;
+  height: 300px; /*same height as jumbotron */
+  top:0;
+  left:0;
+  z-index: -1;
+}
+
+.jumbotron {
+  height: 300px;
+  color: white;
+  text-shadow: #444 0 1px 1px;
+  background:transparent;
+}
+</style>
+<div class="bg"></div>
 	<!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
 	<div class="row">
-		<div id="bienvenue" class="col-md-6"></div> 
-		<div class="col-md-6">
-		</div>
+		<div id="bienvenue"></div>
 	</div>
 	<div class="row">
-                <div id="accueil" class="col-md-7"></div>
-		<div class="col-md-5">
-                        <br/>
-                        <div class="navbar-collapse collapse">
-                        <form class="navbar-form navbar-left" role="form" method=post action="/Videos/search">
-                        <div class="form-group">
-                        <input type="text" name="search" placeholder="Entrer des mots clés" class="form-control">
-                        </div>
-                        <!-- <button type="submit" class="btn btn-primary">Rechercher une vidéo</button> -->
-			<div class="btn-group">
-  <button class="btn btn-primary">Rechercher une Vidéo</button>
-  <button id="search_option" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span> </button>
-  <ul class="dropdown-menu">
-    <li><a href="#"> Sur le Web</a></li>
-    <li><a href="#"> En local</a></li>
-  </ul>
-</div>
-                        </form>
-                        </div>
-                </div>
-	</div>	
-        <!-- <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p> -->
+		<div id="accueil"></div>
+    	</div>
       </div>
     </div>
+
 <div class="container">
 
      <!--  <div class="page-header">
         <h1>Chris Videos</h1>
         <p class="lead">Accèder rapidement à toutes vos vidéos.</p>
-      </div> -->
+</div> -->
 
-{% if searchResult != null %}
-{% if searchResult.movies|length > 0 %}
-<h2>Films</h2>
-      <div class="row">
-	 {% for film in searchResult.movies %}
+<div class="container">
+  <div class="row">
+    <h2>Page Content</h2>
+    Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis 
+    dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. 
+    Aliquam in felis sit amet augue.
+  </div>
+  <hr>
+</div>
+<script>
+var jumboHeight = $('.jumbotron').outerHeight();
+function parallax(){
+    var scrolled = $(window).scrollTop();
+    $('.bg').css('height', (jumboHeight-scrolled) + 'px');
+}
 
-        <div class="col-md-3">
-		<p><img src="{{ film.imageWebpath }}" class="img-thumbnail" alt="image absente" /><br/><a href="{{ film.href }}" title="Genre: {{ film.genre }}&#10;Pays: {{ film.nationality }}">{{ film.title }} 
-		{% if film.productionYear != '' %}
-			({{ film.productionYear }})
-		{% endif %}
-		</a>
-		</p>
-        </div>
-	{% endfor %}
-
-      </div>
-<hr>
-{% endif %}
-
-{% if searchResult.tvseries|length > 0 %}
-
-<h2>Series</h2>
-      <div class="row">
-	{% for film in searchResult.tvseries %}
-
-        <div class="col-md-3">
-                <p><img src="{{ film.imageWebpath }}" class="img-thumbnail" alt="image absente"/><br/>{{ film.title }} 
-		{% if film.productionYear != '' %}
-                        ({{ film.productionYear }})
-                {% endif %}
-		</p>
-        </div>
-	{% endfor %}
-
-      </div>
-<hr>
-{% endif %}
-{% endif %}
-
-<br/>
-<br/>
+$(window).scroll(function(e){
+    parallax();
+});
+</script>
 {% endblock %}
 
 {% block bottom %}
