@@ -21,6 +21,33 @@ var myObj = null;
   return myObj;
 };
 
+var Downloads = function(conf) {
+	this.path = conf.path;
+	var list = new Array();
+	var files = Finder.from(this.path.toString()).findFiles('*.avi'); // $ ne semble pas supporté
+        for (var i = 0, len = files.length; i < len; i++) {
+		var file = files[i];
+		var patt = new RegExp(/.avi$/gm);
+		if( patt.test(file) ) {
+			file = file.replace(this.path + "/","");
+			file = file.replace(this.path,"");
+                	list[list.length] = file;
+		}
+        }
+	files = Finder.from(this.path.toString()).findFiles('*.mkv');
+        for (var i = 0, len = files.length; i < len; i++) {
+		var file = files[i];
+                var patt = new RegExp(/.mkv$/gm);
+                if( patt.test(file) ) {
+                        file = file.replace(this.path + "/","");
+                        file = file.replace(this.path,"");
+                        list[list.length] = file;
+                }
+        }
+	
+
+	this.list =list;
+};
 
 var Videos = function(staticdir,conf) {
 	//var videos = readConf(path.join(__dirname, 'videos.json'));
@@ -32,14 +59,22 @@ var Videos = function(staticdir,conf) {
 	var list = new Array();
         var files = Finder.from(this.path.toString()).findFiles('*.avi');
         for (var i = 0, len = files.length; i < len; i++) {
-                var film = new Film(files[i], this.path, this.urlpath);
-		list[list.length] = film;
+		var file = files[i];
+                var patt = new RegExp(/.avi$/gm);
+                if( patt.test(file) ) {
+                	var film = new Film(file, this.path, this.urlpath);
+			list[list.length] = film;
+		}
         }
 	files = Finder.from(this.path.toString()).findFiles('*.mkv');
 	for (var i = 0, len = files.length; i < len; i++) {
-		var urlfilename = files[i].replace(this.path, this.urlpath);
-                var film = new Film(files[i], this.path, this.urlpath);
-		list[list.length] = film;
+		var file = files[i];
+                var patt = new RegExp(/.mkv$/gm);
+                if( patt.test(file) ) {
+			//var urlfilename = files[i].replace(this.path, this.urlpath);
+                	var film = new Film(file, this.path, this.urlpath);
+			list[list.length] = film;
+		}
         }
 
 	this.list =list;
@@ -132,5 +167,6 @@ var lines = fs.readFileSync(descFile).toString().split('\n'); //.forEach(
 };
 
 module.exports.films = function(staticdir) { return new Videos(staticdir,readConf(path.join(__dirname, 'videos.json')).films) };
+module.exports.downloads = function() { return new Downloads(readConf(path.join(__dirname, 'videos.json')).downloads) };
 //module.exports.files = new Videos(readConf(path.join(__dirname, 'videos.json')).files);
 //module.exports.series = new Videos(readConf(path.join(__dirname, 'videos.json')).series);

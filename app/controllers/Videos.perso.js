@@ -6,6 +6,7 @@ for (var i = 0, len = list.length; i < len; i++) {
         console.log(list[i].title);
 */
 	var LocalVideos = callDataModel('localVideos.js');
+	var LocalDownloads = callDataModel('localDownloads.js');
 	//console.log(localVideos.path);
 	var userAuth = getSessionData( app, req, 'userAuth' );
 
@@ -31,6 +32,16 @@ for (var i = 0, len = list.length; i < len; i++) {
 		var localVideos = getSessionData(app,req,'localVideos');
 		var list = localVideos.getListGenres();		
 		res.json(list);		
+	}
+	else if( req.param('type') === 'listdownloads'  && userAuth.is_granted_role('ROLE_ADMIN') ) {
+		var localDownloads = getSessionData(app,req,'localDownloads');
+		if( localDownloads === null || typeof localDownloads === 'undefined' )
+		{
+			localDownloads = new LocalDownloads();
+		}
+                //var list = localDownloads.getAll();
+		//var path = localDownloads.path;
+		res.json(localDownloads);
 	}
 	else
 		res.redirect('/Videos');

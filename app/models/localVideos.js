@@ -41,7 +41,7 @@ this.getLastFilms = function(number) {
 	var filmsByDate = {};
 	var arrayDate = [];
 	for (var i = 0, len = this.films.list.length; i < len; i++) {
-		arrayDate[i] = new Date(fs.statSync(this.films.list[i].file).mtime).toISOString();
+		arrayDate[i] = new Date(fs.statSync(this.films.list[i].file).mtime).toISOString() + "-" + this.films.list[i].file;
 		filmsByDate[arrayDate[i]] = this.films.list[i];
 		//console.log(new Date(fs.statSync(films.list[i].file).mtime).toISOString().sort());
 	}
