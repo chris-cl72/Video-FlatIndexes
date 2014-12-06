@@ -26,14 +26,40 @@ function removeDuplicates(target_array) {
 }
 
 this.getListGenres = function() {
-	var listGenre = [];
+	var listGenres = [];
 	for (var i = 0, len = this.films.list.length; i < len; i++) {
 		var genre = 'unclassed';
 		if( typeof this.films.list[i].genre !== 'undefined' && this.films.list[i].genre !== null )
 			genre = this.films.list[i].genre;
-		listGenre[listGenre.length] = genre;
+		listGenres[listGenres.length] = genre;
 	}
-	return removeDuplicates(listGenre);
+	return removeDuplicates(listGenres);
+}
+
+this.getListYears = function() {
+        var listYears = [];
+        for (var i = 0, len = this.films.list.length; i < len; i++) {
+                var year = '';
+                if( typeof this.films.list[i].year !== 'undefined' && this.films.list[i].year !== null && this.films.list[i].year !== ''  )
+		{
+                        year = this.films.list[i].year;
+                	listYears[listYears.length] = year;
+		}
+        }
+        return removeDuplicates(listYears).sort().reverse();
+}
+
+this.getListCountrys = function() {
+        var listCountrys = [];
+        for (var i = 0, len = this.films.list.length; i < len; i++) {
+                var country = '';
+                if( typeof this.films.list[i].country !== 'undefined' && this.films.list[i].country !== null && this.films.list[i].country !== ''  )
+		{
+                        country = this.films.list[i].country;
+                	listCountrys[listCountrys.length] = country;
+		}
+        }
+        return removeDuplicates(listCountrys);
 }
 	
 this.getLastFilms = function(number) {
@@ -67,6 +93,34 @@ this.getLastFilmsbyGenre = function(genre) {
                 	lastFilmsbyGenre[lastFilmsbyGenre.length] = lastFilms[i];
         }
         return lastFilmsbyGenre;
+}
+
+this.getLastFilmsbyYear = function(year) {
+        var lastFilmsbyYear = [];
+        var lastFilms = this.getLastFilms(-1);
+
+        for (var i = 0, len = lastFilms.length; i < len; i++) {
+                var myyear = '';
+                if( typeof lastFilms[i].year !== 'undefined' && lastFilms[i].year !== null && lastFilms[i].year !== '' )
+                        myyear = lastFilms[i].year;
+                if( myyear.toLowerCase() === year.toLowerCase() )
+                        lastFilmsbyYear[lastFilmsbyYear.length] = lastFilms[i];
+        }
+        return lastFilmsbyYear;
+}
+
+this.getLastFilmsbyCountry = function(country) {
+        var lastFilmsbyCountry = [];
+        var lastFilms = this.getLastFilms(-1);
+
+        for (var i = 0, len = lastFilms.length; i < len; i++) {
+                var mycountry = '';
+                if( typeof lastFilms[i].country !== 'undefined' && lastFilms[i].country !== null && lastFilms[i].country !== '' )
+                        mycountry = lastFilms[i].country;
+                if( mycountry.toLowerCase() === country.toLowerCase() )
+                        lastFilmsbyCountry[lastFilmsbyCountry.length] = lastFilms[i];
+        }
+        return lastFilmsbyCountry;
 }
 
 };

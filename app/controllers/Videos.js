@@ -1,5 +1,5 @@
 module.exports = function(app, req, res) {
-	callDataModel(app, req, 'searchOnline.js',function(data)
+	callDataModel(app, req, 'searchOnline.js.save',function(data)
 	{
        		var userAuth = getSessionData( app, req, 'userAuth' );
 		res.render('Videos.twig', { userAuth : userAuth, searchResult : data });

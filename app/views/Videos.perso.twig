@@ -42,6 +42,7 @@ width: 100%;
         <ul class="dropdown-menu">
           <li><a href="#films-genre" id="films-genre-tab" data-toggle="tab">genre</a></li>
           <li><a href="#films-year" id="films-year-tab"  data-toggle="tab">date</a></li>
+	  <li><a href="#films-country" id="films-country-tab"  data-toggle="tab">pays</a></li>
         </ul>
       </li>
 	<li><a href="#series" id="series-tab" data-toggle="tab">Series </a></li>
@@ -85,23 +86,49 @@ width: 100%;
 	</div>
       </div>
       <div class="tab-pane fade" id="films-genre">
-	<div ALIGN=CENTER id="titleGenre" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div> 
-	<!-- <div ALIGN=CENTER id="titleGenre" href="#" style="background-color: #428BCA;"><H1>Chargement de la liste des films ...</H1></div> -->
+	<div ALIGN=CENTER id="titlegenre" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div> 
 	 <div class="row"> 
 		<div class="tabbable nav-tabs" style="border-bottom: 0;">
-			<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" > <!-- class="col-xs-2 col-sm-2 col-md-3 col-lg-3" style="min-width: 150px"> -->
+			<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" > 
 			<ul class="nav nav-pills nav-stacked" id="nav-genre">
 			</ul>
 		</div>
-		<div class="col-xs-8 col-sm-9 col-md-9 col-lg-9"> <!-- class="col-xs-5 col-sm-7 col-md-9 col-lg-9"> -->
+		<div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
 			<div class="tab-content" id="tab-content-genre"> 
 			</div>	
 		</div>
-			</div>
+	 </div>
 	</div> 
       </div>
       <div class="tab-pane fade" id="films-year">
-	<p>Liste des films triés par date, en construction ...</p>
+        <div ALIGN=CENTER id="titleyear" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div>
+         <div class="row">
+                <div class="tabbable nav-tabs" style="border-bottom: 0;">
+                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" >
+                        <ul class="nav nav-pills nav-stacked" id="nav-year">
+                        </ul>
+                </div>
+                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+                        <div class="tab-content" id="tab-content-year">
+                        </div>
+                </div>
+         </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="films-country">
+        <div ALIGN=CENTER id="titlecountry" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div>
+         <div class="row">
+                <div class="tabbable nav-tabs" style="border-bottom: 0;">
+                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" >
+                        <ul class="nav nav-pills nav-stacked" id="nav-country">
+                        </ul>
+                </div>
+                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+                        <div class="tab-content" id="tab-content-country">
+                        </div>
+                </div>
+         </div>
+        </div>
       </div>
 
       <div class="tab-pane fade" id="series">
@@ -168,18 +195,17 @@ function updateNews( selectdiv )
 	$('#newSynopsis').html( '<a href="' + textFile  + '">' + textTitle + '</a>&nbsp;' + textCountry + '<br/><br/>' + textGenre + textYear + textRuntime + textDirector + textActors + textSynopsis );
 };
 
-function updateGenreType(type)
+function updateOrderType(orderType, orderTypeValue)
 {
-var genre = type;
-var trimgenre = type.replace(/ /g, '');
-var genreselected = $('#nav-genre .active').text();
+var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '');
+var orderTypeValueSelected = $('#nav-' + orderType + ' .active').text();
 
-if( $('#films-genre' + trimgenre).html() === '' ) { //(genreselected !== genre  || force) ) {
-$('#titleGenre').html('<h1>Chargement de la liste des films ...</h1>');
+if( $('#films-' + orderType + trimOrderTypeValue).html() === '' ) { //(genreselected !== genre  || force) ) {
+$('#title' + orderType).html('<h1>Chargement de la liste des films ...</h1>');
 $.ajax({
     type: "GET",
     url: "/Videos/perso",
-    data: { type: 'films', order: 'genre', value: type },
+    data: { type: 'films', order: orderType, value: orderTypeValue },
     dataType: 'json',
     xhrFields: { withCredentials: true },
     crossDomain: true,
@@ -214,16 +240,16 @@ $.ajax({
                 }
 
 		//tabhtmldatahtml += '</TABLE></div>';
-                $('#films-genre' + trimgenre).html(tabhtmldatahtml);
-		$('#titleGenre').html('<H1>Envie de regarder des films dans ' + type + ' ?</H1>');
-		window.location = $('#titleGenre').attr('href');
+                $('#films-' + orderType + trimOrderTypeValue).html(tabhtmldatahtml);
+		$('#title' + orderType).html('<H1>Envie de regarder des films dans ' + orderTypeValue + ' ?</H1>');
+		window.location = $('#title' + orderType).attr('href');
         }
 });
 }
 else
 	{
-		$('#titleGenre').html('<H1>Envie de regarder des films dans ' + type + ' ?</H1>');
-		window.location = $('#titleGenre').attr('href');
+		$('#title' + orderType).html('<H1>Envie de regarder des films dans ' + orderTypeValue + ' ?</H1>');
+		window.location = $('#title' + orderType).attr('href');
 	}
 };
 
@@ -249,15 +275,15 @@ $('#fixedcarousel').bind('slide.bs.carousel', function (e) {
 	//$('#newSynopsis').html('<h2>Synopsis</h2>' + newDiv.attr('synopsis'));
 });
 
-function updateGenre()
+function updateOrder(orderType)
 {
-var genreselected = $('#nav-genre .active').text();
+var orderTypeValueSelected = $('#nav-' + orderType + ' .active').text();
 
-if( genreselected === '') {
+if( orderTypeValueSelected === '') {
 $.ajax({
     type: "GET",
     url: "/Videos/perso",
-    data: { type: 'listgenres' },
+    data: { type: 'list' + orderType + 's' },
     dataType: 'json',
     xhrFields: { withCredentials: true },
     crossDomain: true,
@@ -266,27 +292,27 @@ $.ajax({
                 var navhtmldata = '';
 		var tabhtmldata = '';
                 for (var i = 0, len = data.length; i < len; i++) {
-                        var genre = data[i];
-                        var trimgenre = data[i].replace(/ /g, '');
+                        var orderTypeValue = data[i];
+                        var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '');
                         if( i === 0 ) {
-                                navhtmldata += '<li class="active" id="films-genre-' + trimgenre  +'" onclick="updateGenreType(\'' + genre  + '\')"><a href="#films-genre' + trimgenre  + '" data-toggle="tab">' + genre + '</a></li>';
-				tabhtmldata += '<div class="tab-pane active" id="films-genre' + trimgenre  + '"></div>';
+                                navhtmldata += '<li class="active" id="films-' + orderType + '-' + trimOrderTypeValue  +'" onclick="updateOrderType(\'' + orderType  + '\', \'' + orderTypeValue  + '\')"><a href="#films-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
+				tabhtmldata += '<div class="tab-pane active" id="films-' + orderType + trimOrderTypeValue  + '"></div>';
 			}
                         else {
-                                navhtmldata += '<li id="films-genre-' + trimgenre  + '" onclick="updateGenreType(\'' + genre  + '\')"><a href="#films-genre' + trimgenre  + '" data-toggle="tab">' + genre + '</a></li>';
-				tabhtmldata += '<div class="tab-pane" id="films-genre' + trimgenre  + '"></div>';
+                                navhtmldata += '<li id="films-' + orderType  + '-' + trimOrderTypeValue  + '" onclick="updateOrderType(\'' + orderType  + '\', \'' + orderTypeValue  + '\')"><a href="#films-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
+				tabhtmldata += '<div class="tab-pane" id="films-' + orderType + trimOrderTypeValue  + '"></div>';
 			}
-			//$('#dynscript').replaceWith('<script>$(\'#films-genreAction\').on(\'click\', function (e) { alert(\'click genre Action\'); });');
 
                 }
-                $('#nav-genre').html(navhtmldata);
-		$('#tab-content-genre').html(tabhtmldata);
-		genreselected = $('#nav-genre .active').text();
-        	updateGenreType(genreselected);
+                $('#nav-' + orderType).html(navhtmldata);
+		$('#tab-content-' + orderType).html(tabhtmldata);
+		orderTypeValueSelected = $('#nav-' + orderType + ' .active').text();
+        	updateOrderType(orderType, orderTypeValueSelected);
         }
 });
 }
 };
+
 
 function updateIndexes()
 {
@@ -311,8 +337,17 @@ $.ajax({
 };
 
 $('#films-genre-tab').on('click', function (e) {
-	updateGenre();	
+	updateOrder('genre');	
 });
+
+$('#films-year-tab').on('click', function (e) {
+        updateOrder('year');
+});
+
+$('#films-country-tab').on('click', function (e) {
+        updateOrder('country');
+});
+
 
 $('#indexes-tab').on('click', function (e) {
         updateIndexes();

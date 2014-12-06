@@ -1,6 +1,8 @@
 var allocine = require('allocine-api');
 var async = require('async');
 
+//var SearchOnline = function(staticdir) {
+
 module.exports = function(app, req, entityResult) {
 	
 	var searchResult = new searchResult();

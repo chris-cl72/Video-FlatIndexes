@@ -25,12 +25,16 @@ module.exports = function(app, express, passport) {
 	log(app, req, res);
     });
 
-    app.get('/Videos/perso', function(req, res) {
-	if( callController('userauth.js').is_granted(app, req, res) )
-		callController('Videos.perso.js')(app, req, res);
+    app.use(function(req, res, next) {
+	if( req.path === '/Videos/perso' ) {
+		if( callController('userauth.js').is_granted(app, req, res) )
+			callController('Videos.perso.js')(app, req, res);
+		else
+			res.redirect('/Videos');
+        	log(app, req, res);
+	}
 	else
-		res.redirect('/Videos');
-        log(app, req, res);
+		next();
     });
 
     app.use(function (req, res, next){ res.statusCode = 404; log(app, req, res)});
