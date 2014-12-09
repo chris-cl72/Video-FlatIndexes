@@ -12,19 +12,23 @@ module.exports.logout = function(app, req, res) {
         res.redirect('/Videos');
 };
 
-module.exports.is_granted = function(app, req, res) {
+module.exports.is_granted = function(app, req, path, res) {
 	var userAuth = getSessionData(app, req, 'userAuth');
-        if( userAuth !=  null && userAuth.is_granted_route(req.path) )
+	//req.session.index = (req.session.index || 0) + 1;
+	//console.log(req.session.index);
+        if( userAuth !==  null && userAuth.is_granted_route(path) ) {
 		return true;
-	else
-		return false
+	}
+	else {
+		return false;
+	}
 };
 
 function getSessionData( app, req, objectName )
 {
         var object = null;
-        if(  typeof app.get(req.sessionID + '.data') !== 'undefined' && app.get(req.sessionID + '.data') != null && app.get(req.sessionID + '.data').hasOwnProperty(objectName))
-                object = app.get(req.sessionID + '.data')[objectName];
+        if(  typeof app.get(req.session.sessionID + '.data') !== 'undefined' && app.get(req.session.sessionID + '.data') !== null && app.get(req.session.sessionID + '.data').hasOwnProperty(objectName))
+                object = app.get(req.session.sessionID + '.data')[objectName];
 
         return object;
 };
@@ -32,25 +36,27 @@ function getSessionData( app, req, objectName )
 function setSessionData( app, req, objectName, object )
 {
         var arrayData = {};
-        if( typeof app.get(req.sessionID + '.data') !== 'undefined'  && app.get(req.sessionID + '.data') !== null)
-                arrayData = app.get(req.sessionID + '.data');
+        if( typeof app.get(req.session.sessionID + '.data') !== 'undefined'  && app.get(req.session.sessionID + '.data') !== null)
+                arrayData = app.get(req.session.sessionID + '.data');
+	else
+		req.session.sessionID = req.sessionID;
         arrayData[objectName] = object;
-        app.set(req.sessionID + '.data', arrayData);
+        app.set(req.session.sessionID + '.data', arrayData);
 };
 
 function deleteSessionData( app, req, objectName )
 {
         var arrayData = {};
-        if(  typeof app.get(req.sessionID + '.data') !== 'undefined' && app.get(req.sessionID + '.data') != null && app.get(req.sessionID + '.data').hasOwnProperty(objectName))
+        if(  typeof app.get(req.session.sessionID + '.data') !== 'undefined' && app.get(req.session.sessionID + '.data') != null && app.get(req.session.sessionID + '.data').hasOwnProperty(objectName))
         {
-                arrayData = app.get(req.sessionID + '.data');
+                arrayData = app.get(req.session.sessionID + '.data');
                 delete arrayData[objectName];
         }
 };
 
 function deleteSession(app, req)
 {
-        app.set(req.sessionID + '.data', null);
+        app.set(req.session.sessionID + '.data', null);
         req.session.destroy(function(err) {
         // cannot access session here
         });

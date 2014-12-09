@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = function(app, req, res) {
 /*
 var  localVideos = new(LocalVideos);
@@ -8,33 +10,34 @@ for (var i = 0, len = list.length; i < len; i++) {
 	var LocalVideos = callDataModel('localVideos.js');
 	var LocalDownloads = callDataModel('localDownloads.js');
 	var OnlineVideos = callDataModel('onlineVideos.js');
-	//console.log(localVideos.path);
+
 	var userAuth = getSessionData( app, req, 'userAuth' );
+	//console.log('Videos.perso controller');
 	if( req.method === 'GET' ) {
 	if( req.param('type') === 'films' ) {
 		if( req.param('order') === 'news' ) {
 			deleteSessionData(app,req,'localVideos');	
-			localVideos = new LocalVideos(app.get('staticdir'));
+			localVideos = new LocalVideos(path.join(__dirname, '../../private/')); //app.get('staticdir'));
 			setSessionData(app,req,'localVideos', localVideos);
 			var list = localVideos.getLastFilms(15);
-        		res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list });
+        		res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list, id : req.session.sessionID });
 		}
 		else if( req.param('order') === 'genre' ) {
 			var localVideos = getSessionData(app,req,'localVideos');
 			var list = localVideos.getLastFilmsbyGenre(req.param('value'));
-			res.json(list);
+			res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
 			//console.log(list[0]);
 		}
 		else if( req.param('order') === 'year' ) {
                         var localVideos = getSessionData(app,req,'localVideos');
                         var list = localVideos.getLastFilmsbyYear(req.param('value'));
-                        res.json(list);
+                        res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
                         //console.log(list[0]);
                 }
 		else if( req.param('order') === 'country' ) {
                         var localVideos = getSessionData(app,req,'localVideos');
                         var list = localVideos.getLastFilmsbyCountry(req.param('value'));
-                        res.json(list);
+                        res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
                         //console.log(list[0]);
                 }
 		else
@@ -93,8 +96,8 @@ function callDataModel(name) {
 function getSessionData( app, req, objectName )
 {
         var object = null;
-        if(  typeof app.get(req.sessionID + '.data') !== 'undefined' && app.get(req.sessionID + '.data') != null && app.get(req.sessionID + '.data').hasOwnProperty(objectName))
-                object = app.get(req.sessionID + '.data')[objectName];
+        if(  typeof app.get(req.session.sessionID + '.data') !== 'undefined' && app.get(req.session.sessionID + '.data') !== null && app.get(req.session.sessionID + '.data').hasOwnProperty(objectName))
+                object = app.get(req.session.sessionID + '.data')[objectName];
 
         return object;
 };
@@ -102,18 +105,20 @@ function getSessionData( app, req, objectName )
 function setSessionData( app, req, objectName, object )
 {
         var arrayData = {};
-        if( typeof app.get(req.sessionID + '.data') !== 'undefined'  && app.get(req.sessionID + '.data') !== null)
-                arrayData = app.get(req.sessionID + '.data');
+        if( typeof app.get(req.session.sessionID + '.data') !== 'undefined'  && app.get(req.session.sessionID + '.data') !== null)
+                arrayData = app.get(req.session.sessionID + '.data');
+        else
+                req.session.sessionID = req.sessionID;
         arrayData[objectName] = object;
-        app.set(req.sessionID + '.data', arrayData);
+        app.set(req.session.sessionID + '.data', arrayData);
 };
 
 function deleteSessionData( app, req, objectName )
 {
         var arrayData = {};
-        if(  typeof app.get(req.sessionID + '.data') !== 'undefined' && app.get(req.sessionID + '.data') != null && app.get(req.sessionID + '.data').hasOwnProperty(objectName))
+        if(  typeof app.get(req.session.sessionID + '.data') !== 'undefined' && app.get(req.session.sessionID + '.data') != null && app.get(req.session.sessionID + '.data').hasOwnProperty(objectName))
         {
-                arrayData = app.get(req.sessionID + '.data');
+                arrayData = app.get(req.session.sessionID + '.data');
                 delete arrayData[objectName];
         }
 };

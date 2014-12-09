@@ -277,8 +277,8 @@ function searchMovieDetails(localResult, mycallback) {
 
 module.exports = OnlineVideos;
 
-var        onlineVideos = new OnlineVideos();
+/*var        onlineVideos = new OnlineVideos();
                 onlineVideos.searchAllocine('black', function(list) {
                         console.log(list.movies);
-                });
+                });*/
 

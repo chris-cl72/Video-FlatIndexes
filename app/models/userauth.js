@@ -24,11 +24,11 @@ this.is_granted_user = function(username, passwd) {
 // class methods
 //UserAuth.prototype.is_granted_route = function(path) {
 this.is_granted_route = function(path) {
-	console.log('is_granted_route: ' + path);
         var isAuthorized = false;
 	if( this.user !== null ) {
         	var routes = extractRoutes(this.user, this.roles);
-        	for( var i = 0, len = routes.length ; i < len; i++) {
+		var len = routes.length;
+        	for( var i = 0; i < len; i++) {
                 	var reg=new RegExp(routes[i]);
                 	if( reg.test(path) ) {
                         	isAuthorized = true;
@@ -36,6 +36,7 @@ this.is_granted_route = function(path) {
                		}
         	}
 	}
+	//console.log('is_granted_route: ' + path + ' : ' + isAuthorized);
         return isAuthorized;
 };
 
@@ -43,8 +44,9 @@ this.is_granted_route = function(path) {
 this.is_granted_role = function(role){
 	var isAuthorized = false;
 	if( this.user !== null ) {
-		for( var i = 0, len = this.user.inroles.length ; i < len; i++) {		
-			console.log(this.user.inroles[i]);
+		var len = this.user.inroles.length;
+		for( var i = 0; i < len; i++) {		
+			//console.log(this.user.inroles[i]);
 			if( this.user.inroles[i] === role ) {
 				isAuthorized = true;
 				console.log('User id ' + this.user.id + ' has granted role ' + role + '.');
@@ -80,7 +82,8 @@ function sha1Auth(username, passwd, users)
 
 function userFindOne(username, users)
 {
-	for (var i = 0, len = users.length; i < len; i++) {
+	var len = users.length;
+	for (var i = 0; i < len; i++) {
 		var user = users[i];
 		if (user.username === username) {
 			return user;
@@ -134,17 +137,20 @@ function extractRoutes(user, roles)
 
 	if( user !== null )
 	{
-	for( var i = 0, len = user.inroles.length; i < len; i++) {
+	var len = user.inroles.length;
+	for( var i = 0; i < len; i++) {
 		var rolename = user.inroles[i];
 		var localroutes = null;
-		for( var j = 0, len = roles.length; j < len; j++) {
+		var len1 = roles.length;
+		for( var j = 0; j < len1; j++) {
 			if( roles[j].name === rolename ) {
 				localroutes = roles[j].routes
 				break;
 			}
 		}
 		if( localroutes !== null ) {
-			for( var j = 0, len = localroutes.length; j < len; j++) {
+			len1 = localroutes.length;
+			for( var j = 0; j < len1; j++) {
 				routes[pos] = localroutes[j];
 				pos++;		
 			}
