@@ -48,9 +48,6 @@ app.use('/Videos/perso/files',express.static(path.join(__dirname, 'private/files
 //app.set('staticdir',path.join(__dirname, 'public'));
 app.set('privatedir',path.join(__dirname, 'private'));
 
-//app.set(req.sessionID + '.data', []);
-
 app.listen(app.get('port'), function(){
   console.log(("Express server listening on port " + app.get('port')))
 });
-

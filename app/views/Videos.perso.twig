@@ -143,7 +143,7 @@ width: 100%;
 		<div class="row">
 			<div class="col-md-12" >
 				<div id="tab-content-indexes">
-				<p>Indexation ...</p>
+				<p>Recherche de fichier(s) Vidéo(s) ...</p>
 				</div>
 			</div>
 		</div>
@@ -300,7 +300,7 @@ $.ajax({
 
                 var navhtmldata = '';
 		var tabhtmldata = '';
-                for (var i = 0, len = data.length; i < len; i++) {
+                for (var i = 0; i < data.length; i++) {
                         var orderTypeValue = data[i];
                         var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '');
                         if( i === 0 ) {
@@ -322,6 +322,51 @@ $.ajax({
 }
 };
 
+function suggestVideoFilename(orifinalFilename)
+{
+	var str = orifinalFilename;
+	var filename = str.replace(/.*\//g,"");
+    var basename = filename.replace(/\.[^.]*$/g,"");
+    var extension = filename.replace(/.*\./g,"");
+var shortbasename = basename.replace(/_[a-zA-Z0-9]*/g,"");
+                            var extend = shortbasename.replace(/.*_/g,"");
+                            if( extend !== "" && extend !== shortbasename )
+                                extend = "_" + extend;
+                            else
+                                extend = "";
+var txt = shortbasename.replace(/\[[^\]]*\]/g,"");
+for (var i = 0; i <= 99; i++) {
+    var iString = i.toString();
+    if( iString.length == 1 )
+	iString = "0" + iString;
+    var reg=new RegExp("\\.20" + iString + "\\.", "g");
+    txt = txt.replace(reg,".");
+    reg=new RegExp("\\.20" + iString + "$", "g");
+    txt = txt.replace(reg,".");
+}
+
+var keywords = ["WEBRip","dvd", "brrip", "bdrip", "xvid", "truefrench","stv","x264"];
+for (var i = 0; i < keywords.length; i++)
+{
+	var reg=new RegExp("\\." + keywords[i] + "[^.]*\\.", "gi");
+	txt = txt.replace(reg,".");
+	reg=new RegExp("\\." + keywords[i] + "[^.]*$", "gi");
+        txt = txt.replace(reg,"."); 
+}
+
+var keywordsSolo = ["french"];
+for (var i = 0; i < keywordsSolo.length; i++)
+{
+        var reg=new RegExp("\\." + keywordsSolo[i] + "\\.", "gi");
+        txt = txt.replace(reg,".");
+        reg=new RegExp("\\." + keywordsSolo[i] + "$", "gi");
+        txt = txt.replace(reg,".");
+}
+
+                        var newfilename = txt.trim() + extend.trim() + "." + extension.trim();
+    newfilename = newfilename.replace(/\.\./g,".");
+    return newfilename;
+}
 
 function updateIndexes()
 {
@@ -335,11 +380,12 @@ $.ajax({
         success: function (mydata) {
 		var data = mydata.list;
 		var path = mydata.path;
-                var tabhtmldata = '<h2>Vidéos du dossier ' + path + '</h2><br/><!-- <form name="formindexfiles" id="index_files" action="/Videos/web/app.php/indexation/action" method="post"> -->';
+                var tabhtmldata = '<h2>Vidéos du dossier ' + path + '</h2><br/><form class="form form-horizontal"><div class="form-group"><!-- <form name="formindexfiles" id="index_files" action="/Videos/web/app.php/indexation/action" method="post"> -->';
                 for (var i = 0, len = data.length; i < len; i++) {
-			tabhtmldata += '<div class="row"><div class="col-md-5"><h5 style="display:inline;">' + data[i] + '</h5></div><div class="col-md-7"> à renommer en <input name="' + data[i] + '" placeholder="' + data[i] + '"><br/></div></div><hr/>';
+			var newfilename = suggestVideoFilename(data[i]); 
+			tabhtmldata += '<div class="row"><div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><p class="text-justify"><h5 style="display:inline;">' + data[i] + '</h5></p></div><div class="col-xs-3 col-sm-2 col-md-2 col-lg-2"><p class="text-justify"> à renommer en</p></div><div class="col-xs-3 col-sm-4 col-md-4 col-lg-4"><input class="form-control" name="' + data[i] + '" placeholder="nouveau nom de fichier" value="' + newfilename + '"></div></div><hr/>';
 		}
-		tabhtmldata += '<br/><!-- <input name="renommer" value="Renommer les fichiers" type="submit"><input name="indexer" value="Rechercher sur Allociné" type="submit"></form> --><div class="row"><div class="col-md-5"><button type="button" id="btnIndexRename" class="btn btn-primary btn-xs">Renommer les fichiers</button></div><div class="col-md-7"><button type="button" id="btnIndexSearch" class="btn btn-primary btn-xs">Rechercher sur Allociné</button></div></div><br/><br/>';
+		tabhtmldata += '<br/><!-- <input name="renommer" value="Renommer les fichiers" type="submit"><input name="indexer" value="Rechercher sur Allociné" type="submit"></form> --><div class="row"><div class="col-md-6"><button type="button" id="btnIndexRename" class="btn btn-primary btn-xs">Renommer les fichiers</button></div><div class="col-md-6"><button type="button" id="btnIndexSearch" class="btn btn-primary btn-xs">Rechercher sur Allociné</button></div></div><br/><br/></div></form>';
 		$('#tab-content-indexes').html(tabhtmldata);
 	}
 	});	
