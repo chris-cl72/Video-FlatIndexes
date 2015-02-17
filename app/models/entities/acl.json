@@ -16,7 +16,23 @@
 		"email":"test@example.com",
 		"inroles":["ROLE_GUEST"],
 		"config":{"mode":"clear"}
-		}
+		},
+		{
+                "id":3,
+                "username":"nana",
+                "password":"cassandra72",
+                "email":"test@example.com",
+                "inroles":["ROLE_GUEST"],
+                "config":{"mode":"clear"}
+                },
+                {
+                "id":4,
+                "username":"lucas",
+                "password":"lucas72",
+                "email":"test@example.com",
+                "inroles":["ROLE_GUEST"],
+                "config":{"mode":"clear"}
+                }
 	],
 	"roles": 
 	[

@@ -335,6 +335,9 @@ var shortbasename = basename.replace(/_[a-zA-Z0-9]*/g,"");
                             else
                                 extend = "";
 var txt = shortbasename.replace(/\[[^\]]*\]/g,"");
+txt=txt.trim();
+txt = txt.replace(new RegExp(" ", "g"),".");
+
 for (var i = 0; i <= 99; i++) {
     var iString = i.toString();
     if( iString.length == 1 )
