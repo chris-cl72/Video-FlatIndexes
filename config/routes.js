@@ -28,10 +28,10 @@ module.exports = function(app, express, passport) {
 	log(app, req, res);
     });
 
-    /*app.post('/Videos/search', function(req, res) {
+    app.post('/Videos/search', function(req, res) {
         callController('Videos.js')(app, req, res);
 	log(app, req, res);
-    });*/
+    });
 
     app.post('/Videos/login', function (req, res){
 	callController('userauth.js').login(app, req, res);
