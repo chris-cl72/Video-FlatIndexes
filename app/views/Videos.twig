@@ -37,6 +37,14 @@
 	</div>
 	<div class="row">
 		<div id="accueil"></div>
+<form class="navbar-form navbar-left" role="form" method=post action="/Videos/search">
+            <div class="form-group">
+              <input type="text" name="search" placeholder="Entrer des mots clés" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Rechercher une vidéo sur le web</button>
+          </form>
+        </div>
+
     	</div>
       </div>
     </div>
@@ -47,6 +55,55 @@
         <h1>Chris Videos</h1>
         <p class="lead">Accèder rapidement à toutes vos vidéos.</p>
 </div> -->
+
+
+
+
+
+
+
+
+
+
+{% if searchResult != null %}
+{% if searchResult.movies|length > 0 %}
+<h2>Films</h2>
+      <div class="row">
+         {% for film in searchResult.movies %}
+
+        <div class="col-md-3">
+                <p><img src="{{ film.imageWebpath }}" class="img-thumbnail" alt="image absente" /><br/><a href="{{ film.href }}" title="Genre: {{ film.genre }}&#10;Pays: {{ film.nationality }}">{{ film.title }}
+                {% if film.productionYear != '' %}
+                        ({{ film.productionYear }})
+                {% endif %}
+                </a>
+                </p>
+        </div>
+        {% endfor %}
+
+      </div>
+<hr>
+{% endif %}
+
+{% if searchResult.tvseries|length > 0 %}
+
+<h2>Series</h2>
+      <div class="row">
+        {% for film in searchResult.tvseries %}
+
+        <div class="col-md-3">
+                <p><img src="{{ film.imageWebpath }}" class="img-thumbnail" alt="image absente"/><br/>{{ film.title }}
+                {% if film.productionYear != '' %}
+                        ({{ film.productionYear }})
+                {% endif %}
+                </p>
+        </div>
+        {% endfor %}
+
+      </div>
+<hr>
+{% endif %}
+{% endif %}
 
 <!--
 {% if userAuth.is_granted_role("ROLE_ADMIN") %}
