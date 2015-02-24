@@ -1,9 +1,14 @@
-module.exports = function(app, req, res) {
-	callDataModel(app, req, 'searchOnline.js.save',function(data)
-	{
-       		var userAuth = getSessionData( app, req, 'userAuth' );
-		res.render('Videos.twig', { userAuth : userAuth, searchResult : data });
-	});
+module.exports.accueil = function(app, req, res) {
+	var userAuth = getSessionData( app, req, 'userAuth' );
+        res.render('Videos.twig', { userAuth : userAuth, searchResult : null });
+};
+
+module.exports.search = function(app, req, res) {
+        callDataModel(app, req, 'searchOnline.js',function(data)
+        {
+                var userAuth = getSessionData( app, req, 'userAuth' );
+                res.render('Videos.twig', { userAuth : userAuth, searchResult : data });
+        });
 };
 
 function callDataModel(app, req, name, callBack) {

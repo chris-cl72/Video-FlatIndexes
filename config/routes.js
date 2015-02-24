@@ -19,7 +19,7 @@ module.exports = function(app, express, passport) {
     var path =__dirname + '/../app/controllers';
 
     app.get('/Videos', function(req, res) {
-        callController('Videos.js')(app, req, res);
+        callController('Videos.js').accueil(app, req, res);
 	log(app, req, res);
     });
 
@@ -29,7 +29,7 @@ module.exports = function(app, express, passport) {
     });
 
     app.post('/Videos/search', function(req, res) {
-        callController('Videos.js')(app, req, res);
+        callController('Videos.js').search(app, req, res);
 	log(app, req, res);
     });
 
