@@ -49,8 +49,7 @@ var Downloads = function(conf) {
 	this.list =list;
 };
 
-var Videos = function(staticdir,conf) {
-	//var videos = readConf(path.join(__dirname, 'videos.json'));
+var Videos = function(staticdir,conf, keywordsfilter) {
 	this.path = conf.path;
 	this.urlpath = conf.urlpath;	
 	if( fs.existsSync(path.join(staticdir,this.urlpath)) ) 
@@ -60,24 +59,45 @@ var Videos = function(staticdir,conf) {
         var files = Finder.from(this.path.toString()).findFiles('*.avi');
         for (var i = 0, len = files.length; i < len; i++) {
 		var file = files[i];
+		if( find(keywordsfilter, file) )
+                {
+
                 var patt = new RegExp(/.avi$/gm);
                 if( patt.test(file) ) {
                 	var film = new Film(file, this.path, this.urlpath);
 			list[list.length] = film;
 		}
+		}
         }
 	files = Finder.from(this.path.toString()).findFiles('*.mkv');
 	for (var i = 0, len = files.length; i < len; i++) {
 		var file = files[i];
+		if( find(keywordsfilter, file) )
+                {
+
                 var patt = new RegExp(/.mkv$/gm);
                 if( patt.test(file) ) {
 			//var urlfilename = files[i].replace(this.path, this.urlpath);
                 	var film = new Film(file, this.path, this.urlpath);
 			list[list.length] = film;
 		}
+		}
         }
 
 	this.list =list;
+};
+
+var find = function(keywords, instring) {
+	if( keywords === "" )
+		return true;
+	var keywordslist = keywords.split(" ");
+	for(i in keywordslist) {
+		var patt = new RegExp( keywordslist[i], "gi");
+                if( !patt.test(instring) ) {
+			return false;	
+		}
+	}
+	return true;
 };
 
 var Film = function(filename, filmsPath, urlfilmsPath) {
@@ -166,7 +186,7 @@ var lines = fs.readFileSync(descFile).toString().split('\n'); //.forEach(
 
 };
 
-module.exports.films = function(staticdir) { return new Videos(staticdir,readConf(path.join(__dirname, 'videos.json')).films) };
+module.exports.films = function(staticdir, keywordsfilter) { return new Videos(staticdir,readConf(path.join(__dirname, 'videos.json')).films, keywordsfilter) };
 module.exports.downloads = function() { return new Downloads(readConf(path.join(__dirname, 'videos.json')).downloads) };
 //module.exports.files = new Videos(readConf(path.join(__dirname, 'videos.json')).files);
 //module.exports.series = new Videos(readConf(path.join(__dirname, 'videos.json')).series);

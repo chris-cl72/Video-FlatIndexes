@@ -3,9 +3,9 @@
 var path = require('path');
 var fs = require('fs');
 
-var LocalVideos = function(staticdir) {
+var LocalVideos = function(staticdir, filter) {
 
-	this.films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir);
+	this.films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir, filter);
 	this.path = this.films.path;
 
 function removeDuplicates(target_array) {

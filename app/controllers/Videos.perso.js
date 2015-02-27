@@ -17,7 +17,7 @@ for (var i = 0, len = list.length; i < len; i++) {
 	if( req.param('type') === 'films' ) {
 		if( req.param('order') === 'news' ) {
 			deleteSessionData(app,req,'localVideos');	
-			localVideos = new LocalVideos(path.join(__dirname, '../../private/')); //app.get('staticdir'));
+			localVideos = new LocalVideos(path.join(__dirname, '../../private/'),""); //app.get('staticdir'));
 			setSessionData(app,req,'localVideos', localVideos);
 			var list = localVideos.getLastFilms(15);
         		res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list, id : req.session.sessionID });
