@@ -81,7 +81,7 @@ if( userid > 0 )
         $('#accueil').html('<p>Vous êtes maintenant authentifié, accèder à vos <a href="/Videos/perso?type=films&order=news">vidéos perso</a>.</p>');
 	$('#text_login').show();
 	$('#bienvenue').html('<h1>Bienvenue ' + username + '</h1>');
-	$('#search').html('<form class="navbar-form navbar-left" role="form" method=post action="/Videos/search"><div class="form-group"><input type="text" name="search" placeholder="Entrer des mots clés" class="form-control"></div><button type="submit" class="btn btn-primary">Rechercher une vidéo sur le serveur local</button></form>');
+	$('#search').html('<form class="navbar-form navbar-left" role="form" method=post action="/Videos/search"><div class="form-group"><input type="text" name="search" placeholder="Entrer des mots clés" class="form-control"><input type="hidden" name="scope" value="local"></div><button type="submit" class="btn btn-primary">Rechercher une vidéo sur le serveur local</button></form>');
 
 }
 else
@@ -90,7 +90,7 @@ else
 	$('#text_login').hide();
         $('#accueil').html('<p>Veuillez-vous authentifier pour accèder rapidement à toutes vos vidéos.</p>');
 	$('#bienvenue').html('<h1>Bienvenue à tous</h1>');
-	$('#search').html('<form class="navbar-form navbar-left" role="form" method=post action="/Videos/search"><div class="form-group"><input type="text" name="search" placeholder="Entrer des mots clés" class="form-control"></div><button type="submit" class="btn btn-primary">Rechercher une vidéo sur le web</button></form>');
+	$('#search').html('<form class="navbar-form navbar-left" role="form" method=post action="/Videos/search"><div class="form-group"><input type="text" name="search" placeholder="Entrer des mots clés" class="form-control"><input type="hidden" name="scope" value="online"></div><button type="submit" class="btn btn-primary">Rechercher une vidéo sur le web</button></form>');
 
 }	
 };

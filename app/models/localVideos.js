@@ -4,7 +4,9 @@ var path = require('path');
 var fs = require('fs');
 
 var LocalVideos = function(staticdir, filter) {
+//module.exports = function(app, req, entityResult) {
 
+        var searchResult = new searchResult();
 	this.films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir, filter);
 	this.path = this.films.path;
 
@@ -121,6 +123,13 @@ this.getLastFilmsbyCountry = function(country) {
                         lastFilmsbyCountry[lastFilmsbyCountry.length] = lastFilms[i];
         }
         return lastFilmsbyCountry;
+}
+
+
+function searchResult()
+{
+        this.movies = new Array;
+        this.tvseries = new Array;
 }
 
 };
