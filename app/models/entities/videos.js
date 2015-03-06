@@ -59,28 +59,30 @@ var Videos = function(staticdir,conf, keywordsfilter) {
         var files = Finder.from(this.path.toString()).findFiles('*.avi');
         for (var i = 0, len = files.length; i < len; i++) {
 		var file = files[i];
-		if( find(keywordsfilter, file) )
-                {
+		var filterFound = false;
+		if( find(keywordsfilter, path.basename(file)) )
+			 filterFound = true;
 
                 var patt = new RegExp(/.avi$/gm);
                 if( patt.test(file) ) {
                 	var film = new Film(file, this.path, this.urlpath);
-			list[list.length] = film;
-		}
+			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.director) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title))
+				list[list.length] = film;
 		}
         }
 	files = Finder.from(this.path.toString()).findFiles('*.mkv');
 	for (var i = 0, len = files.length; i < len; i++) {
 		var file = files[i];
-		if( find(keywordsfilter, file) )
-                {
+		var filterFound = false;
+		if( find(keywordsfilter, path.basename(file)) )
+			filterFound = true;	
 
                 var patt = new RegExp(/.mkv$/gm);
                 if( patt.test(file) ) {
 			//var urlfilename = files[i].replace(this.path, this.urlpath);
                 	var film = new Film(file, this.path, this.urlpath);
-			list[list.length] = film;
-		}
+			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.director) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title))
+				list[list.length] = film;
 		}
         }
 

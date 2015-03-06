@@ -92,7 +92,7 @@ function searchMovies(error,object, movies)
 		try{ link_href = movie.link[0].href; } catch(error) {link_href = '';}
 		monfilm.imageWebpath = href;
 		monfilm.title = title;
-		monfilm.productionYear = productionYear;
+		monfilm.year = productionYear;
 		monfilm.href = link_href; 
 		movies[i] = monfilm;
 	}
@@ -120,7 +120,7 @@ function movieDetails(error, object, movies, callback)
                                 nationality = result.movie.nationality[0].$;
 
 			movies[j].genre = genre;	
-			movies[j].nationality = nationality;
+			movies[j].country = nationality;
 			break;
 			}
 			}
@@ -218,11 +218,11 @@ function film(code)
 {
 	this.code = code;
 	this.title = '';
-	this.productionYear = '';
+	this.year = '';
 	this.imageWebpath = '';
 	this.imageLocalpath = '';
 	this.genre = '';
-	this.nationality = '';
+	this.country = '';
 	this.href = '';
 }
 

@@ -18,18 +18,18 @@ module.exports.search = function(app, req, res) {
 		var searchResult = new SearchResult();
 		searchResult.movies = data;
 		//console.log(data);
-                res.render('Videos.twig', { userAuth : userAuth, searchResult : searchResult });
+                res.render('Videos.twig', { userAuth : userAuth, searchResult : searchResult, id : req.session.sessionID });
         });
 	}
         if( req.param('scope') === 'local' )
         {
 	var LocalVideos = callDataModel('localVideos.js');
 	localVideos = new LocalVideos(path.join(__dirname, '../../private/'),req.param('search')); //app.get('staticdir'));
-	var list = localVideos.getLastFilms(15);
+	var list = localVideos.getLastFilms(100);
 	var userAuth = getSessionData( app, req, 'userAuth' );
 	var searchResult = new SearchResult();
                 searchResult.movies = list;
-	res.render('Videos.twig', { userAuth : userAuth, searchResult : searchResult });
+	res.render('Videos.twig', { userAuth : userAuth, searchResult : searchResult, id : req.session.sessionID });
 	
         /*callDataModel(app, req, 'localVideos.js',function(data)
         {

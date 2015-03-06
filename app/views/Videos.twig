@@ -10,6 +10,7 @@
   {{ parent() }}
 {% endblock %}
 {% block content %}    
+
 <style>
 .bg {
   background: url('/static/images/bg2.jpg') no-repeat center center;
@@ -27,6 +28,9 @@
   text-shadow: #444 0 1px 1px;
   background:transparent;
 }
+#back-to-top{display:block;color:#fff;position:fixed;z-index:49;right:20px;bottom:20px;opacity:0;font-size:3em;padding:0 11px 0 12px;border-radius:10px;background-color:#b0c4de;}
+#back-to-top:hover{opacity:0.85 !important}
+#back-to-top.visible{opacity:0.5}
 </style>
 <div class="bg"></div>
 	<!-- Main jumbotron for a primary marketing message or call to action -->
@@ -65,15 +69,38 @@
 <h2>Films</h2>
       <div class="row">
          {% for film in searchResult.movies %}
+		<div class="col-md-3">
+		<p>
+		{% if film.urlimagefile != null %}
+		{% if film.urlimagefile != '' %}
+			<div class="fadeover"><img class="img-thumbnail" alt="image absente" src="/Videos/perso/{{ film.urlimagefile }}" width="160"/></div>
+		{% endif %}
+		{% endif %}
+		{% if film.imageWebpath != null %}
+		{% if film.imageWebpath  != '' %}
+			<div class="fadeover"><img class="img-thumbnail" alt="image absente" src="{{ film.imageWebpath }}" width="160"/></div>
+		{% endif %}
+		{% endif %}
 
-        <div class="col-md-3">
-                <p><img src="{{ film.imageWebpath }}" class="img-thumbnail" alt="image absente" /><br/><a href="{{ film.href }}" title="Genre: {{ film.genre }}&#10;Pays: {{ film.nationality }}">{{ film.title }}
-                {% if film.productionYear != '' %}
-                        ({{ film.productionYear }})
+		<br/>
+		<a 
+		{% if film.href != null %}
+                {% if film.href  != '' %}
+			href="{{ film.href }}"
+		{% endif %}
+		{% endif %}
+		{% if film.urlfile != null %}
+                {% if film.urlfile  != '' %}
+                        href="/Videos/perso/{{ film.urlfile|escape('html') }}?id={{ id }}"
                 {% endif %}
-                </a>
+                {% endif %}
+		 title="{{ film.title }}&#10;Réalisateur: {{ film.director|escape('html') }}&#10;Acteurs: {{ film.actors|escape('html') }}&#10;Pays: {{ film.country|escape('html') }}">{{ film.title|escape('html') }}</a>
+                {% if film.year != '' %}
+			<br/>
+                        {{ film.genre|escape('html') }} [{{ film.year|escape('html') }}]
+                {% endif %}
                 </p>
-        </div>
+		</div>
         {% endfor %}
 
       </div>
@@ -113,7 +140,24 @@
 </div>
 {% endif %}
 -->
+
+<a href='#' id='back-to-top' title='Retour en haut'>
+&#8679;
+</a>
+
 <script>
+$(document).on('mouseover', '.fadeover', function(){
+        $(this).animate({
+            opacity: 0.6
+        });
+});
+
+$(document).on('mouseout', '.fadeover', function(){
+        $(this).stop(true, true).animate({
+            opacity: 1
+        });
+});
+
 var jumboHeight = $('.jumbotron').outerHeight();
 function parallax(){
     var scrolled = $(window).scrollTop();
