@@ -46,21 +46,26 @@
 <script>
 $('#form_login').on('submit', function(){
 	$("#strcrypt").val(SHA1($("#password").val()));
-	$.ajax({
-    		type: "POST",    
-    		url: "/Videos/login",
-    		data: $( "#form_login" ).serialize(),	
-    		//dataType: 'json',
-    		xhrFields: {
-       			withCredentials: true
-    		},
-    		crossDomain: true,
-		success: function (user) {
-			$('#text_login').attr('userid', user.id);
-			$('#text_login').attr('username', user.username);
-			refreshAuthent();
-		}
-	});
+$.ajax({
+    type: "POST",    
+    url: "/Videos/login",
+    data: $( "#form_login" ).serialize(),	
+    //dataType: 'json',
+    xhrFields: {
+       withCredentials: true
+    },
+    crossDomain: true,
+success: function (user) {
+        //if( user != null && user.id >= 0 )
+        //        {
+		$('#text_login').attr('userid', user.id);
+		$('#text_login').attr('username', user.username);
+		refreshAuthent();
+              //  }
+
+
+}
+});
 	return false;
 });
 

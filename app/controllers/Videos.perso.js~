@@ -96,7 +96,7 @@ for (var i = 0, len = list.length; i < len; i++) {
 				var oldfile = pathdownload + '/' + decodeURIComponent(datadownload[i]);
 				var newfile = pathdownload + '/' + req.param(datadownload[i]);
 				console.log('Moving "' +  oldfile + '" into "' + newfile + '" ...');
-				fs.renameSync(oldfile, newfile);
+				//fs.renameSync(oldfile, newfile);
 			}
 			res.json(localDownloads);
          	}

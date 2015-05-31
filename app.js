@@ -4,6 +4,7 @@ var express = require('express');
 var twig = require('twig');
 var path = require('path');
 var bodyParser = require('body-parser');
+var util = require('util');
 
 var app = express();
 var timeout = require('connect-timeout'); //express v4

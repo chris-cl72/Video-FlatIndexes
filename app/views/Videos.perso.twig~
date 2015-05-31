@@ -441,7 +441,7 @@ url: "/Videos/perso", //?type=rename",
 				updateIndexes();
 			}
 			else if( $('#type_download_action').val() === 'search' ) {
-				alert('... indexing');
+				
 			}
 		}
 	});

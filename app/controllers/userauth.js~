@@ -2,7 +2,7 @@ module.exports.login = function(app, req, res) {
 	var UserAuth = require(__dirname + '/../models/userauth.js');	
 	var userAuth = new UserAuth(); //app.get('users'), app.get('roles') );
         if( userAuth.is_granted_user(req.param('username'), req.param('strcrypt')) ) {
-		//console.log( req.body );
+		console.log( req.body );
                 setSessionData(app, req, 'userAuth', userAuth);
                 res.json(userAuth.user);
         }

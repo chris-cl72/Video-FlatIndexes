@@ -41,9 +41,8 @@ var Downloads = function(conf) {
                 if( patt.test(file) ) {
                         file = file.replace(this.path + "/","");
                         file = file.replace(this.path,"");
-			/*file = file.replace("[","%5B");
-			file = file.replace("]","%5D");*/
-			file = encodeURIComponent(file);
+			file = file.replace("[","%5B");
+			file = file.replace("]","%5D");
                         list[list.length] = file;
                 }
         }
