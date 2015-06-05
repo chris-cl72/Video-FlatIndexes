@@ -2,5 +2,4 @@ node_modules
 *.swp
 config/user_default.js
 config/user_chris.js
-private/files/films
-private/files/series
+private
