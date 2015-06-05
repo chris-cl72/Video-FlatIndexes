@@ -120,6 +120,7 @@ for (var i = 0, len = list.length; i < len; i++) {
 					});
 				}
     			}
+		
          	}
 
 	}
