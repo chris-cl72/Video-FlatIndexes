@@ -149,9 +149,10 @@ width: 100%;
 						<p>Recherche de fichier(s) Vidéo(s) ...</p>
 					</div>
 				</form>			
-				<form id="form_indexation_files">				
+				<form id="form_indexation_files" href="#form_indexation_files">				
 					<input type="hidden" id="type_indexation_action" name="type" value="indexation"/>
-					<div id="indexation_files"/>
+					<div id="indexation_files" href="#indexation_files"></div>
+					<div id="indexation_button" href="#indexation_button"></div>
 				</form>	
 				</div>
 			</div>
@@ -399,16 +400,16 @@ $.ajax({
 			var newfilename = suggestVideoFilename(filenamedecoded);
 			var color = '';
 			if (i % 2 == 0) {
-      				color = 'active';
+      				color = 'info';
     			}
     			if (i % 2 != 0) {
-      				color = 'info';
+      				color = 'active';
     			}
 			tabhtmldata += '<tr class="' + color + '"><td class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><h5>' + filenamedecoded  + '</h5></td><td class="col-xs-3 col-sm-2 col-md-2 col-lg-2"><h5> à renommer en </h5></td><td class="col-xs-3 col-sm-4 col-md-4 col-lg-4"><input class="form-control" name="' + data[i] + '" placeholder="nouveau nom de fichier" value="' + newfilename + '"></td></tr>';
 			//tabhtmldata += '<div class="row"><div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><p class="text-justify"><h5 style="display:inline;">' + filenamedecoded  + '</h5></p></div><div class="col-xs-3 col-sm-2 col-md-2 col-lg-2"><p class="text-justify"> à renommer en</p></div><div class="col-xs-3 col-sm-4 col-md-4 col-lg-4"><input class="form-control" name="' + data[i] + '" placeholder="nouveau nom de fichier" value="' + newfilename + '"></div></div>';
 
 		}
-		tabhtmldata += '</tbody></table></div><br/><div class="row"><div class="col-md-6"><button onclick="getElementById(\'type_download_action\').value=\'rename\'"  class="btn btn-primary btn-xs">Renommer les fichiers</button></div><div class="col-md-6"><button onclick="getElementById(\'type_download_action\').value=\'search\'" id="btnIndexSearch" class="btn btn-primary btn-xs">Rechercher sur Allociné</button></div></div><br/></div><div class=\'row\'><hr/><div class=\'span12\'>';
+		tabhtmldata += '</tbody></table></div><br/><div class="row"><div class="col-md-6"><button onclick="getElementById(\'type_download_action\').value=\'rename\'"  class="btn btn-primary btn-xs center-block">Renommer les fichiers</button></div><div class="col-md-6"><button onclick="getElementById(\'type_download_action\').value=\'search\'" id="btnIndexSearch" class="btn btn-primary btn-xs center-block">Rechercher sur Allociné</button></div></div><br/></div><div class=\'row\'><hr/><div class=\'span12\'>';
 		$('#downloaded_files').html(tabhtmldata);
 	}
 	});	
@@ -435,20 +436,53 @@ $('#form_downloaded_files').on('submit', function(){
 				updateIndexes();
 			}
 			else if( $('#type_download_action').val() === 'search' ) {
-				var content = '<div class="table-responsive"><table class="table"><tbody><tr class=\'info\'><td><h4>' + decodeURIComponent(result["filename"]) + '</h4>'; 			
+				var content = '<div class="table-responsive"><table class="table"><tbody><tr class=\'info\'><td><h4>' + decodeURIComponent(result["filename"]) + '</h4>'; 
+				//if( result["data"].length != 0 ) {			
 				for (var i = 0; i < result["data"].length; i++) {
 					//if( i == 0 ) { content = '<h4>' + result["filename"] + '</h4>'; }
 					var newentries = '';
-					newentries = newentries + '<input name="' + result["filename"] + '" value="228463" type="radio">' + result["data"][i].title + ' [' + result["data"][i].genre + ' de ' +  result["data"][i].year + ']' + '</input><br/>';
+					newentries = newentries + '<input name="' + result["filename"] + '" value="' +  result["data"][i].code + '" type="radio">' + result["data"][i].title + ' [' + result["data"][i].genre + ' de ' +  result["data"][i].year + ']' + '</input><br/>';
 					content = content + newentries;	
 				}
+				//} else {
+					var newentries = '';
+					newentries = newentries + '<input name="' + result["filename"] + '" value="0" type="radio">[unclassed]</input><br/>';
+					content = content + newentries;	
+				//}
 				//if( content !== '' ) { content = content + '<hr>'; }	
-				content = content + '</td></tr></tbody></table></div>'; //'<div class=\'row\'><hr/><div class=\'span12\'>';	
+				content = content + '</td></tr></tbody></table></div>';					
 				$('#indexation_files').html($('#indexation_files').html() + content);
+				$('#indexation_button').html('<button class="btn btn-primary btn-xs center-block">Confirmer indexation</button>');
+				//window.location = $('#form_indexation_files').attr('href');
+				window.location.hash = $('#form_indexation_files').attr('href');
+				$(window).scrollTop( $(window).scrollTop() -60);
 			}
 		}
 	});
 	}
+	});
+	return false;
+});
+
+
+$('#form_indexation_files').on('submit', function(){
+	//alert( JSON.stringify($( this ).serializeArray()) );
+	$( this ).serializeArray().forEach(function(entry) {
+		if( entry.name !== 'type' ) {
+			$.ajax({
+			type: "POST",
+			url: "/Videos/perso",
+			dataType: "json",
+			data: '{"type":"' + $('#type_indexation_action').val() + '","' + entry.name + '":"' + entry.value + '"}',
+		      	contentType: 'application/json; charset=utf-8',
+		    	cache: false,
+		    	timeout: 30000,
+		    		crossDomain: true,
+				success: function (result) {
+					alert ( JSON.stringify(result) );
+				}
+			});
+		}
 	});
 	return false;
 });

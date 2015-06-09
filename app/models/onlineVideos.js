@@ -15,7 +15,7 @@ this.listmovies = function( filter, entityResult ) {
 				allocine.api('search', {q: filter, count: 4, filter: 'movie'}, function(err, object) { movies = searchMovies(err,object, movies); callback(null, object, callback); });
         		},
 			function (err, object, callback) {
-				movieDetails(err, object, movies, function(result) {movies = result; callback(null, object, callback); } );
+				moviesDetails(err, object, movies, function(result) {movies = result; callback(null, object, callback); } );
 			}
     		],
 		function (err, object, callback) {
@@ -101,7 +101,7 @@ function searchMovies(error,object, movies)
 	return movies;	
 }
 
-function movieDetails(error, object, movies, callback)
+function moviesDetails(error, object, movies, callback)
 {
 	var nbMovieDetailsEvent = 0;
 	if(movies.length !== 0 )
@@ -134,8 +134,98 @@ function movieDetails(error, object, movies, callback)
 		callback(movies);
 }
 
+this.getMovie = function( code, error, callback)
+{
+	var monfilm = new film(code);
+	if( code != 0 ) {
+	allocine.api('movie', {code: code}, function(error,result) {
+		//console.log(result.movie);
+		//console.log(result.movie.castMember);
+		if( typeof result.movie.genre !== 'undefined' &&  result.movie.genre.length !== 0 ) {
+			monfilm.genre = result.movie.genre[0].$;		
+		}
+		if( typeof result.movie.nationality !== 'undefined' && result.movie.nationality.length !== 0 ) {
+                	monfilm.country = result.movie.nationality[0].$;
+		}
+		if( typeof result.movie.synopsis !== 'undefined' ) {
+                	monfilm.synopsis = result.movie.synopsis;
+		}
+		if( typeof result.movie.runtime !== 'undefined' ) {
+                	monfilm.runtime = result.movie.runtime;
+		}
+		var castingShort = '';
+		if( typeof result.movie.castingShort !== 'undefined' ) {
+                	castingShort = result.movie.castingShort;
+		}
+		//console.log( castingShort );
+		var castMember = new Array();
+		if( typeof result.movie.castMember !== 'undefined' && result.movie.castMember.length !== 0 ) {
+                	castMember = result.movie.castMember;
+		}
+		var maxdirectors = 2;
+		var maxactors = 5
+		var nbdirectors = 0;
+		var nbactors = 0;
+		for (i = 0; i < castMember.length ; i++) {
+			if( typeof castMember[i].activity.$ !== 'undefined' && (castMember[i].activity.$ === 'Réalisateur' || castMember[i].activity.$ === 'Réalisatrice' ) && nbdirectors < maxdirectors ) {
+				nbdirectors++;
+				if( monfilm.directors === '' ) {
+					monfilm.directors = castMember[i].person.name;
+				} else {
+					monfilm.directors += ', ' + castMember[i].person.name;
+				}
+			}
+			if( typeof castMember[i].activity.$ !== 'undefined' && (castMember[i].activity.$ === 'Acteur' || castMember[i].activity.$ === 'Actrice' ) && nbactors < maxactors ) {
+				nbactors++;
+				if( monfilm.actors === '' ) {
+					if( typeof castMember[i].role !== 'undefined' )
+						monfilm.actors = castMember[i].person.name + " (" + castMember[i].role + ")";
+					else
+						monfilm.actors = castMember[i].person.name;
+				} else {
+					if( typeof castMember[i].role !== 'undefined' )
+						monfilm.actors += ', ' + castMember[i].person.name + " (" + castMember[i].role + ")";
+					else
+						monfilm.actors += ', ' + castMember[i].person.name;
+				}
+			}
+			//console.log(castMember[i].person.name + " [" + castMember[i].activity.$ + "] " + " (" + castMember[i].role + ")");
+		}
 
-function searchSeries(error,object, searchResult)
+
+		var title = '';
+		try{ title = result.movie.title; } catch(error) {title = '';}
+		if( title === '' || typeof title === 'undefined')
+			try { title = result.movie.originalTitle;} catch(error) {title = '';}
+		var productionYear = '';
+		try{ productionYear = result.movie.productionYear } catch(error) {productionYear= ''; }
+
+		/*if( title !== '' && result.movie.productionYear !== '' )
+		{	
+			data += title + ' (' + productionYear + ')' + '<br/>';
+		}*/
+
+		var href = 'http://fr.web.img4.acsta.net/r_160_240/b_1_d6d6d6/commons/emptymedia/empty_photo.jpg';
+		if( typeof result.movie.poster !== 'undefined' && typeof result.movie.poster.href !== 'undefined' )
+		{
+			href = result.movie.poster.href;
+			href = href.replace(/^(http:\/\/[^\/]*)(.*)$/g, "$1/r_160_240/b_1_d6d6d6$2");
+		}
+	
+		var link_href = '';
+		try{ link_href = result.movie.link[0].href; } catch(error) {link_href = '';}
+		monfilm.imageWebpath = href;
+		monfilm.title = title;
+		monfilm.year = productionYear;
+		monfilm.href = link_href; 
+
+		callback(monfilm);
+	});
+	} else { callback(monfilm); }
+}
+
+
+/*function searchSeries(error,object, searchResult)
 {
         var data = '';
 	if( typeof object.feed !== 'undefined' && typeof object.feed.totalResults !== 'undefined') {
@@ -178,12 +268,12 @@ function searchSeries(error,object, searchResult)
 	}
 	return searchResult;
         //_entityResult(_searchResult);   
-}
+}*/
 
-function serieDetails(error, object, localResult, callback)
+/*function serieDetails(error, object, localResult, callback)
 {
         var nbMovieDetailsEvent = 0;
-	/*
+	
         if(localResult.tvseries.length !== 0 )
         {
         for (i = 0; i < localResult.tvseries.length ; i++) {
@@ -209,10 +299,10 @@ function serieDetails(error, object, localResult, callback)
                  });
         }
         }
-        else*/
+        else
                 callback(localResult);
 }
-
+*/
 
 function film(code)
 {
@@ -224,13 +314,17 @@ function film(code)
 	this.genre = '';
 	this.country = '';
 	this.href = '';
+	this.synopsis = '';
+	this.runtime = '';
+	this.directors = '';
+	this.actors = '';
 }
 
-function searchResult()
+/*function searchResult()
 {
 	this.movies = new Array;
 	this.tvseries = new Array;
-}
+}*/
 
 };
 

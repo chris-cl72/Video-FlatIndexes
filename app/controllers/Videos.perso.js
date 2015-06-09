@@ -1,13 +1,11 @@
 var path = require('path');
 var fs = require('fs');
 
+var fs = require('fs');
+var path = require('path');
+eval(fs.readFileSync(path.join(__dirname, '../libraries/tools.js'))+'');
+
 module.exports = function(app, req, res) {
-/*
-var  localVideos = new(LocalVideos);
-var list = localVideos.getLastFilms(5);
-for (var i = 0, len = list.length; i < len; i++) {
-        console.log(list[i].title);
-*/
 	var LocalVideos = callDataModel('localVideos.js');
 	var LocalDownloads = callDataModel('localDownloads.js');
 	var OnlineVideos = callDataModel('onlineVideos.js');
@@ -57,21 +55,12 @@ for (var i = 0, len = list.length; i < len; i++) {
                 res.json(list);
         }
 	else if( req.param('type') === 'listcountrys' ) {
-                //console.log('listgenres');
                 var localVideos = getSessionData(app,req,'localVideos');
                 var list = localVideos.getListCountrys();
                 res.json(list);
         }
 	else if( req.param('type') === 'listdownloads'  && userAuth.is_granted_role('ROLE_ADMIN') ) {
-	//	var localDownloads = getSessionData(app,req,'localDownloads');
-	//	if( localDownloads === null || typeof localDownloads === 'undefined' )
-	//	{
 		var localDownloads = new LocalDownloads();
-		setSessionData(app,req,'localDownloads', localDownloads);
-		//localDownloads = getSessionData(app,req,'localDownloads');
-	//	}
-                //var list = localDownloads.getAll();
-		//var path = localDownloads.path;
 		res.json(localDownloads);
 	}
 	else
@@ -87,11 +76,7 @@ for (var i = 0, len = list.length; i < len; i++) {
 			});
          	}
 		else if( jsonParams['type'] === 'rename' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
-			var localDownloads = getSessionData(app,req,'localDownloads');
-			
-			var datadownload = localDownloads.list;
-			var pathdownload = localDownloads.path;
-
+			var pathdownload = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads;
 			for(var key in jsonParams){
 				if( key !== 'type' ) {
 					var oldfile = pathdownload + '/' + decodeURIComponent(key);
@@ -105,15 +90,11 @@ for (var i = 0, len = list.length; i < len; i++) {
 			
          	}
 		else if( jsonParams['type'] === 'search' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
-			var localDownloads = getSessionData(app,req,'localDownloads');
-			var datadownload = localDownloads.list;
-
 			for(var key in jsonParams){
 				if( key !== 'type' ) {
 					var searchkeywords = decodeURIComponent(key).replace(/^(.*)\/([^\/]*)$/g, "$2");
 					searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
 					searchkeywords = searchkeywords.replace(/\./g, ' ');
-					console.log(searchkeywords);
 					var onlineVideos = new OnlineVideos();
 					onlineVideos.listmovies( searchkeywords,function(movies) {
 						res.json({filename:key,data:movies});
@@ -121,6 +102,20 @@ for (var i = 0, len = list.length; i < len; i++) {
 				}
     			}
          	}
+		else if( jsonParams['type'] === 'indexation' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
+			for(var name in jsonParams){
+				if( name !== 'type' ) {
+					var pathdownload = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads;
+					var pathfilms = readConf(path.join(__dirname, '../models/entities/videos.json')).films;
+					console.log( name + ':' + jsonParams[name]);
+					var onlineVideos = new OnlineVideos();
+					var error = '';
+					onlineVideos.getMovie(jsonParams[name],error, function(monfilm) {
+						res.json({filename:name,monfilm:monfilm});
+					}); 
+				}
+    			}
+		}			
 
 	}
 };

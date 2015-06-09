@@ -2,24 +2,12 @@
 
 //var acl = function(users, roles) {
 var path = require('path');
-var fs = require('fs');
 var Finder = require('fs-finder');
 var url = require('url');
 
-function readConf(configFile)
-{
-var data = fs.readFileSync(configFile,  'utf-8');
-var myObj = null;
-
-  try {
-    myObj = JSON.parse(data);
-  }
-  catch (err) {
-    //console.log('There has been an error parsing your JSON.')
-    console.log(err);
-  }
-  return myObj;
-};
+var fs = require('fs');
+var path = require('path');
+eval(fs.readFileSync(path.join(__dirname, '../../libraries/tools.js'))+'');
 
 var Downloads = function(conf) {
 	this.path = conf.path;
@@ -55,9 +43,11 @@ var Downloads = function(conf) {
 var Videos = function(staticdir,conf, keywordsfilter) {
 	this.path = conf.path;
 	this.urlpath = conf.urlpath;	
+	// A revoir ????
 	if( fs.existsSync(path.join(staticdir,this.urlpath)) ) 
 		fs.unlinkSync(path.join(staticdir,this.urlpath));
 	fs.symlinkSync(this.path, path.join(staticdir,this.urlpath));	
+	// ----    ????
 	var list = new Array();
         var files = Finder.from(this.path.toString()).findFiles('*.avi');
         for (var i = 0, len = files.length; i < len; i++) {
