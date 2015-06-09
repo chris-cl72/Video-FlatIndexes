@@ -1,12 +1,17 @@
 #!/usr/bin/env nodejs
 
-var path = require('path');
 var fs = require('fs');
+var path = require('path');
+eval(fs.readFileSync(path.join(__dirname, '../libraries/tools.js'))+'');
+
+var Videos = require(path.join(__dirname, './entities/videos.js'));
 
 var LocalVideos = function(staticdir, filter) {
 
-	this.films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir, filter);
-	this.path = this.films.path;
+	//this.films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir, filter);
+	var videos = new Videos();
+	this.films = videos.listfilms(staticdir,readConf(path.join(__dirname, './entities/videos.json')).films, filter);
+	//this.filmspath = readConf(path.join(__dirname, '../models/entities/videos.json')).films.path;
 
 function removeDuplicates(target_array) {
     target_array.sort();
@@ -27,10 +32,10 @@ function removeDuplicates(target_array) {
 
 this.getListGenres = function() {
 	var listGenres = [];
-	for (var i = 0, len = this.films.list.length; i < len; i++) {
+	for (var i = 0, len = this.films.length; i < len; i++) {
 		var genre = 'unclassed';
-		if( typeof this.films.list[i].genre !== 'undefined' && this.films.list[i].genre !== null )
-			genre = this.films.list[i].genre;
+		if( typeof this.films[i].genre !== 'undefined' && this.films[i].genre !== null )
+			genre = this.films[i].genre;
 		listGenres[listGenres.length] = genre;
 	}
 	return removeDuplicates(listGenres);
@@ -38,11 +43,11 @@ this.getListGenres = function() {
 
 this.getListYears = function() {
         var listYears = [];
-        for (var i = 0, len = this.films.list.length; i < len; i++) {
+        for (var i = 0, len = this.films.length; i < len; i++) {
                 var year = '';
-                if( typeof this.films.list[i].year !== 'undefined' && this.films.list[i].year !== null && this.films.list[i].year !== ''  )
+                if( typeof this.films[i].year !== 'undefined' && this.films[i].year !== null && this.films[i].year !== ''  )
 		{
-                        year = this.films.list[i].year;
+                        year = this.films[i].year;
                 	listYears[listYears.length] = year;
 		}
         }
@@ -51,11 +56,11 @@ this.getListYears = function() {
 
 this.getListCountrys = function() {
         var listCountrys = [];
-        for (var i = 0, len = this.films.list.length; i < len; i++) {
+        for (var i = 0, len = this.films.length; i < len; i++) {
                 var country = '';
-                if( typeof this.films.list[i].country !== 'undefined' && this.films.list[i].country !== null && this.films.list[i].country !== ''  )
+                if( typeof this.films[i].country !== 'undefined' && this.films[i].country !== null && this.films[i].country !== ''  )
 		{
-                        country = this.films.list[i].country;
+                        country = this.films[i].country;
                 	listCountrys[listCountrys.length] = country;
 		}
         }
@@ -66,9 +71,9 @@ this.getLastFilms = function(number) {
 	var lastFilms = [];
 	var filmsByDate = {};
 	var arrayDate = [];
-	for (var i = 0, len = this.films.list.length; i < len; i++) {
-		arrayDate[i] = new Date(fs.statSync(this.films.list[i].file).mtime).toISOString() + "-" + this.films.list[i].file;
-		filmsByDate[arrayDate[i]] = this.films.list[i];
+	for (var i = 0, len = this.films.length; i < len; i++) {
+		arrayDate[i] = new Date(fs.statSync(this.films[i].file).mtime).toISOString() + "-" + this.films[i].file;
+		filmsByDate[arrayDate[i]] = this.films[i];
 		//console.log(new Date(fs.statSync(films.list[i].file).mtime).toISOString().sort());
 	}
 	arrayDate.sort().reverse();

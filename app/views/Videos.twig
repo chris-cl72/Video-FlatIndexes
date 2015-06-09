@@ -71,11 +71,7 @@
          {% for film in searchResult.movies %}
 		<div class="col-md-3">
 		<p>
-		{% if film.urlimagefile != null %}
-		{% if film.urlimagefile != '' %}
-			<div class="fadeover"><img class="img-thumbnail" alt="image absente" src="/Videos/perso/{{ film.urlimagefile }}" width="160"/></div>
-		{% endif %}
-		{% endif %}
+
 		{% if film.imageWebpath != null %}
 		{% if film.imageWebpath  != '' %}
 			<div class="fadeover"><img class="img-thumbnail" alt="image absente" src="{{ film.imageWebpath }}" width="160"/></div>
@@ -94,7 +90,7 @@
                         href="/Videos/perso/{{ film.urlfile|escape('html') }}?id={{ id }}"
                 {% endif %}
                 {% endif %}
-		 title="{{ film.title }}&#10;Réalisateur: {{ film.director|escape('html') }}&#10;Acteurs: {{ film.actors|escape('html') }}&#10;Pays: {{ film.country|escape('html') }}">{{ film.title|escape('html') }}</a>
+		 title="{{ film.title }}&#10;Réalisateur: {{ film.directors|escape('html') }}&#10;Acteurs: {{ film.actors|escape('html') }}&#10;Pays: {{ film.country|escape('html') }}">{{ film.title|escape('html') }}</a>
                 {% if film.year != '' %}
 			<br/>
                         {{ film.genre|escape('html') }} [{{ film.year|escape('html') }}]

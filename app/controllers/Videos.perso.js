@@ -59,7 +59,7 @@ module.exports = function(app, req, res) {
                 res.json(list);
         }
 	else if( req.param('type') === 'listdownloads'  && userAuth.is_granted_role('ROLE_ADMIN') ) {
-		var localDownloads = new LocalDownloads();
+		var localDownloads = new LocalDownloads(readConf(path.join(__dirname, '../models/entities/videos.json')).downloads);
 		res.json(localDownloads);
 	}
 	else
@@ -68,13 +68,14 @@ module.exports = function(app, req, res) {
 	else if (req.method === 'POST') {
 		//console.log( req.body );
 		var jsonParams = req.body;
-		if( req.param('type') === 'searchonline' && userAuth.is_granted_role('ROLE_ADMIN') ) {
+		/*if( req.param('type') === 'searchonline' && userAuth.is_granted_role('ROLE_ADMIN') ) {
                 	var onlineVideos = new OnlineVideos();
 			var list = onlineVideos.searchAllocine(req.param('value'), function(list) {
 				res.json(list);
 			});
          	}
-		else if( jsonParams['type'] === 'rename' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
+		else */
+		if( jsonParams['type'] === 'rename' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
 			var pathdownload = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads.path;
 			for(var key in jsonParams){
 				if( key !== 'type' ) {

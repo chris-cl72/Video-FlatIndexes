@@ -70,7 +70,7 @@ width: 100%;
   			<!-- Wrapper for slides -->
   			<div class="carousel-inner">
   			{% for key,value in lastFilms %}
-				<div {% if key == 0 %} id="itemactive" class="item active" {% else %} class="item" {% endif %} title="{{ value.title|escape('html') }}" synopsis="{{ value.synopsis|escape('html') }}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}?id={{ id }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" director="{{ value.director|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" country="{{ value.country|escape('html') }}" >
+				<div {% if key == 0 %} id="itemactive" class="item active" {% else %} class="item" {% endif %} title="{{ value.title|escape('html') }}" synopsis="{{ value.synopsis|escape('html') }}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}?id={{ id }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" directors="{{ value.directors|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" country="{{ value.country|escape('html') }}" >
 					<div style="background:url(/Videos/perso/{{ value.urlimagefile }}) top center; background-size:cover; background-position: 0px -100px; background-repeat:no-repeat;" class="slider-size" >
       					<!-- <div class="carousel-caption"><H2>{{ value.title }}</H2></div> -->
       					</div>
@@ -194,9 +194,9 @@ function updateNews( selectdiv )
 		textGenre = '<h3 style="display:inline;">' + selectdiv.attr('genre') + '</h3>&nbsp;';
                 //textGenre = '<h3 style="display:inline; padding-left:1em; padding-right:1em;">' + selectdiv.attr('genre') + '</h3>';
 
-	var textDirector = '';
-        if( selectdiv.attr('director') !== '' )
-                textDirector = '<U><h4>De</h4></U>' + selectdiv.attr('director');
+	var textDirectors = '';
+        if( selectdiv.attr('directors') !== '' )
+                textDirectors = '<U><h4>De</h4></U>' + selectdiv.attr('directors');
 
 	var textActors = '';
         if( selectdiv.attr('actors') !== '' )
@@ -210,7 +210,7 @@ function updateNews( selectdiv )
 	if( selectdiv.attr('synopsis') !== '' )
 		textSynopsis = '<U><h4>Synopsis</h4></U>' + selectdiv.attr('synopsis');
 
-	$('#newSynopsis').html( '<a href="' + textFile  + '">' + textTitle + '</a>&nbsp;' + textCountry + '<br/><br/>' + textGenre + textYear + textRuntime + textDirector + textActors + textSynopsis );
+	$('#newSynopsis').html( '<a href="' + textFile  + '">' + textTitle + '</a>&nbsp;' + textCountry + '<br/><br/>' + textGenre + textYear + textRuntime + textDirectors + textActors + textSynopsis );
 };
 
 function updateOrderType(orderType, orderTypeValue)
@@ -241,8 +241,8 @@ $.ajax({
 				tabhtmldatahtml += '<B>Genre :</B> ' + value.genre + ' (' + value.year + ')<BR/>';
 			else
 				tabhtmldatahtml += '<B>Genre :</B> ' + value.genre + '<BR/>';
-			if( typeof value.director !== 'undefined' && value.director !== null && value.director !== '' )
-				 tabhtmldatahtml += '<B>De :</B> ' + value.director + '<BR/>';
+			if( typeof value.directors !== 'undefined' && value.directors !== null && value.directors !== '' )
+				 tabhtmldatahtml += '<B>De :</B> ' + value.directors + '<BR/>';
 			if( typeof value.actors !== 'undefined' && value.actors !== null && value.actors !== '' )
                                  tabhtmldatahtml += '<B>Avec :</B> ' + value.actors + '<BR/>';
 			if( typeof value.country !== 'undefined' && value.country !== null && value.country !== '' )

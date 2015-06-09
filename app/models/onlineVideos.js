@@ -1,5 +1,7 @@
 var allocine = require('allocine-api');
 var async = require('async');
+var path = require('path');
+var Film = require(path.join(__dirname, './entities/film.js'));
 
 var onlineVideos = function() {
 this.listmovies = function( filter, entityResult ) {
@@ -32,7 +34,8 @@ function searchMovies(error,object, movies)
 		var code = '';
 		if( typeof movie.code !== 'undefined' )
 			code = movie.code;
-		var monfilm = new film(code);
+		var monfilm = new Film();
+		monfilm.code = code;
 		var title = '';
 		try{ title = movie.title; } catch(error) {title = '';}
 		if( title === '' || typeof title === 'undefined')
@@ -99,8 +102,9 @@ function moviesDetails(error, object, movies, callback)
 
 this.getMovie = function( code, error, callback)
 {
-	var monfilm = new film(code);
+	var monfilm = new Film();
 	if( code != 0 ) {
+	monfilm.code = code;
 	allocine.api('movie', {code: code}, function(error,result) {
 		if( typeof result.movie.genre !== 'undefined' &&  result.movie.genre.length !== 0 ) {
 			monfilm.genre = result.movie.genre[0].$;		
@@ -178,21 +182,6 @@ this.getMovie = function( code, error, callback)
 	} else { callback(monfilm); }
 }
 
-function film(code)
-{
-	this.code = code;
-	this.title = '';
-	this.year = '';
-	this.imageWebpath = '';
-	this.imageLocalpath = '';
-	this.genre = '';
-	this.country = '';
-	this.href = '';
-	this.synopsis = '';
-	this.runtime = '';
-	this.directors = '';
-	this.actors = '';
-}
 
 };
 
