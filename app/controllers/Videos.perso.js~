@@ -75,7 +75,7 @@ module.exports = function(app, req, res) {
 			});
          	}
 		else if( jsonParams['type'] === 'rename' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
-			var pathdownload = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads.path;
+			var pathdownload = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads;
 			for(var key in jsonParams){
 				if( key !== 'type' ) {
 					var oldfile = pathdownload + '/' + decodeURIComponent(key);
@@ -104,8 +104,8 @@ module.exports = function(app, req, res) {
 		else if( jsonParams['type'] === 'indexation' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
 			for(var name in jsonParams){
 				if( name !== 'type' ) {
-					var pathdownload = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads.path;
-					var pathfilms = readConf(path.join(__dirname, '../models/entities/videos.json')).films.path;
+					var pathdownload = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads;
+					var pathfilms = readConf(path.join(__dirname, '../models/entities/videos.json')).films;
 					console.log( name + ':' + jsonParams[name]);
 					var onlineVideos = new OnlineVideos();
 					var error = '';
