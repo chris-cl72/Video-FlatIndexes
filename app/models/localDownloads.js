@@ -40,14 +40,18 @@ var LocalDownloads = function() {
 				}
     				else {
 					console.log('Moving "' +  srcfile + '" into "' + destfile + '" ...');
-					fs.rename(srcfile, destfile, function() {
+
+					var source = fs.createReadStream(srcfile);
+					var dest = fs.createWriteStream(destfile);
+					source.pipe(dest);
+					source.on('end', function() { 
 						if( film.genre !== 'unclassed' ) { 
 							videos.importfilm(destfile, film, callback);
 						} else {
 							callback(null);
 						}
 					});
-					//callback();
+					source.on('error', function(err) { callback(err); });
 				}
 			});
 			
