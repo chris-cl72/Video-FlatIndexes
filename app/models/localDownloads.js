@@ -44,12 +44,19 @@ var LocalDownloads = function() {
 					var source = fs.createReadStream(srcfile);
 					var dest = fs.createWriteStream(destfile);
 					source.pipe(dest);
-					source.on('end', function() { 
-						if( film.genre !== 'unclassed' ) { 
-							videos.importfilm(destfile, film, callback);
-						} else {
-							callback(null);
-						}
+					source.on('end', function() {
+						fs.unlink('/tmp/hello', function (err) {
+	  						if (err) {
+								console.log('File "' +  srcfile + '" successfully moved');
+								callback(err);
+							} else {
+								if( film.genre !== 'unclassed' ) { 
+									videos.importfilm(destfile, film, callback);
+								} else {
+									callback(null);
+								}
+							}						
+						}); 						
 					});
 					source.on('error', function(err) { callback(err); });
 				}
