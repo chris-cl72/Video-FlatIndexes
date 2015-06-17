@@ -45,11 +45,12 @@ var LocalDownloads = function() {
 					var dest = fs.createWriteStream(destfile);
 					source.pipe(dest);
 					source.on('end', function() {
-						fs.unlink('/tmp/hello', function (err) {
+						fs.unlink(srcfile, function (err) {
 	  						if (err) {
-								console.log('File "' +  srcfile + '" successfully moved');
+								console.log('Error moving file "' +  srcfile + '".');
 								callback(err);
 							} else {
+								console.log('File "' +  srcfile + '" successfully moved');
 								if( film.genre !== 'unclassed' ) { 
 									videos.importfilm(destfile, film, callback);
 								} else {
