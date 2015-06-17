@@ -73,7 +73,7 @@ module.exports = function(app, req, res) {
 		else if( jsonParams['type'] === 'search' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
 			for(var key in jsonParams){
 				if( key !== 'type' ) {
-					var searchkeywords = jsonParams[key];
+					var searchkeywords = key;
 					console.log(searchkeywords);
 					var onlineVideos = new OnlineVideos();
 					onlineVideos.listmovies( searchkeywords,function(movies) {

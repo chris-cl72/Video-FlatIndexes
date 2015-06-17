@@ -40,7 +40,7 @@ var LocalDownloads = function() {
 				}
     				else {
 					console.log('Moving "' +  srcfile + '" into "' + destfile + '" ...');
-					fs.rename(srcfile, destfile, function() {
+					fs.rename(oldfilepath, newfilepath, function() {
 						if( film.genre !== 'unclassed' ) { 
 							videos.importfilm(destfile, film, callback);
 						} else {

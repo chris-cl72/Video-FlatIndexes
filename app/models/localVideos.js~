@@ -6,11 +6,11 @@ eval(fs.readFileSync(path.join(__dirname, '../libraries/tools.js'))+'');
 
 var Videos = require(path.join(__dirname, './entities/videos.js'));
 
-var LocalVideos = function(filter) {
+var LocalVideos = function(staticdir, filter) {
 
 	//this.films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir, filter);
 	var videos = new Videos();
-	this.films = videos.listfilms(path.join(__dirname, '../../private/'),readConf(path.join(__dirname, './entities/videos.json')).films, filter);
+	this.films = videos.listfilms(staticdir,readConf(path.join(__dirname, './entities/videos.json')).films, filter);
 	//this.filmspath = readConf(path.join(__dirname, '../models/entities/videos.json')).films.path;
 
 function removeDuplicates(target_array) {

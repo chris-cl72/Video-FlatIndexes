@@ -429,6 +429,7 @@ $('#form_downloaded_files').on('submit', function(){
 		searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
 		searchkeywords = searchkeywords.replace(/\./g, ' ');
 		value = searchkeywords;
+		alert(value);
 	}
 
 	$.ajax({

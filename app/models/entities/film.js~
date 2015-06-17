@@ -27,7 +27,7 @@ this.code = '';
 this.href = '';
 
 this.write = function(file, callback) {
-	var destdescFile = path.join( path.dirname(file), '.' + path.basename(file) + '.desc');
+	var destdescFile = path.join( destdir, '.' + path.basename(file) + '.desc');
 	this.file = file;
 	this.descfile = destdescFile;
 

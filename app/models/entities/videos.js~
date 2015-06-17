@@ -64,8 +64,8 @@ this.importfilm = function( file, film, callback ) {
 var downloadfile = function(uri, filename, callback){
     var request = require('request');
     request.head(uri, function(err, res, body){
-    //console.log('content-type:', res.headers['content-type']);
-    //console.log('content-length:', res.headers['content-length']);
+    console.log('content-type:', res.headers['content-type']);
+    console.log('content-length:', res.headers['content-length']);
 
     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
   });
