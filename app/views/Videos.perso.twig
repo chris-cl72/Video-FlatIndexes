@@ -383,6 +383,9 @@ for (var i = 0; i < keywordsSolo.length; i++)
 
 function updateIndexes()
 {
+$('#downloaded_files').html('<p>Recherche de fichier(s) Vidéo(s) ...</p>');
+$('#indexation_files').html('');
+$('#indexation_button').html('');
 $.ajax({
     type: "GET",
     url: "/Videos/perso",
@@ -409,8 +412,10 @@ $.ajax({
 			//tabhtmldata += '<div class="row"><div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><p class="text-justify"><h5 style="display:inline;">' + filenamedecoded  + '</h5></p></div><div class="col-xs-3 col-sm-2 col-md-2 col-lg-2"><p class="text-justify"> à renommer en</p></div><div class="col-xs-3 col-sm-4 col-md-4 col-lg-4"><input class="form-control" name="' + data[i] + '" placeholder="nouveau nom de fichier" value="' + newfilename + '"></div></div>';
 
 		}
+		if( data.length > 0 ) {
 		tabhtmldata += '</tbody></table></div><br/><div class="row"><div class="col-md-6"><button onclick="getElementById(\'type_download_action\').value=\'rename\'"  class="btn btn-primary btn-xs center-block">Renommer les fichiers</button></div><div class="col-md-6"><button onclick="getElementById(\'type_download_action\').value=\'search\'" id="btnIndexSearch" class="btn btn-primary btn-xs center-block">Rechercher sur Allociné</button></div></div><br/></div><div class=\'row\'><hr/><div class=\'span12\'>';
 		$('#downloaded_files').html(tabhtmldata);
+		}
 	}
 	});	
 };
@@ -477,7 +482,10 @@ $('#form_downloaded_files').on('submit', function(){
 
 $('#form_indexation_files').on('submit', function(){
 	//alert( JSON.stringify($( this ).serializeArray()) );
-	$( this ).serializeArray().forEach(function(entry) {
+	var tab = $( this ).serializeArray();
+	//alert( tab.length );
+	var number = 1;
+	tab.forEach(function(entry) {
 		if( entry.name !== 'type' ) {
 			$.ajax({
 			type: "POST",
@@ -490,6 +498,10 @@ $('#form_indexation_files').on('submit', function(){
 		    		crossDomain: true,
 				success: function (result) {
 					//alert ( JSON.stringify(result) );
+					number++;
+					if( number >= tab.length) {
+						updateIndexes();
+					}
 				}
 			});
 		}
