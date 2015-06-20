@@ -10,24 +10,31 @@ module.exports = function(app, req, res) {
 	if( req.method === 'GET' ) {
 	if( req.param('type') === 'films' ) {
 		if( req.param('order') === 'news' ) {
-			deleteSessionData(app,req,'localVideos');	
-			localVideos = new LocalVideos("");
-			setSessionData(app,req,'localVideos', localVideos);
+			var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+			//deleteSessionData(app,req,'localVideos');	
+			//var localVideos = new LocalVideos("");
+			//setSessionData(app,req,'localVideos', localVideos);
 			var list = localVideos.getLastFilms(15);
         		res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list, id : req.session.sessionID });
 		}
 		else if( req.param('order') === 'genre' ) {
 			var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
 			var list = localVideos.getLastFilmsbyGenre(req.param('value'));
 			res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
 		}
 		else if( req.param('order') === 'year' ) {
-                        var localVideos = getSessionData(app,req,'localVideos');
+                        //var localVideos = getSessionData(app,req,'localVideos');
+			var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
                         var list = localVideos.getLastFilmsbyYear(req.param('value'));
                         res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
                 }
 		else if( req.param('order') === 'country' ) {
-                        var localVideos = getSessionData(app,req,'localVideos');
+                        //var localVideos = getSessionData(app,req,'localVideos');
+			var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
                         var list = localVideos.getLastFilmsbyCountry(req.param('value'));
                         res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
                 }
@@ -36,16 +43,19 @@ module.exports = function(app, req, res) {
 	}
 	else if( req.param('type') === 'listgenres' ) {
 		var localVideos = getSessionData(app,req,'localVideos');
+		if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
 		var list = localVideos.getListGenres();		
 		res.json(list);		
 	}
 	else if( req.param('type') === 'listyears' ) {
                 var localVideos = getSessionData(app,req,'localVideos');
+		if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
                 var list = localVideos.getListYears();
                 res.json(list);
         }
 	else if( req.param('type') === 'listcountrys' ) {
                 var localVideos = getSessionData(app,req,'localVideos');
+		if( localVideos == null ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
                 var list = localVideos.getListCountrys();
                 res.json(list);
         }
@@ -98,6 +108,13 @@ module.exports = function(app, req, res) {
 					}); 
 				}
     			}
+		}
+		else if( jsonParams['type'] === 'delete' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
+			deleteSessionData(app,req,'localVideos');
+			var localVideos = new LocalVideos();
+			localVideos.deleteFile(jsonParams['filename'], function(err) {
+				res.json({error:err});
+			});
 		}			
 
 	}

@@ -39,7 +39,7 @@ width: 100%;
 
 <div class="container-fluid">
 <div class="tabbable">
-    <ul id="myTab" class="nav nav-tabs">
+    <ul id="myTab" class="nav nav-tabs" {% if userAuth.is_granted_role("ROLE_ADMIN") %} admin="true" {% endif %} >
       <li class="active"><a href="#news" data-toggle="tab">Nouveautés </a></li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Films <span class="caret"></span></a>
@@ -213,6 +213,23 @@ function updateNews( selectdiv )
 	$('#newSynopsis').html( '<a href="' + textFile  + '">' + textTitle + '</a>&nbsp;' + textCountry + '<br/><br/>' + textGenre + textYear + textRuntime + textDirectors + textActors + textSynopsis );
 };
 
+function deleteVideoFile(filename)
+{
+	if( confirm('Dérirez vous supprimer la Vidéo "' + filename + '" ?') )
+			$.ajax({
+			type: "POST",
+			url: "/Videos/perso",
+			dataType: "json",
+			data: '{"type":"delete","filename":"' + encodeURIComponent(filename) + '"}',
+		      	contentType: 'application/json; charset=utf-8',
+		    	cache: false,
+		    	timeout: 30000,
+		    		crossDomain: true,
+				success: function (result) {
+				}
+			});
+};
+
 function updateOrderType(orderType, orderTypeValue)
 {
 var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '');
@@ -230,12 +247,17 @@ $.ajax({
         success: function (jsonObject) {
 		var data = jsonObject.list;
 		var id = jsonObject.id;	
+		var isAdmin = $('#myTab').attr('admin');
 
 		var tabhtmldatahtml = '';
                 //var tabhtmldatahtml = '<div class="table-responsive"><TABLE class="table" border="0" WIDTH="100%" cellpadding="0">';
                 for (var i = 0, len = data.length; i < len; i++) {
                         var value = data[i];
+			if( isAdmin === 'true' ) {
+			tabhtmldatahtml += '<div class="row"><div class="col-md-12"><hr><h2>' + value.title + '&nbsp;<span><button onclick="deleteVideoFile(\'' + value.urlfile + '\')"  class="btn btn-success btn-xs inline">SUPRIMER</button></span></h2></div></div>';
+			} else {
 			tabhtmldatahtml += '<div class="row"><div class="col-md-12"><hr><h2>' + value.title + '</h2></div></div>';
+			}
 			tabhtmldatahtml += '<div class="row"><div class="col-md-8">';
 			if( typeof value.year !== 'undefined' && value.year !== null && value.year !== '' )
 				tabhtmldatahtml += '<B>Genre :</B> ' + value.genre + ' (' + value.year + ')<BR/>';
@@ -419,6 +441,7 @@ $.ajax({
 	}
 	});	
 };
+
 
 $('#form_downloaded_files').on('submit', function(){
   if( $('#type_download_action').val() === 'search' ) {

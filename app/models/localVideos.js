@@ -6,12 +6,16 @@ eval(fs.readFileSync(path.join(__dirname, '../libraries/tools.js'))+'');
 
 var Videos = require(path.join(__dirname, './entities/videos.js'));
 
-var LocalVideos = function(filter) {
+var LocalVideos = function() {
 
 	//this.films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir, filter);
 	var videos = new Videos();
-	this.films = videos.listfilms(path.join(__dirname, '../../private/'),readConf(path.join(__dirname, './entities/videos.json')).films, filter);
+	
 	//this.filmspath = readConf(path.join(__dirname, '../models/entities/videos.json')).films.path;
+
+this.list = function (filter) {
+	this.films = videos.listfilms(path.join(__dirname, '../../private/'),readConf(path.join(__dirname, './entities/videos.json')).films, filter);
+}
 
 function removeDuplicates(target_array) {
     target_array.sort();
@@ -28,6 +32,25 @@ function removeDuplicates(target_array) {
 		break;
     }
     return target_array;
+}
+
+this.deleteFile = function(filename, callback) {
+	var filmsconf = readConf(path.join(__dirname, './entities/videos.json')).films;
+	realfilename = decodeURIComponent(filename).replace( filmsconf.urlpath, filmsconf.path);
+	var descFile = path.join( path.dirname(realfilename), '.' + path.basename(realfilename) + '.desc');
+	var imageFile = path.join( path.dirname(realfilename), '.' + path.basename(realfilename) + '.jpg');
+	fs.unlink(realfilename, function (err) {
+		if (err) {
+			console.log('Error deleting file "' +  realfilename + '".');
+		} else {
+			console.log('File "' +  realfilename + '" was deleted.');
+			fs.unlink(descFile, function (err) {
+				fs.unlink(imageFile, function (err) {
+					callback(null);
+				});
+			});			
+		}
+	});
 }
 
 this.getListGenres = function() {
