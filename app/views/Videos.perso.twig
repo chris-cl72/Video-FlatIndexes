@@ -213,7 +213,7 @@ function updateNews( selectdiv )
 	$('#newSynopsis').html( '<a href="' + textFile  + '">' + textTitle + '</a>&nbsp;' + textCountry + '<br/><br/>' + textGenre + textYear + textRuntime + textDirectors + textActors + textSynopsis );
 };
 
-function deleteVideoFile(filename)
+function deleteVideoFile(filename, iddiv)
 {
 	if( confirm('Dérirez vous supprimer la Vidéo "' + filename + '" ?') )
 			$.ajax({
@@ -226,6 +226,8 @@ function deleteVideoFile(filename)
 		    	timeout: 30000,
 		    		crossDomain: true,
 				success: function (result) {
+					if( result.error ) { }
+					else { $('#' + iddiv).html( '' ) ; }
 				}
 			});
 };
@@ -254,7 +256,7 @@ $.ajax({
                 for (var i = 0, len = data.length; i < len; i++) {
                         var value = data[i];
 			if( isAdmin === 'true' ) {
-			tabhtmldatahtml += '<div class="row"><div class="col-md-12"><hr><h2>' + value.title + '&nbsp;<span><button onclick="deleteVideoFile(\'' + value.urlfile + '\')"  class="btn btn-success btn-xs inline">SUPRIMER</button></span></h2></div></div>';
+			tabhtmldatahtml += '<div id="film_' + orderType + trimOrderTypeValue + '_' + i + '"><div class="row"><div class="col-md-12"><hr><h2>' + value.title + '&nbsp;<span><button onclick="deleteVideoFile(\'' + value.urlfile + '\',\'film_' + orderType + trimOrderTypeValue + '_' + i + '\')"  class="btn btn-success btn-xs inline">SUPRIMER</button></span></h2></div></div>';
 			} else {
 			tabhtmldatahtml += '<div class="row"><div class="col-md-12"><hr><h2>' + value.title + '</h2></div></div>';
 			}
@@ -277,7 +279,7 @@ $.ajax({
 			tabhtmldatahtml += value.synopsis + '</div>';
 			if( typeof value.urlimagefile !== 'undefined' && value.urlimagefile !== null && value.urlimagefile !== '' )
 				tabhtmldatahtml += '<div class="col-md-4"><div class="fadeover"><img class="img-thumbnail" src="/Videos/perso/' + value.urlimagefile + '" width="160"/></div></div>';
-			tabhtmldatahtml += '</div>';	
+			tabhtmldatahtml += '</div></div>';	
                 }
 
 		//tabhtmldatahtml += '</TABLE></div>';
@@ -517,11 +519,12 @@ $('#form_indexation_files').on('submit', function(){
 			data: '{"type":"' + $('#type_indexation_action').val() + '","' + entry.name + '":"' + entry.value + '"}',
 		      	contentType: 'application/json; charset=utf-8',
 		    	cache: false,
-		    	timeout: 30000,
+		    	timeout: 600000,
 		    		crossDomain: true,
 				success: function (result) {
 					//alert ( JSON.stringify(result) );
 					number++;
+					//entry.html('');
 					if( number >= tab.length) {
 						updateIndexes();
 					}

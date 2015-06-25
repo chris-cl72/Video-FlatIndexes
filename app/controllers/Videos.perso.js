@@ -96,8 +96,8 @@ module.exports = function(app, req, res) {
 			for(var name in jsonParams){
 				if( name !== 'type' ) {
 					var onlineVideos = new OnlineVideos();
-					var error = '';
-					onlineVideos.getMovie(jsonParams[name],error, function(monfilm) {
+					//var error = '';
+					onlineVideos.getMovie(jsonParams[name], function(monfilm) {
 						var localDownloads = new LocalDownloads();
 						localDownloads.importFilm(name, monfilm, function(error) { 
 							if( error )
@@ -154,4 +154,6 @@ function deleteSessionData( app, req, objectName )
                 delete arrayData[objectName];
         }
 };
+
+
 

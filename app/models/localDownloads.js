@@ -11,6 +11,10 @@ var LocalDownloads = function() {
 	this.path = staticconf_downloads.path;
 	this.list = null;
 
+	this.setpath = function(refpath) {
+		this.path = refpath;
+	}
+
 	this.readall = function() {
 		var videos = new Videos();
 		//var staticconf = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads;

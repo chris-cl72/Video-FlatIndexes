@@ -1,3 +1,5 @@
+#!/usr/bin/env nodejs
+
 var allocine = require('allocine-api');
 var async = require('async');
 var path = require('path');
@@ -100,7 +102,7 @@ function moviesDetails(error, object, movies, callback)
 		callback(movies);
 }
 
-this.getMovie = function( code, error, callback)
+this.getMovie = function( code, callback)
 {
 	var monfilm = new Film();
 	if( code != 0 ) {
@@ -186,3 +188,5 @@ this.getMovie = function( code, error, callback)
 };
 
 module.exports = onlineVideos;
+
+
