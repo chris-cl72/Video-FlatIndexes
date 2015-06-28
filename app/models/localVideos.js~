@@ -181,6 +181,7 @@ this.getLastFilmsbyGroup = function(group) {
 			var groupslist = groups.split(",");
 			var groupfound = false;
 			for(j in groupslist) {
+				listGroups[listGroups.length] = group;
 				if( groupslist[j].toLowerCase() === group.toLowerCase() ) {
 					groupfound = true;
 					break;

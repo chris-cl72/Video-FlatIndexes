@@ -9,15 +9,10 @@ var staticconf_downloads = readConf(path.join(__dirname, '../models/entities/vid
 var staticconf_films = readConf(path.join(__dirname, '../models/entities/videos.json')).films;
 var LocalDownloads = function() {
 	this.path = staticconf_downloads.path;
-	this.filmspath = staticconf_films.path;
 	this.list = null;
 
 	this.setpath = function(refpath) {
 		this.path = refpath;
-	}
-
-	this.setfilmspath = function(refpath) {
-		this.filmspath = refpath;
 	}
 
 	this.readall = function() {
@@ -37,8 +32,8 @@ var LocalDownloads = function() {
 
 	this.importFilm = function(filename, film, callback) {
 		var videos = new Videos();
-		var srcfile = path.join(this.path, filename);
-		var destdir = path.join(this.filmspath, 'genre');
+		var srcfile = path.join(staticconf_downloads.path, filename);
+		var destdir = path.join(staticconf_films.path, 'genre');
 		destdir = path.join(destdir, film.genre);
 		var destfile = path.join(destdir, filename);
 		if( fs.existsSync(srcfile) ) {

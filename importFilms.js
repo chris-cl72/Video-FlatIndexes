@@ -85,8 +85,9 @@ function importFilms( srcdir, destdir) {
 			var onlineVideos = new OnlineVideos();
 			onlineVideos.listmovies( searchkeywords,function(movies) {
 				onlineVideos.getMovie(movies[0].code, function(monfilm) {
-					localDownloads.importFilm(newfile, monfilm, function(error) { 
-					});
+					/*localDownloads.importFilm(newfile, monfilm, function(error) { 
+					});*/
+					console.log(monfilm.title);
 				});
 			});
 		});

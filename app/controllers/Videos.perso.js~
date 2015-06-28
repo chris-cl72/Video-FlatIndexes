@@ -86,8 +86,8 @@ module.exports = function(app, req, res) {
 			for(var key in jsonParams){
 				if( key !== 'type' ) {
 					var localDownloads = new LocalDownloads();
-					localDownloads.rename(key,jsonParams[key], function(oldfile, newfile) {
-						res.json({filename:oldfile,data:newfile});
+					localDownloads.rename(key,jsonParams[key], function() {
+						res.json({filename:key,data:jsonParams[key]});
 					});					
 				}
     			}
