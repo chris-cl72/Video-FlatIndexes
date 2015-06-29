@@ -84,11 +84,20 @@ function importFilms( srcdir, destdir) {
 
 			var onlineVideos = new OnlineVideos();
 			onlineVideos.listmovies( searchkeywords,function(movies) {
+				if( movies.length > 0 ) {
 				onlineVideos.getMovie(movies[0].code, function(monfilm) {
-					/*localDownloads.importFilm(newfile, monfilm, function(error) { 
-					});*/
-					console.log(monfilm.title);
+					console.log(path.basename(newfile));
+					localDownloads.importFilm(path.basename(newfile), monfilm, function(error) { 
+						if( error ) {
+							console.log(monfilm.title);
+							console.log(error);
+						} else {
+							console.log(monfilm.title);
+						}
+					});
+					
 				});
+				}
 			});
 		});
 	}

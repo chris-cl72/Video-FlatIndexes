@@ -39,12 +39,14 @@ var LocalDownloads = function() {
 		var videos = new Videos();
 		var srcfile = path.join(this.path, filename);
 		var destdir = path.join(this.filmspath, 'genre');
-		destdir = path.join(destdir, film.genre);
-		var destfile = path.join(destdir, filename);
+		
 		if( fs.existsSync(srcfile) ) {
 			ensureExists(destdir, 0744, function(err) {
+			destdir = path.join(destdir, film.genre);
+			var destfile = path.join(destdir, filename);
+			ensureExists(destdir, 0744, function(err) {
     				if (err) {
-					console.log('Cannot create dir : "' +  destdir + '/' + this.genre + '"');
+					console.log('Cannot create dir : "' +  destdir + '"');
 					callback(err);
 				}
     				else {
@@ -70,6 +72,7 @@ var LocalDownloads = function() {
 					});
 					source.on('error', function(err) { callback(err); });
 				}
+			});
 			});
 			
 		}
