@@ -97,7 +97,7 @@ module.exports = function(app, req, res) {
 			for(var key in jsonParams){
 				if( key !== 'type' ) {
 					var searchkeywords = jsonParams[key];
-					console.log(searchkeywords);
+					//console.log(searchkeywords);
 					var onlineVideos = new OnlineVideos();
 					onlineVideos.listmovies( searchkeywords,function(movies) {
 						res.json({filename:key,data:movies});

@@ -26,6 +26,7 @@ this.runtime='';
 this.code = '';
 this.href = '';
 this.groupŝ = '';
+this.imageWebpath = '';
 
 this.write = function(file, callback) {
 	var destdescFile = path.join( path.dirname(file), '.' + path.basename(file) + '.desc');

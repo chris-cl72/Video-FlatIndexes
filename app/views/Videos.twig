@@ -72,10 +72,14 @@
 		<div class="col-md-3">
 		<p>
 
-		{% if film.imageWebpath != null %}
-		{% if film.imageWebpath  != '' %}
+		{% if film.urlimagefile != null %}
+		{% if film.urlimagefile  != '' %}
+			<div class="fadeover"><img class="img-thumbnail" alt="image absente" src="perso/{{ film.urlimagefile }}" width="160"/></div>
+		{% else %}
 			<div class="fadeover"><img class="img-thumbnail" alt="image absente" src="{{ film.imageWebpath }}" width="160"/></div>
 		{% endif %}
+		{% else %}
+			<div class="fadeover"><img class="img-thumbnail" alt="image absente" src="{{ film.imageWebpath }}" width="160"/></div>
 		{% endif %}
 
 		<br/>

@@ -1,5 +1,5 @@
 var path = require('path');
-
+var LocalVideos = callDataModel('localVideos.js');
 
 module.exports.accueil = function(app, req, res) {
 	var userAuth = getSessionData( app, req, 'userAuth' );
@@ -23,8 +23,10 @@ module.exports.search = function(app, req, res) {
 	}
         if( req.param('scope') === 'local' )
         {
-	var LocalVideos = callDataModel('localVideos.js');
-	localVideos = new LocalVideos(path.join(__dirname, '../../private/'),req.param('search')); //app.get('staticdir'));
+	//var LocalVideos = callDataModel('localVideos.js');
+	var localVideos = new LocalVideos();
+	localVideos.list(req.param('search'));
+	//localVideos = new LocalVideos(path.join(__dirname, '../../private/'),req.param('search')); //app.get('staticdir'));
 	var list = localVideos.getLastFilms(100);
 	var userAuth = getSessionData( app, req, 'userAuth' );
 	var searchResult = new SearchResult();
