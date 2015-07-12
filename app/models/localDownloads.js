@@ -23,7 +23,7 @@ var LocalDownloads = function() {
 	this.readall = function() {
 		var videos = new Videos();
 		//var staticconf = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads;
-		this.list = videos.listDownload(staticconf_downloads);
+		this.list = videos.listDownload(this.path);
 	}
 
 	this.rename = function(oldfile, newfile, callback) {

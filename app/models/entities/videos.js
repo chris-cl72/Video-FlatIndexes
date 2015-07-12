@@ -12,9 +12,9 @@ var Film = require(path.join(__dirname, './film.js'));
 
 var Videos = function() {
 
-this.listDownload = function(conf) {
+this.listDownload = function(currentpath) {
 	//console.log(conf);
-	var currentpath = conf.path;
+	//var currentpath = conf.path;
 	var list = new Array();
 	var files = Finder.from(currentpath.toString()).findFiles('*.avi'); // $ ne semble pas supporté
         for (var i = 0, len = files.length; i < len; i++) {

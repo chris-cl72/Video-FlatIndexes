@@ -377,12 +377,15 @@ function suggestVideoFilename(orifinalFilename)
 	var filename = str.replace(/.*\//g,"");
     var basename = filename.replace(/\.[^.]*$/g,"");
     var extension = filename.replace(/.*\./g,"");
-var shortbasename = basename.replace(/_[a-zA-Z0-9]*/g,"");
-                            var extend = shortbasename.replace(/.*_/g,"");
-                            if( extend !== "" && extend !== shortbasename )
-                                extend = "_" + extend;
-                            else
-                                extend = "";
+	//var shortbasename = basename.replace(/_[a-zA-Z0-9]*/g,"");
+        //var extend = shortbasename.replace(/.*_/g,"");
+        //if( extend !== "" && extend !== shortbasename )
+        //	extend = "_" + extend;
+        //else
+        //	extend = "";
+	var shortbasename = basename;
+	var extend = "";
+
 var txt = shortbasename.replace(/\[[^\]]*\]/g,"");
 txt=txt.trim();
 txt = txt.replace(new RegExp(" ", "g"),".");
@@ -470,8 +473,9 @@ $('#form_downloaded_files').on('submit', function(){
 
 	var value = $(this).val();
 	if( $('#type_download_action').val() === 'search' ) {
-		var searchkeywords = decodeURIComponent(value).replace(/^(.*)\/([^\/]*)$/g, "$2");
+		var searchkeywords = newfile.replace(/^(.*)\/([^\/]*)$/g, "$2");
 		searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
+		searchkeywords = searchkeywords.replace(/_[a-zA-Z0-9]*/g,"");
 		searchkeywords = searchkeywords.replace(/\./g, ' ');
 		value = searchkeywords;
 	}

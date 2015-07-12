@@ -24,12 +24,14 @@ function suggestVideoFilename(orifinalFilename)
 	var filename = str.replace(/.*\//g,"");
     var basename = filename.replace(/\.[^.]*$/g,"");
     var extension = filename.replace(/.*\./g,"");
-var shortbasename = basename.replace(/_[a-zA-Z0-9]*/g,"");
-                            var extend = shortbasename.replace(/.*_/g,"");
-                            if( extend !== "" && extend !== shortbasename )
-                                extend = "_" + extend;
-                            else
-                                extend = "";
+	//var shortbasename = basename.replace(/_[a-zA-Z0-9]*/g,"");
+        //var extend = shortbasename.replace(/.*_/g,"");
+        //if( extend !== "" && extend !== shortbasename )
+        //	extend = "_" + extend;
+        //else
+        //	extend = "";
+	var shortbasename = basename;
+	var extend = "";
 var txt = shortbasename.replace(/\[[^\]]*\]/g,"");
 txt=txt.trim();
 txt = txt.replace(new RegExp(" ", "g"),".");
@@ -79,7 +81,9 @@ function importFilms( srcdir, destdir) {
 
 		localDownloads.rename(fileName,newFilename, function(oldfile,newfile) {	
 			var searchkeywords = newfile.replace(/^(.*)\/([^\/]*)$/g, "$2");
+
 			searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
+			searchkeywords = searchkeywords.replace(/_[a-zA-Z0-9]*/g,"");
 			searchkeywords = searchkeywords.replace(/\./g, ' ');
 
 			var onlineVideos = new OnlineVideos();

@@ -78,22 +78,26 @@ function moviesDetails(error, object, movies, callback)
 	for (i = 0; i < movies.length ; i++) {
 		allocine.api('movie', {code: movies[i].code}, function(error,result) {
 			nbMovieDetailsEvent++;
-			for (j = 0; j < movies.length ; j++) {
-			if(  movies[j].code === result.movie.code ) {
-			var genre = '';
-			var nationality = '';
-			if( typeof result.movie.genre !== 'undefined' &&  result.movie.genre.length !== 0 )
-				genre = result.movie.genre[0].$;		
-			if( typeof result.movie.nationality !== 'undefined' && result.movie.nationality.length !== 0 )
-                                nationality = result.movie.nationality[0].$;
+			if( error ) { 
+			}
+			else {
+				for (j = 0; j < movies.length ; j++) {
+				if(  typeof movies[j] !== 'undefined' && movies[j].code === result.movie.code ) {
+				var genre = '';
+				var nationality = '';
+				if( typeof result.movie.genre !== 'undefined' &&  result.movie.genre.length !== 0 )
+					genre = result.movie.genre[0].$;		
+				if( typeof result.movie.nationality !== 'undefined' && result.movie.nationality.length !== 0 )
+		                        nationality = result.movie.nationality[0].$;
 
-			movies[j].genre = genre;	
-			movies[j].country = nationality;
-			break;
-			}
-			}
-			if( nbMovieDetailsEvent === movies.length ) {
-				callback(movies);
+				movies[j].genre = genre;	
+				movies[j].country = nationality;
+				break;
+				}
+				}
+				if( nbMovieDetailsEvent === movies.length ) {
+					callback(movies);
+				}
 			}
 		 });
 	}
