@@ -473,7 +473,7 @@ $('#form_downloaded_files').on('submit', function(){
 
 	var value = $(this).val();
 	if( $('#type_download_action').val() === 'search' ) {
-		var searchkeywords = newfile.replace(/^(.*)\/([^\/]*)$/g, "$2");
+		var searchkeywords = value.replace(/^(.*)\/([^\/]*)$/g, "$2");
 		searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
 		searchkeywords = searchkeywords.replace(/_[a-zA-Z0-9]*/g,"");
 		searchkeywords = searchkeywords.replace(/\./g, ' ');
