@@ -88,8 +88,10 @@ function importFilms( srcdir, destdir) {
 
 			var onlineVideos = new OnlineVideos();
 			onlineVideos.listmovies( searchkeywords,function(movies) {
-				if( movies.length > 0 ) {
-				onlineVideos.getMovie(movies[0].code, function(monfilm) {
+				var code = 0;
+				if( movies.length > 0 ) { code = movies[0].code }
+
+				onlineVideos.getMovie(code, function(monfilm) {
 					console.log(path.basename(newfile));
 					localDownloads.importFilm(path.basename(newfile), monfilm, function(error) { 
 						if( error ) {
@@ -101,7 +103,7 @@ function importFilms( srcdir, destdir) {
 					});
 					
 				});
-				}
+				//}
 			});
 		});
 	}
