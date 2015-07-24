@@ -13,6 +13,7 @@ process.argv.forEach(function(val, index, array) {
 	if( index == 2 ) 
 		srcdir=val;
 	if( index == 3 ) {
+		console.log(val);
 		destdir=val;
 		importFilms(srcdir, destdir);
 	}
@@ -87,6 +88,7 @@ function importFilms( srcdir, destdir) {
 			searchkeywords = searchkeywords.replace(/\./g, ' ');
 
 			var onlineVideos = new OnlineVideos();
+			//console.log('dfsdfs');
 			onlineVideos.listmovies( searchkeywords,function(movies) {
 				var code = 0;
 				if( movies.length > 0 ) { code = movies[0].code }

@@ -84,7 +84,7 @@ module.exports = function(app, req, res) {
 		var jsonParams = req.body;
 		if( jsonParams['type'] === 'rename' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
 			for(var key in jsonParams){
-				if( key !== 'type' ) {
+				if( key !== 'type' && key !== 'typevideo' && key !== 'seasonnumber' ) {
 					var localDownloads = new LocalDownloads();
 					localDownloads.rename(key,jsonParams[key], function(oldfile, newfile) {
 						res.json({filename:oldfile,data:newfile});
@@ -94,25 +94,37 @@ module.exports = function(app, req, res) {
 			
          	}
 		else if( jsonParams['type'] === 'search' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
+			var searchkeywords = '';
+			var filename = '';
+			var typevideo = jsonParams['typevideo'];
+			var seasonnumber = jsonParams['seasonnumber'];
 			for(var key in jsonParams){
-				if( key !== 'type' ) {
-					var searchkeywords = jsonParams[key];
-					//console.log(searchkeywords);
-					var onlineVideos = new OnlineVideos();
-					onlineVideos.listmovies( searchkeywords,function(movies) {
-						res.json({filename:key,data:movies});
-					});
+				if( key !== 'type' && key !== 'typevideo' && key !== 'seasonnumber' ) {
+					filename = key;
+					searchkeywords = jsonParams[filename];					
 				}
     			}
+			if( typevideo === 'tvserie' ) {
+				var onlineVideos = new OnlineVideos();
+				onlineVideos.listseries( searchkeywords,seasonnumber, function(saisons) {
+					res.json({filename:filename,data:saisons});
+				});
+			}
+			if( typevideo === 'film' ) {
+				var onlineVideos = new OnlineVideos();
+				onlineVideos.listmovies( searchkeywords,function(movies) {
+					res.json({filename:filename,data:movies});
+				});
+			}
          	}
 		else if( jsonParams['type'] === 'indexation' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
-			for(var name in jsonParams){
-				if( name !== 'type' ) {
+			for(var key in jsonParams){
+				if( key !== 'type' && key !== 'typevideo' && key !== 'seasonnumber' ) {
 					var onlineVideos = new OnlineVideos();
 					//var error = '';
-					onlineVideos.getMovie(jsonParams[name], function(monfilm) {
+					onlineVideos.getMovie(jsonParams[key], function(monfilm) {
 						var localDownloads = new LocalDownloads();
-						localDownloads.importFilm(name, monfilm, function(error) { 
+						localDownloads.importFilm(key, monfilm, function(error) { 
 							if( error )
 								console.log(error);
 							res.json({filename:name,monfilm:monfilm});

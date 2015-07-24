@@ -5,6 +5,7 @@ var twig = require('twig');
 var path = require('path');
 var bodyParser = require('body-parser');
 var util = require('util');
+var compression = require('compression');
 
 var app = express();
 var timeout = require('connect-timeout'); //express v4
@@ -45,6 +46,10 @@ app.use(session({
  saveUninitialized: true
 //"store":  new session.MemoryStore({ reapInterval: 60000 * 10 })
 }));
+
+app.locals.cache = 'memory';
+app.use(compression({ level: 9 }));
+
 //require('./config/system.js')(app,express);
 //require('./config/user.js')(app,express);
 require('./config/settings.js')(app,express);

@@ -71,7 +71,12 @@ width: 100%;
   			<!-- Wrapper for slides -->
   			<div class="carousel-inner">
   			{% for key,value in lastFilms %}
-				<div {% if key == 0 %} id="itemactive" class="item active" {% else %} class="item" {% endif %} title="{{ value.title|escape('html') }}" synopsis="{{ value.synopsis|escape('html') }}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}?id={{ id }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" directors="{{ value.directors|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" country="{{ value.country|escape('html') }}" >
+				<div {% if key == 0 %} id="itemactive" class="item active" {% else %} class="item" {% endif %} title="{{ value.title|escape('html') }}" synopsis="
+{% if value.synopsisShort != '' %}
+    {{ value.synopsisShort|escape('html') }}
+{% else %}
+    {{ value.synopsis|escape('html') }}
+{% endif %}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}?id={{ id }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" directors="{{ value.directors|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" country="{{ value.country|escape('html') }}" >
 					<div style="background:url(/Videos/perso/{{ value.urlimagefile }}) top center; background-size:cover; background-position: 0px -100px; background-repeat:no-repeat;" class="slider-size" >
       					<!-- <div class="carousel-caption"><H2>{{ value.title }}</H2></div> -->
       					</div>
@@ -373,54 +378,77 @@ $.ajax({
 
 function suggestVideoFilename(orifinalFilename)
 {
-	var str = orifinalFilename;
+		var str = orifinalFilename;
 	var filename = str.replace(/.*\//g,"");
     var basename = filename.replace(/\.[^.]*$/g,"");
     var extension = filename.replace(/.*\./g,"");
-	//var shortbasename = basename.replace(/_[a-zA-Z0-9]*/g,"");
-        //var extend = shortbasename.replace(/.*_/g,"");
-        //if( extend !== "" && extend !== shortbasename )
-        //	extend = "_" + extend;
-        //else
-        //	extend = "";
+
 	var shortbasename = basename;
 	var extend = "";
 
-var txt = shortbasename.replace(/\[[^\]]*\]/g,"");
-txt=txt.trim();
-txt = txt.replace(new RegExp(" ", "g"),".");
+	var txt = shortbasename.replace(/\[[^\]]*\]/g,"");
+	txt=txt.trim();
+	txt = txt.replace(new RegExp(" ", "g"),".");
 
-for (var i = 0; i <= 99; i++) {
-    var iString = i.toString();
-    if( iString.length == 1 )
-	iString = "0" + iString;
-    var reg=new RegExp("\\.20" + iString + "\\.", "g");
-    txt = txt.replace(reg,".");
-    reg=new RegExp("\\.20" + iString + "$", "g");
-    txt = txt.replace(reg,".");
+	for (var i = 0; i <= 99; i++) {
+	    var iString = i.toString();
+	    if( iString.length == 1 )
+		iString = "0" + iString;
+	    var reg=new RegExp("\\.20" + iString + "\\.", "g");
+	    txt = txt.replace(reg,".");
+	    reg=new RegExp("\\.20" + iString + "$", "g");
+	    txt = txt.replace(reg,".");
+	}
+
+	var keywords = ["WEBRip","dvd", "brrip", "bdrip", "xvid", "truefrench","stv","x264","fastsub","web-dl","ld","ac3","hdtv"];
+	for (var i = 0; i < keywords.length; i++)
+	{
+		var reg=new RegExp("\\." + keywords[i] + "[^.]*\\.", "gi");
+		txt = txt.replace(reg,".");
+		reg=new RegExp("\\." + keywords[i] + "[^.]*$", "gi");
+		txt = txt.replace(reg,"."); 
+	}
+
+	var keywordsSolo = ["french"];
+	for (var i = 0; i < keywordsSolo.length; i++)
+	{
+		var reg=new RegExp("\\." + keywordsSolo[i] + "\\.", "gi");
+		txt = txt.replace(reg,".");
+		reg=new RegExp("\\." + keywordsSolo[i] + "$", "gi");
+		txt = txt.replace(reg,".");
+	}
+
+var vostfr = '';
+pattern = new RegExp("\\.VOSTFR", "gi");
+if( pattern.test(txt) ) {
+	pattern.lastIndex=0;
+	vostfr = '_VOSTFR';
+	txt = txt.replace(pattern,'.');
 }
 
-var keywords = ["WEBRip","dvd", "brrip", "bdrip", "xvid", "truefrench","stv","x264","fastsub","web-dl","ld","ac3","hdtv"];
-for (var i = 0; i < keywords.length; i++)
-{
-	var reg=new RegExp("\\." + keywords[i] + "[^.]*\\.", "gi");
-	txt = txt.replace(reg,".");
-	reg=new RegExp("\\." + keywords[i] + "[^.]*$", "gi");
-        txt = txt.replace(reg,"."); 
+var episode = '';
+pattern = new RegExp("\\.S[0-9]{1,2}E[0-9]{1,2}", "gi");
+pattern1 = new RegExp("S[0-9]{1,2}E[0-9]{1,2}", "gi");
+if( pattern.test(txt) ) {
+	pattern.lastIndex=0;
+	episode = '_' + pattern1.exec(txt)[0];
+	txt = txt.replace(pattern,'');
 }
 
-var keywordsSolo = ["french"];
-for (var i = 0; i < keywordsSolo.length; i++)
-{
-        var reg=new RegExp("\\." + keywordsSolo[i] + "\\.", "gi");
-        txt = txt.replace(reg,".");
-        reg=new RegExp("\\." + keywordsSolo[i] + "$", "gi");
-        txt = txt.replace(reg,".");
+	var newfilename = txt.trim() + episode.trim() + vostfr.trim() +  extend.trim() + "." + extension.trim();
+	newfilename = newfilename.replace(/\.\./g,".");
+	newfilename = newfilename.replace(/\._/g,"_");
+	newfilename = newfilename.replace(/_\./g,"_");
+	return newfilename;
 }
 
-    var newfilename = txt.trim() + extend.trim() + "." + extension.trim();
-    newfilename = newfilename.replace(/\.\./g,".");
-    return newfilename;
+function getSeasonNumber(filename) {
+	var seasonnumber = 0;
+	if( filename.match(/_S[0-9]{1,2}E[0-9]{1,2}/) ) {
+		var strseasonnumber = filename.replace(/.*_S([0-9]{1,2})(E[0-9]{1,2}.*)/,'$1');
+		if( strseasonnumber !== '' ) { seasonnumber = parseInt(strseasonnumber,10); }	
+	}
+	return seasonnumber;
 }
 
 function updateIndexes()
@@ -470,22 +498,31 @@ $('#form_downloaded_files').on('submit', function(){
 
   $( '#form_downloaded_files input').each(function() {
 	if( $(this).attr('name') !== 'type' ) {
-
+	var typevideos = '';
+	var seasonnumber = 0;
 	var value = $(this).val();
 	if( $('#type_download_action').val() === 'search' ) {
+		if( (seasonnumber = getSeasonNumber(value)) > 0 ) 
+			typevideos = 'tvserie';
+		else
+			typevideos = 'film';
+		var searchkeywords = value.replace(/^(.*)\/([^\/]*)$/g, "$2");
+
 		var searchkeywords = value.replace(/^(.*)\/([^\/]*)$/g, "$2");
 		searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
 		searchkeywords = searchkeywords.replace(/_[a-zA-Z0-9]*/g,"");
 		searchkeywords = searchkeywords.replace(/\./g, ' ');
 		value = searchkeywords;
+		
 	}
+
+	
 
 	$.ajax({
 	type: "POST",
 	url: "/Videos/perso",
 	dataType: "json",
-	data: '{"type":"' + $('#type_download_action').val() + '","' + $(this).attr('name') + '":"' + value + '"}', //JSON.stringify(arrayDownloadedFiles),
-	// data: '{"type":"' + $('#type_download_action').val() + '","' + $(this).attr('name') + '":"' + encodeURIComponent($(this).val()) + '"}', //JSON.stringify(arrayDownloadedFiles),
+	data: '{"type":"' + $('#type_download_action').val() + '","' + $(this).attr('name') + '":"' + value + '","typevideo":"' + typevideos + '","seasonnumber":"' + seasonnumber + '"}', //JSON.stringify(arrayDownloadedFiles),
       	contentType: 'application/json; charset=utf-8',
     	cache: false,
     	timeout: 30000,
@@ -500,7 +537,11 @@ $('#form_downloaded_files').on('submit', function(){
 				for (var i = 0; i < result["data"].length; i++) {
 					//if( i == 0 ) { content = '<h4>' + result["filename"] + '</h4>'; }
 					var newentries = '';
-					newentries = newentries + '<input name="' + result["filename"] + '" value="' +  result["data"][i].code + '" type="radio">' + result["data"][i].title + ' [' + result["data"][i].genre + ' de ' +  result["data"][i].year + ']' + '</input><br/>';
+					var seasonnumber = 0;
+					if( typeof result["data"][i].number !== 'undefined' ) seasonnumber = result["data"][i].number;
+					var txtSeason = '';
+					if( seasonnumber > 0 ) { txtSeason = ' Saison ' + seasonnumber; txtSerie = 'Série '; }
+					newentries = newentries + '<input name="' + result["filename"] + '" value="' +  result["data"][i].code + '" type="radio">' + txtSerie + result["data"][i].title + ' [' + result["data"][i].genre + ' de ' +  result["data"][i].year + ']' + txtSeason + '</input><br/>';
 					content = content + newentries;	
 				}
 				//} else {
