@@ -25,6 +25,7 @@
     "follow-redirects": "~0.0.3",
     "fs-finder": "~1.8.0",
     "path": "~0.4.9",
+    "request": "^2.60.0",
     "twig": "~0.7.2",
     "url": "~0.10.1",
     "util": "^0.10.3"

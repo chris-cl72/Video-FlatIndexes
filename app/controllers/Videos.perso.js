@@ -146,6 +146,7 @@ module.exports = function(app, req, res) {
 						if( error )
 							console.log(error);
 						res.json({filename:filename,monfilm:monfilm});
+						//console.log('fin' + ' : ' + id);
 					});	
 				}); 
 			//}
