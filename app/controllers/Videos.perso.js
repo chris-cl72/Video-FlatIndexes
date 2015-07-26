@@ -118,21 +118,38 @@ module.exports = function(app, req, res) {
 			}
          	}
 		else if( jsonParams['type'] === 'indexation' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
+			var filename = '';
+			var id = '';
 			for(var key in jsonParams){
-				if( key !== 'type' && key !== 'typevideo' && key !== 'seasonnumber' ) {
-					var onlineVideos = new OnlineVideos();
-					//var error = '';
-					onlineVideos.getMovie(jsonParams[key], function(monfilm) {
-						var localDownloads = new LocalDownloads();
-						localDownloads.importFilm(key, monfilm, function(error) { 
-							if( error )
-								console.log(error);
-							res.json({filename:name,monfilm:monfilm});
-						});
-						
-					}); 
+				if( key !== 'type' /*&& key !== 'typevideo' && key !== 'seasonnumber'*/ ) {
+					filename = key;
+					id = jsonParams[filename];
 				}
-    			}
+			}	
+			/*if( typevideo === 'tvserie' ) {
+				var onlineVideos = new OnlineVideos();
+				onlineVideos.getMovie(jsonParams[key], function(saison) {
+					var localDownloads = new LocalDownloads();
+					localDownloads.importSerie(key, masaison, function(error) { 
+						if( error )
+							console.log(error);
+						res.json({filename:filename,object:masaison});
+					});	
+				}); 
+			}*/
+			//if( typevideo === 'film' ) {
+				var onlineVideos = new OnlineVideos();
+				//console.log(id);
+				onlineVideos.getMovie(id, function(monfilm) {
+					var localDownloads = new LocalDownloads();
+					localDownloads.importFilm(filename, monfilm, function(error) { 
+						if( error )
+							console.log(error);
+						res.json({filename:filename,monfilm:monfilm});
+					});	
+				}); 
+			//}
+    			
 		}
 		else if( jsonParams['type'] === 'delete' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
 			deleteSessionData(app,req,'localVideos');

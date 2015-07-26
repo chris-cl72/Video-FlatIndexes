@@ -82,6 +82,8 @@ function getMovie( code, callback)
 	if( code != 0 ) {
 	monfilm.code = code;
 	allocine.api('movie', {code: code}, function(error,result) {
+		if( error ) { }
+		else {
 		if( typeof result.movie.genre !== 'undefined' &&  result.movie.genre.length !== 0 ) {
 			monfilm.genre = result.movie.genre[0].$;		
 		}
@@ -167,7 +169,7 @@ function getMovie( code, callback)
 		monfilm.title = title;
 		monfilm.year = productionYear;
 		
-
+		}
 		callback(monfilm);
 	});
 	} else { callback(monfilm); }

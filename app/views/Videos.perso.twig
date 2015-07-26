@@ -446,6 +446,7 @@ function getSeasonNumber(filename) {
 	var seasonnumber = 0;
 	if( filename.match(/_S[0-9]{1,2}E[0-9]{1,2}/) ) {
 		var strseasonnumber = filename.replace(/.*_S([0-9]{1,2})(E[0-9]{1,2}.*)/,'$1');
+		//alert(filename + ':' + strseasonnumber);
 		if( strseasonnumber !== '' ) { seasonnumber = parseInt(strseasonnumber,10); }	
 	}
 	return seasonnumber;
@@ -502,7 +503,8 @@ $('#form_downloaded_files').on('submit', function(){
 	var seasonnumber = 0;
 	var value = $(this).val();
 	if( $('#type_download_action').val() === 'search' ) {
-		if( (seasonnumber = getSeasonNumber(value)) > 0 ) 
+		seasonnumber = getSeasonNumber(value);
+		if( seasonnumber > 0 ) 
 			typevideos = 'tvserie';
 		else
 			typevideos = 'film';
@@ -540,6 +542,7 @@ $('#form_downloaded_files').on('submit', function(){
 					var seasonnumber = 0;
 					if( typeof result["data"][i].number !== 'undefined' ) seasonnumber = result["data"][i].number;
 					var txtSeason = '';
+					var txtSerie = '';
 					if( seasonnumber > 0 ) { txtSeason = ' Saison ' + seasonnumber; txtSerie = 'Série '; }
 					newentries = newentries + '<input name="' + result["filename"] + '" value="' +  result["data"][i].code + '" type="radio">' + txtSerie + result["data"][i].title + ' [' + result["data"][i].genre + ' de ' +  result["data"][i].year + ']' + txtSeason + '</input><br/>';
 					content = content + newentries;	

@@ -77,6 +77,49 @@ var LocalDownloads = function() {
 			
 		}
 	}
+
+	this.importSerie = function(filename, saison, callback) {
+		var videos = new Videos();
+		var srcfile = path.join(this.path, filename);
+		var destdir = path.join(this.filmspath, 'genre');
+		
+		if( fs.existsSync(srcfile) ) {
+			ensureExists(destdir, 0744, function(err) {
+			destdir = path.join(destdir, film.genre);
+			var destfile = path.join(destdir, filename);
+			ensureExists(destdir, 0744, function(err) {
+    				if (err) {
+					console.log('Cannot create dir : "' +  destdir + '"');
+					callback(err);
+				}
+    				else {
+					console.log('Moving "' +  srcfile + '" into "' + destfile + '" ...');
+
+					var source = fs.createReadStream(srcfile);
+					var dest = fs.createWriteStream(destfile);
+					source.pipe(dest);
+					source.on('end', function() {
+						fs.unlink(srcfile, function (err) {
+	  						if (err) {
+								console.log('Error moving file "' +  srcfile + '".');
+								callback(err);
+							} else {
+								console.log('File "' +  srcfile + '" successfully moved');
+								if( film.genre !== 'unclassed' ) { 
+									videos.importfilm(destfile, film, callback);
+								} else {
+									callback(null);
+								}
+							}						
+						}); 						
+					});
+					source.on('error', function(err) { callback(err); });
+				}
+			});
+			});
+			
+		}
+	}
 };
 
 module.exports = LocalDownloads;

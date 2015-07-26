@@ -1,10 +1,22 @@
 #!/bin/bash
 
 
-dsource="$1"
+dealsource="$1"
 ddest="$2"
-dtmp="$3"
+
 number=2
+
+function movevideos
+{
+	srcvideos="$1"
+	destvideos="$srcvideos/tmpVideos"
+	mkdir $destvideos
+	while read file
+	do
+		mv "$file" "$destvideos"		
+	done < <(find "$srcvideos" -type f | egrep -i "\.mkv$|\.avi$")
+	echo $destvideos
+}
 
 function import
 {
@@ -46,10 +58,14 @@ function import
 }
 
 rm -f /tmp/import_nodejs.log
+dtmp="$dealsource"
+dsource="$(movevideos ""$dealsource"")"
 
 while true
 do
 valreturn=$(import)
-echo $valreturn
+#echo $valreturn
 if [[ "$valreturn" == "1" ]]; then break; fi
 done
+
+rm -Rf $dsource
