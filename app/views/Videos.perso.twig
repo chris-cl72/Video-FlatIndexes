@@ -527,7 +527,7 @@ $('#form_downloaded_files').on('submit', function(){
 	data: '{"type":"' + $('#type_download_action').val() + '","' + $(this).attr('name') + '":"' + value + '","typevideo":"' + typevideos + '","seasonnumber":"' + seasonnumber + '"}', //JSON.stringify(arrayDownloadedFiles),
       	contentType: 'application/json; charset=utf-8',
     	cache: false,
-    	timeout: 30000,
+    	timeout: 300000000,
     		crossDomain: true,
 		success: function (result) {
 			if( $('#type_download_action').val() === 'rename' ) {
@@ -582,7 +582,7 @@ $('#form_indexation_files').on('submit', function(){
 			data: '{"type":"' + $('#type_indexation_action').val() + '","' + entry.name + '":"' + entry.value + '"}',
 		      	contentType: 'application/json; charset=utf-8',
 		    	cache: false,
-		    	timeout: 600000,
+		    	timeout: 300000000,
 		    		crossDomain: true,
 				success: function (result) {
 					//alert ( JSON.stringify(result) );
