@@ -20,7 +20,8 @@ this.listDownload = function(currentpath) {
         for (var i = 0, len = files.length; i < len; i++) {
 		var file = files[i];
 		var patt = new RegExp(/.avi$/gm);
-		if( patt.test(file) ) {
+		//var patt1 = new RegExp(/.mkv$/gm);
+		if( patt.test(file) ) { //|| patt1.test(file) ) {
 			file = file.replace(currentpath + "/","");
 			file = file.replace(currentpath,"");
                 	list[list.length] = encodeURIComponent(file);
@@ -47,6 +48,16 @@ this.importfilm = function( file, film, callback ) {
 	downloadfile(srcimageWebpath, imageFile, function(){
   		film.imageFile = imageFile;
 		film.write(file, callback);
+	});
+}
+
+this.importserie = function( dir, saison, callback ) {
+	var imageFile = path.join( dir, '.' + path.basename(dir) + '.jpg');
+	var srcimageWebpath = saison.imageWebpath.replace('r_160_240','r_640_960');
+	srcimageWebpath = srcimageWebpath.replace('b_1_d6d6d6','b_4_dffdffdff')
+	downloadfile(srcimageWebpath, imageFile, function(){
+  		saison.imageFile = imageFile;
+		saison.write(dir, callback);
 	});
 }
 

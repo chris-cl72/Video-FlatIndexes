@@ -7,9 +7,12 @@ eval(fs.readFileSync(path.join(__dirname, '../libraries/tools.js'))+'');
 var Videos = require(path.join(__dirname, 'entities/videos.js'));
 var staticconf_downloads = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads;
 var staticconf_films = readConf(path.join(__dirname, '../models/entities/videos.json')).films;
+var staticconf_series = readConf(path.join(__dirname, '../models/entities/videos.json')).series;
+
 var LocalDownloads = function() {
 	this.path = staticconf_downloads.path;
 	this.filmspath = staticconf_films.path;
+	this.seriespath = staticconf_series.path;
 	this.list = null;
 
 	this.setpath = function(refpath) {
@@ -20,6 +23,11 @@ var LocalDownloads = function() {
 		this.filmspath = refpath;
 	}
 
+	this.setseriespath = function(refpath) {
+		this.seriespath = refpath;
+		
+	}
+
 	this.readall = function() {
 		var videos = new Videos();
 		//var staticconf = readConf(path.join(__dirname, '../models/entities/videos.json')).downloads;
@@ -27,8 +35,8 @@ var LocalDownloads = function() {
 	}
 
 	this.rename = function(oldfile, newfile, callback) {
-		var oldfilepath = this.path + '/' + decodeURIComponent(oldfile);
-		var newfilepath = this.path + '/' + decodeURIComponent(newfile);
+		var oldfilepath = this.path + '/' + oldfile;
+		var newfilepath = this.path + '/' + newfile;
 		console.log('Moving "' +  oldfilepath + '" into "' + newfilepath + '" ...');
 		fs.rename(oldfilepath, newfilepath, function() {
 			callback(oldfilepath, newfilepath);
@@ -43,7 +51,7 @@ var LocalDownloads = function() {
 		if( fs.existsSync(srcfile) ) {
 			ensureExists(destdir, 0744, function(err) {
 			destdir = path.join(destdir, film.genre);
-			var destfile = path.join(destdir, filename);
+			var destfile = path.join(destdir, path.basename(filename));
 			ensureExists(destdir, 0744, function(err) {
     				if (err) {
 					console.log('Cannot create dir : "' +  destdir + '"');
@@ -75,19 +83,33 @@ var LocalDownloads = function() {
 			});
 			});
 			
-		}
+		}else callback(null);
 	}
 
-	this.importSerie = function(filename, saison, callback) {
+	this.importSerie = function(filename, masaison, callback) {
 		var videos = new Videos();
 		var srcfile = path.join(this.path, filename);
-		var destdir = path.join(this.filmspath, 'genre');
+		console.log('!!!!!!!!!!!!! srcfile: ' + srcfile);
+		var destdir = '';
+		if( masaison.genre !== 'unclassed' ) { 
+			var destdirname = path.basename(filename);
+			var vostfr = '';
+			var patt = new RegExp('^.*S[0-9]{1,2}E[0-9]{1,2}_(VOSTFR).*$','gi');
+			if( patt.test(destdirname) ) 
+				vostfr = '_VOSTFR';
+			destdirname = destdirname.replace(/([^_]*)_.*/,'$1');
+
+			var saisonname = '_saison' + masaison.number;
+			destdir = path.join(this.seriespath, destdirname + saisonname + vostfr);
+		} else {
+			destdir = path.join(this.seriespath, 'unclassed');
+		}
+
 		
 		if( fs.existsSync(srcfile) ) {
 			ensureExists(destdir, 0744, function(err) {
-			destdir = path.join(destdir, film.genre);
-			var destfile = path.join(destdir, filename);
-			ensureExists(destdir, 0744, function(err) {
+			var destfile = path.join(destdir, path.basename(filename));
+			
     				if (err) {
 					console.log('Cannot create dir : "' +  destdir + '"');
 					callback(err);
@@ -105,8 +127,8 @@ var LocalDownloads = function() {
 								callback(err);
 							} else {
 								console.log('File "' +  srcfile + '" successfully moved');
-								if( film.genre !== 'unclassed' ) { 
-									videos.importfilm(destfile, film, callback);
+								if( masaison.genre !== 'unclassed' ) { 
+									videos.importserie(destdir, masaison, callback);
 								} else {
 									callback(null);
 								}
@@ -116,9 +138,8 @@ var LocalDownloads = function() {
 					source.on('error', function(err) { callback(err); });
 				}
 			});
-			});
 			
-		}
+		} else callback(null);
 	}
 };
 

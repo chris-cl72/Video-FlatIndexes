@@ -15,7 +15,7 @@ process.argv.forEach(function(val, index, array) {
 	if( index == 3 ) {
 		console.log(val);
 		destdir=val;
-		importFilms(srcdir, destdir);
+		importSeries(srcdir, destdir);
 	}
 });
 
@@ -95,10 +95,11 @@ function getSeasonNumber(filename) {
 	return seasonnumber;
 }
 
-function importFilms( srcdir, destdir) {
+function importSeries( srcdir, destdir) {
 	var localDownloads = new LocalDownloads();
 	localDownloads.setpath(srcdir);
-	localDownloads.setfilmspath(destdir);
+	localDownloads.setseriespath(destdir);
+	
 	localDownloads.readall();
 
 	for(var i  in localDownloads.list ){
@@ -106,26 +107,25 @@ function importFilms( srcdir, destdir) {
 		var newFilename = suggestVideoFilename(path.basename(fileName))
 		//console.log( '!!!!!!!! ' + fileName + '->' + newFilename);
 		localDownloads.rename(fileName,path.basename(newFilename), function(oldfile,newfile) {	
-			var searchkeywords = newfile.replace(/^(.*)\/([^\/]*)$/g, "$2");
-
-			searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
-			searchkeywords = searchkeywords.replace(/_[a-zA-Z0-9]*/g,"");
-			searchkeywords = searchkeywords.replace(/\./g, ' ');
-
+		var searchkeywords = newfile.replace(/^(.*)\/([^\/]*)$/g, "$2");
+		searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
+		searchkeywords = searchkeywords.replace(/_[a-zA-Z0-9]*/g,"");
+		searchkeywords = searchkeywords.replace(/\./g, ' ');
+		//console.log( 'searchkeywords :' + searchkeywords);
 			var onlineVideos = new OnlineVideos();
 			//console.log('dfsdfs');
-			onlineVideos.listmovies( searchkeywords,function(movies) {
+			onlineVideos.listseries( searchkeywords,getSeasonNumber(newfile),function(movies) {
 				var code = 0;
 				if( movies.length > 0 ) { code = movies[0].code }
 
-				onlineVideos.getMovie(code, function(monfilm) {
+				onlineVideos.getSaison(code, function(masaison) {
 					console.log(path.basename(newfile));
-					localDownloads.importFilm(path.basename(newfile), monfilm, function(error) { 
+					localDownloads.importSerie(path.basename(newfile), masaison, function(error) { 
 						if( error ) {
-							console.log(monfilm.title);
+							//console.log(masaison.title);
 							console.log(error);
 						} else {
-							console.log(monfilm.title);
+							//console.log(masaison.title);
 						}
 					});
 					

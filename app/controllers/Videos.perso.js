@@ -86,7 +86,7 @@ module.exports = function(app, req, res) {
 			for(var key in jsonParams){
 				if( key !== 'type' && key !== 'typevideo' && key !== 'seasonnumber' ) {
 					var localDownloads = new LocalDownloads();
-					localDownloads.rename(key,jsonParams[key], function(oldfile, newfile) {
+					localDownloads.rename(decodeURIComponent(key),decodeURIComponent(jsonParams[key]), function(oldfile, newfile) {
 						res.json({filename:oldfile,data:newfile});
 					});					
 				}
@@ -107,55 +107,53 @@ module.exports = function(app, req, res) {
 			if( typevideo === 'tvserie' ) {
 				var onlineVideos = new OnlineVideos();
 				onlineVideos.listseries( searchkeywords,seasonnumber, function(saisons) {
-					res.json({filename:filename,data:saisons});
+					res.json({filename:filename,typevideo:typevideo,data:saisons});
 				});
 			}
-			if( typevideo === 'film' ) {
+			if( typevideo === 'movie' ) {
 				var onlineVideos = new OnlineVideos();
 				onlineVideos.listmovies( searchkeywords,function(movies) {
-					res.json({filename:filename,data:movies});
+					res.json({filename:filename,typevideo:typevideo,data:movies});
 				});
 			}
          	}
 		else if( jsonParams['type'] === 'indexation' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
 			var filename = '';
-			var id = '';
+			var id = 0;
+			var typevideo = jsonParams['typevideo'];
 			for(var key in jsonParams){
-				if( key !== 'type' /*&& key !== 'typevideo' && key !== 'seasonnumber'*/ ) {
+				if( key !== 'type' && key !== 'typevideo' ) {
 					filename = key;
 					id = jsonParams[filename];
 				}
 			}	
-			/*if( typevideo === 'tvserie' ) {
+			if( typevideo === 'tvserie' ) {
 				var onlineVideos = new OnlineVideos();
-				onlineVideos.getMovie(jsonParams[key], function(saison) {
+				onlineVideos.getSaison(id, function(masaison) {
 					var localDownloads = new LocalDownloads();
-					localDownloads.importSerie(key, masaison, function(error) { 
+					localDownloads.importSerie(decodeURIComponent(filename), masaison, function(error) { 
 						if( error )
 							console.log(error);
-						res.json({filename:filename,object:masaison});
+						res.json({filename:filename,masaison:masaison});
 					});	
 				}); 
-			}*/
-			//if( typevideo === 'film' ) {
+			}
+			else if( typevideo === 'movie' ) {
 				var onlineVideos = new OnlineVideos();
-				//console.log(id);
 				onlineVideos.getMovie(id, function(monfilm) {
 					var localDownloads = new LocalDownloads();
-					localDownloads.importFilm(filename, monfilm, function(error) { 
+					localDownloads.importFilm(decodeURIComponent(filename), monfilm, function(error) { 
 						if( error )
 							console.log(error);
 						res.json({filename:filename,monfilm:monfilm});
-						//console.log('fin' + ' : ' + id);
 					});	
 				}); 
-			//}
-    			
+			}   			
 		}
 		else if( jsonParams['type'] === 'delete' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
 			deleteSessionData(app,req,'localVideos');
 			var localVideos = new LocalVideos();
-			localVideos.deleteFile(jsonParams['filename'], function(err) {
+			localVideos.deleteFile(decodeURIComponent(jsonParams['filename']), function(err) {
 				res.json({error:err});
 			});
 		}			

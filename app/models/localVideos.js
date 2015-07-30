@@ -36,7 +36,7 @@ function removeDuplicates(target_array) {
 
 this.deleteFile = function(filename, callback) {
 	var filmsconf = readConf(path.join(__dirname, './entities/videos.json')).films;
-	realfilename = decodeURIComponent(filename).replace( filmsconf.urlpath, filmsconf.path);
+	realfilename = filename.replace( filmsconf.urlpath, filmsconf.path);
 	var descFile = path.join( path.dirname(realfilename), '.' + path.basename(realfilename) + '.desc');
 	var imageFile = path.join( path.dirname(realfilename), '.' + path.basename(realfilename) + '.jpg');
 	fs.unlink(realfilename, function (err) {

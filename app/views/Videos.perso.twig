@@ -169,9 +169,12 @@ width: 100%;
 						<p>Recherche de fichier(s) Vidéo(s) ...</p>
 					</div>
 				</form>			
-				<form id="form_indexation_files" href="#form_indexation_files">				
-					<input type="hidden" id="type_indexation_action" name="type" value="indexation"/>
-					<div id="indexation_files" href="#indexation_files"></div>
+				<form id="form_indexation_files" href="#form_indexation_files">	
+					<div id="indexation_files_txt" href="#indexation_files_txt"></div>
+					<div id="indexation_files_movies" href="#indexation_files_movies">
+					</div>
+					<div id="indexation_files_tvseries" href="#indexation_files_tvseries">
+					</div>
 					<div id="indexation_button" href="#indexation_button"></div>
 				</form>	
 				</div>
@@ -455,7 +458,9 @@ function getSeasonNumber(filename) {
 function updateIndexes()
 {
 $('#downloaded_files').html('<p>Recherche de fichier(s) Vidéo(s) ...</p>');
-$('#indexation_files').html('');
+$('#indexation_files_txt').html('');
+$('#indexation_files_movies').html('');
+$('#indexation_files_tvseries').html('');
 $('#indexation_button').html('');
 $.ajax({
     type: "GET",
@@ -494,7 +499,10 @@ $.ajax({
 
 $('#form_downloaded_files').on('submit', function(){
   if( $('#type_download_action').val() === 'search' ) {
-	$('#indexation_files').html("<h2>Propositions d'indexation ...</h2>");
+	$('#indexation_files_txt').html("<h2>Propositions d'indexation ...</h2>");
+	$('#indexation_files_tvseries').html('');
+	$('#indexation_files_films').html('');
+	$('#indexation_button').html('');
   }
 
   $( '#form_downloaded_files input').each(function() {
@@ -507,9 +515,7 @@ $('#form_downloaded_files').on('submit', function(){
 		if( seasonnumber > 0 ) 
 			typevideos = 'tvserie';
 		else
-			typevideos = 'film';
-		var searchkeywords = value.replace(/^(.*)\/([^\/]*)$/g, "$2");
-
+			typevideos = 'movie';
 		var searchkeywords = value.replace(/^(.*)\/([^\/]*)$/g, "$2");
 		searchkeywords = searchkeywords.replace(/^(.*)(\.[^.]*)$/g, "$1");
 		searchkeywords = searchkeywords.replace(/_[a-zA-Z0-9]*/g,"");
@@ -535,7 +541,8 @@ $('#form_downloaded_files').on('submit', function(){
 			}
 			else if( $('#type_download_action').val() === 'search' ) {
 				var content = '<div class="table-responsive"><table class="table"><tbody><tr class=\'info\'><td><h4>' + decodeURIComponent(result["filename"]) + '</h4>'; 
-				//if( result["data"].length != 0 ) {			
+				var typevideo = result["typevideo"]; 
+				//alert( typevideo );	
 				for (var i = 0; i < result["data"].length; i++) {
 					//if( i == 0 ) { content = '<h4>' + result["filename"] + '</h4>'; }
 					var newentries = '';
@@ -553,8 +560,12 @@ $('#form_downloaded_files').on('submit', function(){
 					content = content + newentries;	
 				//}
 				//if( content !== '' ) { content = content + '<hr>'; }	
-				content = content + '</td></tr></tbody></table></div>';					
-				$('#indexation_files').html($('#indexation_files').html() + content);
+				content = content + '</td></tr></tbody></table></div>';	
+				$('#indexation_files_txt').html("<h2>Propositions d'indexation ...</h2>");
+				if( typevideo === 'tvserie' )
+					$('#indexation_files_tvseries').html($('#indexation_files_tvseries').html() + content);
+				if( typevideo === 'movie' )
+					$('#indexation_files_movies').html($('#indexation_files_movies').html() + content);
 				$('#indexation_button').html('<button class="btn btn-primary btn-xs center-block">Confirmer indexation</button>');
 				//window.location = $('#form_indexation_files').attr('href');
 				window.location.hash = $('#form_indexation_files').attr('href');
@@ -569,11 +580,11 @@ $('#form_downloaded_files').on('submit', function(){
 
 
 $('#form_indexation_files').on('submit', function(){
-	//alert( JSON.stringify($( this ).serializeArray()) );
-	var tab = $( this ).serializeArray();
-	//alert( tab.length );
+	/*var tab = $( this ).serializeArray();
 	var number = 1;
 	tab.forEach(function(entry) {
+	//$( '#indexation_files_movies').each(function() {
+		//if( $(this).attr('name') !== 'type' ) {
 		if( entry.name !== 'type' ) {
 			$.ajax({
 			type: "POST",
@@ -594,6 +605,51 @@ $('#form_indexation_files').on('submit', function(){
 				}
 			});
 		}
+	});*/
+
+	var number = 0;
+	var tab = $( '#indexation_files_movies input' ).serializeArray();
+	//$( '#indexation_files_movies input').each(function() {
+	tab.forEach(function(entry) {
+			//alert(entry.name + ' : ' + entry.value);
+			$.ajax({
+			type: "POST",
+			url: "/Videos/perso",
+			dataType: "json",
+			data: '{"type":"indexation","typevideo":"movie","' + entry.name + '":"' + entry.value + '"}',
+		      	contentType: 'application/json; charset=utf-8',
+		    	cache: false,
+		    	timeout: 300000000,
+		    		crossDomain: true,
+				success: function (result) {
+					number++;
+					if( number >= tab.length) {
+						updateIndexes();
+					}
+				}
+			});
+	});
+
+	tab = $( '#indexation_files_tvseries input' ).serializeArray();
+	//$( '#indexation_files_tvseries input').each(function() {
+	tab.forEach(function(entry) {
+			//alert(entry.name + ' : ' + entry.value);
+			$.ajax({
+			type: "POST",
+			url: "/Videos/perso",
+			dataType: "json",
+			data: '{"type":"indexation","typevideo":"tvserie","' + entry.name + '":"' + entry.value + '"}',
+		      	contentType: 'application/json; charset=utf-8',
+		    	cache: false,
+		    	timeout: 300000000,
+		    		crossDomain: true,
+				success: function (result) {
+					number++;
+					if( number >= tab.length) {
+						updateIndexes();
+					}
+				}
+			});
 	});
 	return false;
 });

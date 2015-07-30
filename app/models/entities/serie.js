@@ -1,7 +1,7 @@
 #!/usr/bin/env nodejs
 
 var url = require('url');
-
+var Finder = require('fs-finder');
 var fs = require('fs');
 var path = require('path');
 eval(fs.readFileSync(path.join(__dirname, '../../libraries/tools.js'))+'');
@@ -13,6 +13,7 @@ var EpisodeSaison = function() {
 	this.synopsis = '';
 	this.synopsisShort = '';
 	this.title = '';
+	this.file = '';
 	//this.runtime = '';
 }
 
@@ -26,6 +27,7 @@ this.number = 0;
 this.episodeCount = 0;
 this.year = '';
 this.imageWebpath = '';
+this.imageFile = '';
 this.synopsis = '';
 this.synopsisShort = '';
 this.genre='unclassed';
@@ -34,6 +36,10 @@ this.actors='';
 this.country='';
 
 this.write = function(dir, callback) {
+	var patt = new RegExp('^.*_(VOSTFR).*$','gi');
+	var vostfr = '';
+	if( patt.test(dir) ) 
+		vostfr = ' [VOSTFR]';
 	var destdescFile = path.join( dir, '.' + path.basename(dir) + '.desc');
 	this.dir = dir;
 	this.descfile = destdescFile;
@@ -41,7 +47,7 @@ this.write = function(dir, callback) {
 	var data = '';
 	data += 'lien|' + this.href + '\n';
 	data += 'Image|' + this.imageWebpath + '\n';
-	data += 'Titre|' + this.title + '\n';
+	data += 'Titre|' + this.title + vostfr + '\n';
 	data += 'Genre|' + this.genre + '\n';
 	data += 'De|' + this.directors + '\n';
 	data += 'Avec|' + this.actors + '\n';
@@ -56,7 +62,27 @@ this.write = function(dir, callback) {
 	for (i = 0; i < this.episodes.length ; i++) {
 		data += 'Episode' + this.episodes[i].number + '.' + 'Title|' + this.episodes[i].title + '\n';	
 		data += 'Episode' + this.episodes[i].number + '.' + 'Synopis|' + this.episodes[i].synopsis + '\n'; 
-		data += 'Episode' + this.episodes[i].number + '.' + 'SynopisShort|' + this.episodes[i].synopsisShort + '\n';	
+		data += 'Episode' + this.episodes[i].number + '.' + 'SynopisShort|' + this.episodes[i].synopsisShort + '\n';
+		data += 'Episode' + this.episodes[i].number + '.' + 'Code|' + this.episodes[i].code + '\n';	
+		data += 'Episode' + this.episodes[i].number + '.' + 'Number|' + this.episodes[i].number + '\n';		
+		var files = Finder.from(dir.toString()).findFiles('*.avi'); 
+        	for (var j = 0, len = files.length; j < len; j++) {
+			var file = files[j];
+			var patt = new RegExp('^.*S[0-9]{1,2}E' + this.episodes[i].number + '.*\.avi$','gi');
+			var patt1 = new RegExp('^.*S[0-9]{1,2}E0' + this.episodes[i].number + '.*\.avi','gi');
+			if( patt.test(file) || patt1.test(file) ) {
+				data += 'Episode' + this.episodes[i].number + '.' + 'File|' + path.basename(file) + '\n';
+			}
+		}
+		files = Finder.from(dir.toString()).findFiles('*.mkv'); 
+        	for (var j = 0, len = files.length; j < len; j++) {
+			var file = files[j];
+			var patt = new RegExp('^.*S[0-9]{1,2}E' + this.episodes[i].number + '.*\.mkv$','gi');
+			var patt1 = new RegExp('^.*S[0-9]{1,2}E0' + this.episodes[i].number + '.*\.mkv$','gi');
+			if( patt.test(file) || patt1.test(file) ) {
+				data += 'Episode' + this.episodes[i].number + '.' + 'File|' + path.basename(file) + '\n';
+			}
+		}
 	}
 	// Création du fichier destdescFile		
 	fs.writeFile(destdescFile,data,function(err) { 
