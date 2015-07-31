@@ -153,7 +153,7 @@ module.exports = function(app, req, res) {
 		else if( jsonParams['type'] === 'delete' &&  userAuth.is_granted_role('ROLE_ADMIN') ) {
 			deleteSessionData(app,req,'localVideos');
 			var localVideos = new LocalVideos();
-			localVideos.deleteFile(decodeURIComponent(jsonParams['filename']), function(err) {
+			localVideos.deleteMovieFile(decodeURIComponent(jsonParams['filename']), function(err) {
 				res.json({error:err});
 			});
 		}			

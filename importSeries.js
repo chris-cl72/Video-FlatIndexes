@@ -62,7 +62,7 @@ function suggestVideoFilename(orifinalFilename)
 	}
 
 var vostfr = '';
-pattern = new RegExp("\\.VOSTFR", "gi");
+var pattern = new RegExp("\\.VOSTFR", "gi");
 if( pattern.test(txt) ) {
 	pattern.lastIndex=0;
 	vostfr = '_VOSTFR';
@@ -71,7 +71,7 @@ if( pattern.test(txt) ) {
 
 var episode = '';
 pattern = new RegExp("\\.S[0-9]{1,2}E[0-9]{1,2}", "gi");
-pattern1 = new RegExp("S[0-9]{1,2}E[0-9]{1,2}", "gi");
+var pattern1 = new RegExp("S[0-9]{1,2}E[0-9]{1,2}", "gi");
 if( pattern.test(txt) ) {
 	pattern.lastIndex=0;
 	episode = '_' + pattern1.exec(txt)[0];
@@ -87,8 +87,8 @@ if( pattern.test(txt) ) {
 
 function getSeasonNumber(filename) {
 	var seasonnumber = 0;
-	if( filename.match(/_S[0-9]{1,2}E[0-9]{1,2}/) ) {
-		var strseasonnumber = filename.replace(/.*_S([0-9]{1,2})(E[0-9]{1,2}.*)/,'$1');
+	if( filename.match(/_S[0-9]{1,2}E[0-9]{1,2}/i) ) {
+		var strseasonnumber = filename.replace(/.*_S([0-9]{1,2})(E[0-9]{1,2}.*)/i,'$1');
 		//alert(filename + ':' + strseasonnumber);
 		if( strseasonnumber !== '' ) { seasonnumber = parseInt(strseasonnumber,10); }	
 	}

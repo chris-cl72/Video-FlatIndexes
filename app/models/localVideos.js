@@ -34,7 +34,7 @@ function removeDuplicates(target_array) {
     return target_array;
 }
 
-this.deleteFile = function(filename, callback) {
+this.deleteMovieFile = function(filename, callback) {
 	var filmsconf = readConf(path.join(__dirname, './entities/videos.json')).films;
 	realfilename = filename.replace( filmsconf.urlpath, filmsconf.path);
 	var descFile = path.join( path.dirname(realfilename), '.' + path.basename(realfilename) + '.desc');
@@ -52,6 +52,29 @@ this.deleteFile = function(filename, callback) {
 		}
 	});
 }
+
+this.deleteTvSerieFile = function(filename, callback) {
+	var seriesconf = readConf(path.join(__dirname, './entities/videos.json')).series;
+	realfilename = filename.replace( seriesconf.urlpath, seriesconf.path);
+	// !!! Attention il faut regénérer le fichier .desc
+
+	//var descFile = path.join( path.dirname(realfilename), '.' + path.basename(realfilename) + '.desc');
+	//var imageFile = path.join( path.dirname(realfilename), '.' + path.basename(realfilename) + '.jpg');
+	fs.unlink(realfilename, function (err) {
+		if (err) {
+			console.log('Error deleting file "' +  realfilename + '".');
+		} else {
+			console.log('File "' +  realfilename + '" was deleted.');
+			callback(null);
+			/*fs.unlink(descFile, function (err) {
+				fs.unlink(imageFile, function (err) {
+					callback(null);
+				});
+			});*/			
+		}
+	});
+}
+
 
 this.getListGenres = function() {
 	var listGenres = [];
