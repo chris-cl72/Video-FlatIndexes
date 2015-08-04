@@ -34,6 +34,7 @@ this.genre='unclassed';
 this.directors='';
 this.actors='';
 this.country='';
+this.descfile = '';
 
 this.write = function(dir, callback) {
 	var patt = new RegExp('^.*_(VOSTFR).*$','gi');
@@ -104,85 +105,81 @@ this.write = function(dir, callback) {
 
 this.read = function(filename, filmsPath, urlfilmsPath) {
 
-var urlFile = url.format(filename.replace(filmsPath, urlfilmsPath));
-this.urlfile = urlFile;
+/*var urlFile = url.format(filename.replace(filmsPath, urlfilmsPath));
+this.urlfile = urlFile;*/
 if (fs.existsSync(filename)) {
-this.file = filename;
+	var basefilename = path.basename(filename).replace(/^\.(.*)\.desc$/,'$1');
+	//console.log('!!!!!!!! basefilename : ' + basefilename);
+	//this.file = filename;
 
-var imageFile = path.join( path.dirname(filename), '.' + path.basename(filename) + '.jpg');
-if( fs.existsSync(imageFile) ) {
-	this.imagefile = imageFile;
-	this.urlimagefile = url.format(imageFile.replace(filmsPath, urlfilmsPath));
-}
-var index = 1;
-var descFile = path.join( path.dirname(filename), '.' + path.basename(filename) + '.desc');
-if (fs.existsSync(descFile)) {
-this.descfile=descFile;
-var lines = fs.readFileSync(descFile).toString().split('\n');
-	for(i in lines) {
-	var arr = lines[i].split("|");
-	if( arr.length === 2 ) {
-		switch(arr[0]) {
-    			/*case 'File':
-        			this.originalfile = arr[1];
-        			break;*/
-			case 'lien':
-                                this.href = arr[1];
-                                break;
-			case 'Image':
-				var originalimage = arr[1];
-				this.imageWebpath = originalimage.replace('r_160_240','r_640_960');
-				this.imageWebpath = this.imageWebpath.replace('b_1_d6d6d6','b_4_dffdffdff');
-                                break;
-			case 'Titre':
-                                this.title = arr[1];
-                                break;
-			case 'Genre':
-                                this.genre = arr[1];
-                                break;
-			case 'De':
-                                this.directors = arr[1];
-                                break;
-			case 'Avec':
-                                this.actors = arr[1];
-                                break;
-			case 'Synopsis':
-                                this.synopsis = arr[1];
-                                break;
-			case 'SynopsisShort':
-                                this.synopsisShort = arr[1];
-                                break;
-			case 'Année':
-                                this.year = arr[1];
-                                break;
-			case 'Pays':
-                                this.country = arr[1];
-                                break;
-			case 'Code':
-                                this.code = arr[1];
-                                break;
-			case 'CodeSerie':
-                                this.codeSerie = arr[1];
-                                break;
-			case 'EpisodeCount':
-                                this.episodeCount = arr[1];
-                                break;
-			case 'SaisonNumber':
-                                this.number = arr[1];
-                                break;
-			/*case 'Runtime':
-                                this.runtime = arr[1];
-                                break;*/
-			case 'Groups':
-                                this.groups = arr[1];
-                                break;
-    			default:
-			} 
-		}
+	var imageFile = path.join( path.dirname(filename), '.' + basefilename + '.jpg');
+	if( fs.existsSync(imageFile) ) {
+		this.imagefile = imageFile;
+		this.urlimagefile = url.format(imageFile.replace(filmsPath, urlfilmsPath));
 	}
-    }
-}
-
+	var index = 1;
+	var descFile = filename;
+	if (fs.existsSync(descFile)) {
+		this.descfile=descFile;
+		var lines = fs.readFileSync(descFile).toString().split('\n');
+		for(i in lines) {
+			var arr = lines[i].split("|");
+			if( arr.length === 2 ) {
+				switch(arr[0]) {
+					case 'lien':
+				                this.href = arr[1];
+				                break;
+					case 'Image':
+						var originalimage = arr[1];
+						this.imageWebpath = originalimage.replace('r_160_240','r_640_960');
+						this.imageWebpath = this.imageWebpath.replace('b_1_d6d6d6','b_4_dffdffdff');
+				                break;
+					case 'Titre':
+				                this.title = arr[1];
+				                break;
+					case 'Genre':
+				                this.genre = arr[1];
+				                break;
+					case 'De':
+				                this.directors = arr[1];
+				                break;
+					case 'Avec':
+				                this.actors = arr[1];
+				                break;
+					case 'Synopsis':
+				                this.synopsis = arr[1];
+				                break;
+					case 'SynopsisShort':
+				                this.synopsisShort = arr[1];
+				                break;
+					case 'Année':
+				                this.year = arr[1];
+				                break;
+					case 'Pays':
+				                this.country = arr[1];
+				                break;
+					case 'Code':
+				                this.code = arr[1];
+				                break;
+					case 'CodeSerie':
+				                this.codeSerie = arr[1];
+				                break;
+					case 'EpisodeCount':
+				                this.episodeCount = arr[1];
+				                break;
+					case 'SaisonNumber':
+				                this.number = arr[1];
+				                break;
+					case 'Groups':
+				                this.groups = arr[1];
+				                break;
+		    			default:
+					} // case
+				} // if
+			} // for
+    		} // if
+	} // if
+//console.log(this);
 
 };
 

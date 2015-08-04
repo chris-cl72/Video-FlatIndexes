@@ -50,7 +50,16 @@ width: 100%;
 	  <li><a href="#films-group" id="films-group-tab"  data-toggle="tab">catégorie</a></li>
         </ul>
       </li>
-	<li><a href="#series" id="series-tab" data-toggle="tab">Series </a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Series <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+	  <li><a href="#series-title" id="series-title-tab" data-toggle="tab">titre</a></li>
+          <li><a href="#series-genre" id="series-genre-tab" data-toggle="tab">genre</a></li>
+          <li><a href="#series-year" id="series-year-tab"  data-toggle="tab">date</a></li>
+	  <li><a href="#series-country" id="series-country-tab"  data-toggle="tab">pays</a></li>
+	  <li><a href="#series-group" id="series-group-tab"  data-toggle="tab">catégorie</a></li>
+        </ul>
+      </li>
 	{% if userAuth.is_granted_role("ROLE_ADMIN") %}
 		<li><a href="#indexes" id="indexes-tab" data-toggle="tab">Téléchargements </a></li>
 	{% endif %}
@@ -76,7 +85,7 @@ width: 100%;
     {{ value.synopsisShort|escape('html') }}
 {% else %}
     {{ value.synopsis|escape('html') }}
-{% endif %}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}?id={{ id }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" directors="{{ value.directors|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" country="{{ value.country|escape('html') }}" >
+{% endif %}" genre="{{ value.genre|escape('html') }}" file="{{ value.urlfile|escape('html') }}?id={{ id }}"  year="{{ value.year|escape('html') }}" actors="{{ value.actors|escape('html') }}" directors="{{ value.directors|escape('html') }}" runtime="{{ value.runtime|escape('html') }}" country="{{ value.country|escape('html') }}" number="{{ value.number|escape('html') }}">
 					<div style="background:url(/Videos/perso/{{ value.urlimagefile }}) top center; background-size:cover; background-position: 0px -100px; background-repeat:no-repeat;" class="slider-size" >
       					<!-- <div class="carousel-caption"><H2>{{ value.title }}</H2></div> -->
       					</div>
@@ -96,67 +105,139 @@ width: 100%;
 	</div>
       </div>
       <div class="tab-pane fade" id="films-genre">
-	<div ALIGN=CENTER id="titlegenre" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div> 
+	<div ALIGN=CENTER id="titlefilmsgenre" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div> 
 	 <div class="row"> 
 		<div class="tabbable nav-tabs" style="border-bottom: 0;">
 			<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" > 
-			<ul class="nav nav-pills nav-stacked" id="nav-genre">
+			<ul class="nav nav-pills nav-stacked" id="nav-filmsgenre">
 			</ul>
 		</div>
 		<div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
-			<div class="tab-content" id="tab-content-genre"> 
+			<div class="tab-content" id="tab-contentfilms-genre"> 
 			</div>	
 		</div>
 	 </div>
 	</div> 
       </div>
       <div class="tab-pane fade" id="films-year">
-        <div ALIGN=CENTER id="titleyear" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div>
+        <div ALIGN=CENTER id="titlefilmsyear" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div>
          <div class="row">
                 <div class="tabbable nav-tabs" style="border-bottom: 0;">
                         <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" >
-                        <ul class="nav nav-pills nav-stacked" id="nav-year">
+                        <ul class="nav nav-pills nav-stacked" id="nav-filmsyear">
                         </ul>
                 </div>
                 <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
-                        <div class="tab-content" id="tab-content-year">
+                        <div class="tab-content" id="tab-contentfilms-year">
                         </div>
                 </div>
          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="films-country">
-        <div ALIGN=CENTER id="titlecountry" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div>
+        <div ALIGN=CENTER id="titlefilmscountry" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div>
          <div class="row">
                 <div class="tabbable nav-tabs" style="border-bottom: 0;">
                         <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" >
-                        <ul class="nav nav-pills nav-stacked" id="nav-country">
+                        <ul class="nav nav-pills nav-stacked" id="nav-filmscountry">
                         </ul>
                 </div>
                 <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
-                        <div class="tab-content" id="tab-content-country">
+                        <div class="tab-content" id="tab-contentfilms-country">
                         </div>
                 </div>
          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="films-group">
-        <div ALIGN=CENTER id="titlegroup" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div>
+        <div ALIGN=CENTER id="titlefilmsgroup" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des films ...</H1></div>
          <div class="row">
                 <div class="tabbable nav-tabs" style="border-bottom: 0;">
                         <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" >
-                        <ul class="nav nav-pills nav-stacked" id="nav-group">
+                        <ul class="nav nav-pills nav-stacked" id="nav-filmsgroup">
                         </ul>
                 </div>
                 <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
-                        <div class="tab-content" id="tab-content-group">
+                        <div class="tab-content" id="tab-contentfilms-group">
                         </div>
                 </div>
          </div>
         </div>
       </div>
-      <div class="tab-pane fade" id="series">
-        <p>Liste des series, en construction ...</p>
+      <div class="tab-pane fade" id="series-title">
+	<div ALIGN=CENTER id="titleseriestitle" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des séries ...</H1></div> 
+	 <div class="row"> 
+		<div class="tabbable nav-tabs" style="border-bottom: 0;">
+			<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" > 
+			<ul class="nav nav-pills nav-stacked" id="nav-seriestitle">
+			</ul>
+		</div>
+		<div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+			<div class="tab-content" id="tab-contentseries-title"> 
+			</div>	
+		</div>
+	 </div>
+	</div> 
+      </div>
+      <div class="tab-pane fade" id="series-genre">
+	<div ALIGN=CENTER id="titleseriesgenre" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des séries ...</H1></div> 
+	 <div class="row"> 
+		<div class="tabbable nav-tabs" style="border-bottom: 0;">
+			<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" > 
+			<ul class="nav nav-pills nav-stacked" id="nav-seriesgenre">
+			</ul>
+		</div>
+		<div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+			<div class="tab-content" id="tab-contentseries-genre"> 
+			</div>	
+		</div>
+	 </div>
+	</div> 
+      </div>
+      <div class="tab-pane fade" id="series-year">
+        <div ALIGN=CENTER id="titleseriesyear" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des séries ...</H1></div>
+         <div class="row">
+                <div class="tabbable nav-tabs" style="border-bottom: 0;">
+                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" >
+                        <ul class="nav nav-pills nav-stacked" id="nav-seriesyear">
+                        </ul>
+                </div>
+                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+                        <div class="tab-content" id="tab-contentseries-year">
+                        </div>
+                </div>
+         </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="series-country">
+        <div ALIGN=CENTER id="titleseriescountry" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des series ...</H1></div>
+         <div class="row">
+                <div class="tabbable nav-tabs" style="border-bottom: 0;">
+                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" >
+                        <ul class="nav nav-pills nav-stacked" id="nav-seriescountry">
+                        </ul>
+                </div>
+                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+                        <div class="tab-content" id="tab-contentseries-country">
+                        </div>
+                </div>
+         </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="series-group">
+        <div ALIGN=CENTER id="titleseriesgroup" href="#" style="background-color: #b0c4de;"><H1>Chargement de la liste des series ...</H1></div>
+         <div class="row">
+                <div class="tabbable nav-tabs" style="border-bottom: 0;">
+                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" >
+                        <ul class="nav nav-pills nav-stacked" id="nav-seriesgroup">
+                        </ul>
+                </div>
+                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+                        <div class="tab-content" id="tab-contentseries-group">
+                        </div>
+                </div>
+         </div>
+        </div>
       </div>
       {% if userAuth.is_granted_role("ROLE_ADMIN") %}
 	<div class="tab-pane fade" id="indexes">
@@ -203,8 +284,12 @@ function updateNews( selectdiv )
 		textFile = '/Videos/perso/' + selectdiv.attr('file');			
 
 	var textTitle = '';
-	if( selectdiv.attr('title') !== '' )
-                textTitle = '<h1 style="display:inline;" title="' + textFile + '">' + selectdiv.attr('title') + '</h1>'
+	if( selectdiv.attr('title') !== '' ) {
+		if( selectdiv.attr('number') !== '' )
+			textTitle = '<h1 style="display:inline;" title="' + textFile + '">' + selectdiv.attr('title') + ' - Saison ' + selectdiv.attr('number') + '</h1>';
+		else
+                	textTitle = '<h1 style="display:inline;" title="' + textFile + '">' + selectdiv.attr('title') + '</h1>';
+	}
 	else
 		textTitle = '<h3>' + textFile + '</h3>';
 
@@ -255,17 +340,17 @@ function deleteVideoFile(filename, iddiv)
 			});
 };
 
-function updateOrderType(orderType, orderTypeValue)
+function updateOrderTypeMovie(orderType, orderTypeValue)
 {
-var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '');
-var orderTypeValueSelected = $('#nav-' + orderType + ' .active').text();
+var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '');
+var orderTypeValueSelected = $('#nav-films' + orderType + ' .active').text();
 
 if( $('#films-' + orderType + trimOrderTypeValue).html() === '' ) { //(genreselected !== genre  || force) ) {
-$('#title' + orderType).html('<h1>Chargement de la liste des films ...</h1>');
+$('#titlefilms' + orderType).html('<h1>Chargement de la liste des films ...</h1>');
 $.ajax({
     type: "GET",
     url: "/Videos/perso",
-    data: { type: 'films', order: orderType, value: orderTypeValue },
+    data: { type: 'listvideos', typevideo: 'movie', order: orderType , value: orderTypeValue},
     dataType: 'json',
     xhrFields: { withCredentials: true },
     crossDomain: true,
@@ -307,15 +392,80 @@ $.ajax({
 
 		//tabhtmldatahtml += '</TABLE></div>';
                 $('#films-' + orderType + trimOrderTypeValue).html(tabhtmldatahtml);
-		$('#title' + orderType).html('<H1>Envie de regarder des films dans ' + orderTypeValue + ' ?</H1>');
-		window.location = $('#title' + orderType).attr('href');
+		$('#titlefilms' + orderType).html('<H1>Envie de regarder des films dans ' + orderTypeValue + ' ?</H1>');
+		window.location = $('#titlefilms' + orderType).attr('href');
         }
 });
 }
 else
 	{
-		$('#title' + orderType).html('<H1>Envie de regarder des films dans ' + orderTypeValue + ' ?</H1>');
-		window.location = $('#title' + orderType).attr('href');
+		$('#titlefilms' + orderType).html('<H1>Envie de regarder des films dans ' + orderTypeValue + ' ?</H1>');
+		window.location = $('#titlefilms' + orderType).attr('href');
+	}
+};
+
+function updateOrderTypeSerie(orderType, orderTypeValue)
+{
+//alert('orderType: ' + orderType + ', orderTypeValue: ' + orderTypeValue);
+var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '');
+var orderTypeValueSelected = $('#nav-series' + orderType + ' .active').text();
+
+if( $('#series-' + orderType + trimOrderTypeValue).html() === '' ) { //(genreselected !== genre  || force) ) {
+$('#titleseries' + orderType).html('<h1>Chargement de la liste des séries ...</h1>');
+$.ajax({
+    type: "GET",
+    url: "/Videos/perso",
+    data: { type: 'listvideos', typevideo: 'tvserie', order: orderType , value: orderTypeValue},
+    dataType: 'json',
+    xhrFields: { withCredentials: true },
+    crossDomain: true,
+        success: function (jsonObject) {
+		var data = jsonObject.list;
+		var id = jsonObject.id;	
+		var isAdmin = $('#myTab').attr('admin');
+
+		var tabhtmldatahtml = '';
+                //var tabhtmldatahtml = '<div class="table-responsive"><TABLE class="table" border="0" WIDTH="100%" cellpadding="0">';
+                for (var i = 0, len = data.length; i < len; i++) {
+                        var value = data[i];
+			if( isAdmin === 'true' ) {
+			tabhtmldatahtml += '<div id="serie_' + orderType + trimOrderTypeValue + '_' + i + '"><div class="row"><div class="col-md-12"><hr><h2>' + value.title + '&nbsp;<span><button onclick="deleteVideoFile(\'' + value.urlfile + '\',\'serie_' + orderType + trimOrderTypeValue + '_' + i + '\')"  class="btn btn-success btn-xs inline">SUPRIMER</button></span></h2></div></div>';
+			} else {
+			tabhtmldatahtml += '<div class="row"><div class="col-md-12"><hr><h2>' + value.title + ' - Saison ' + value.number + '</h2></div></div>';
+			}
+			tabhtmldatahtml += '<div class="row"><div class="col-md-8">';
+			if( typeof value.year !== 'undefined' && value.year !== null && value.year !== '' )
+				tabhtmldatahtml += '<B>Genre :</B> ' + value.genre + ' (' + value.year + ')<BR/>';
+			else
+				tabhtmldatahtml += '<B>Genre :</B> ' + value.genre + '<BR/>';
+			if( typeof value.directors !== 'undefined' && value.directors !== null && value.directors !== '' )
+				 tabhtmldatahtml += '<B>De :</B> ' + value.directors + '<BR/>';
+			if( typeof value.actors !== 'undefined' && value.actors !== null && value.actors !== '' )
+                                 tabhtmldatahtml += '<B>Avec :</B> ' + value.actors + '<BR/>';
+			if( typeof value.country !== 'undefined' && value.country !== null && value.country !== '' )
+				tabhtmldatahtml += '<B>Pays :</B> ' + value.country + '<BR/>';
+			if( typeof value.runtime !== 'undefined' && value.runtime !== null && value.runtime !== '' )
+				tabhtmldatahtml += '<B>Fichier :</B><a href="/Videos/perso/' + value.urlfile + '?id=' + id + '"> ' + value.urlfile + '</a> (' + value.runtime + ')<BR/><BR/>';
+			else
+				tabhtmldatahtml += '<B>Fichier :</B><a href="/Videos/perso/' + value.urlfile + '?id=' + id + '"> ' + value.urlfile + '</a><BR/><BR/>';
+			
+			tabhtmldatahtml += value.synopsis + '</div>';
+			if( typeof value.urlimagefile !== 'undefined' && value.urlimagefile !== null && value.urlimagefile !== '' )
+				tabhtmldatahtml += '<div class="col-md-4"><div class="fadeover"><img class="img-thumbnail" src="/Videos/perso/' + value.urlimagefile + '" width="160"/></div></div>';
+			tabhtmldatahtml += '</div></div>';	
+                }
+
+		//tabhtmldatahtml += '</TABLE></div>';
+                $('#series-' + orderType + trimOrderTypeValue).html(tabhtmldatahtml);
+		$('#titleseries' + orderType).html('<H1>Envie de regarder des séries dans ' + orderTypeValue + ' ?</H1>');
+		window.location = $('#titleseries' + orderType).attr('href');
+        }
+});
+}
+else
+	{
+		$('#titleseries' + orderType).html('<H1>Envie de regarder des séries dans ' + orderTypeValue + ' ?</H1>');
+		window.location = $('#titleseries' + orderType).attr('href');
 	}
 };
 
@@ -341,15 +491,15 @@ $('#fixedcarousel').bind('slide.bs.carousel', function (e) {
 	//$('#newSynopsis').html('<h2>Synopsis</h2>' + newDiv.attr('synopsis'));
 });
 
-function updateOrder(orderType)
+function updateOrderFilms(orderType)
 {
-var orderTypeValueSelected = $('#nav-' + orderType + ' .active').text();
+var orderTypeValueSelected = $('#nav-films' + orderType + ' .active').text();
 
 if( orderTypeValueSelected === '') {
 $.ajax({
     type: "GET",
     url: "/Videos/perso",
-    data: { type: 'list' + orderType + 's' },
+    data: { type: 'list' + orderType + 's', typevideo: 'movie' },
     dataType: 'json',
     xhrFields: { withCredentials: true },
     crossDomain: true,
@@ -359,21 +509,60 @@ $.ajax({
 		var tabhtmldata = '';
                 for (var i = 0; i < data.length; i++) {
                         var orderTypeValue = data[i];
-                        var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '');
+                        var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '');
                         if( i === 0 ) {
-                                navhtmldata += '<li class="active" id="films-' + orderType + '-' + trimOrderTypeValue  +'" onclick="updateOrderType(\'' + orderType  + '\', \'' + orderTypeValue  + '\')"><a href="#films-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
+                                navhtmldata += '<li class="active" id="films-' + orderType + '-' + trimOrderTypeValue  +'" onclick="updateOrderTypeMovie(\'' + orderType  + '\', \'' + orderTypeValue.replace(/\'/g,'\\\'')  + '\')"><a href="#films-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
 				tabhtmldata += '<div class="tab-pane active" id="films-' + orderType + trimOrderTypeValue  + '"></div>';
 			}
                         else {
-                                navhtmldata += '<li id="films-' + orderType  + '-' + trimOrderTypeValue  + '" onclick="updateOrderType(\'' + orderType  + '\', \'' + orderTypeValue  + '\')"><a href="#films-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
+                                navhtmldata += '<li id="films-' + orderType  + '-' + trimOrderTypeValue  + '" onclick="updateOrderTypeMovie(\'' + orderType  + '\', \'' + orderTypeValue.replace(/\'/g,'\\\'')  + '\')"><a href="#films-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
 				tabhtmldata += '<div class="tab-pane" id="films-' + orderType + trimOrderTypeValue  + '"></div>';
 			}
 
                 }
-                $('#nav-' + orderType).html(navhtmldata);
-		$('#tab-content-' + orderType).html(tabhtmldata);
-		orderTypeValueSelected = $('#nav-' + orderType + ' .active').text();
-        	updateOrderType(orderType, orderTypeValueSelected);
+                $('#nav-films' + orderType).html(navhtmldata);
+		$('#tab-contentfilms-' + orderType).html(tabhtmldata);
+		orderTypeValueSelected = $('#nav-films' + orderType + ' .active').text();
+        	updateOrderTypeMovie(orderType, orderTypeValueSelected);
+        }
+});
+}
+};
+
+function updateOrderSeries(orderType)
+{
+var orderTypeValueSelected = $('#nav-series' + orderType + ' .active').text();
+
+if( orderTypeValueSelected === '') {
+$.ajax({
+    type: "GET",
+    url: "/Videos/perso",
+    data: { type: 'list' + orderType + 's', typevideo: 'tvserie' },
+    dataType: 'json',
+    xhrFields: { withCredentials: true },
+    crossDomain: true,
+        success: function (data) {
+
+                var navhtmldata = '';
+		var tabhtmldata = '';
+                for (var i = 0; i < data.length; i++) {
+                        var orderTypeValue = data[i];
+                        var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '');
+                        if( i === 0 ) {
+                                navhtmldata += '<li class="active" id="series-' + orderType + '-' + trimOrderTypeValue  +'" onclick="updateOrderTypeSerie(\'' + orderType  + '\', \'' + orderTypeValue.replace(/\'/g,'\\\'')  + '\')"><a href="#series-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
+				tabhtmldata += '<div class="tab-pane active" id="series-' + orderType + trimOrderTypeValue  + '"></div>';
+			}
+                        else {
+				//alert(trimOrderTypeValue);
+                                navhtmldata += '<li id="series-' + orderType  + '-' + trimOrderTypeValue  + '" onclick="updateOrderTypeSerie(\'' + orderType  + '\', \'' + orderTypeValue.replace(/\'/g,'\\\'')  + '\')"><a href="#series-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
+				tabhtmldata += '<div class="tab-pane" id="series-' + orderType + trimOrderTypeValue  + '"></div>';
+			}
+
+                }
+                $('#nav-series' + orderType).html(navhtmldata);
+		$('#tab-contentseries-' + orderType).html(tabhtmldata);
+		orderTypeValueSelected = $('#nav-series' + orderType + ' .active').text();
+        	updateOrderTypeSerie(orderType, orderTypeValueSelected);
         }
 });
 }
@@ -381,10 +570,10 @@ $.ajax({
 
 function suggestVideoFilename(orifinalFilename)
 {
-		var str = orifinalFilename;
+	var str = orifinalFilename;
 	var filename = str.replace(/.*\//g,"");
-    var basename = filename.replace(/\.[^.]*$/g,"");
-    var extension = filename.replace(/.*\./g,"");
+    	var basename = filename.replace(/\.[^.]*$/g,"");
+    	var extension = filename.replace(/.*\./g,"");
 
 	var shortbasename = basename;
 	var extend = "";
@@ -421,22 +610,22 @@ function suggestVideoFilename(orifinalFilename)
 		txt = txt.replace(reg,".");
 	}
 
-var vostfr = '';
-var pattern = new RegExp("\\.VOSTFR", "gi");
-if( pattern.test(txt) ) {
-	pattern.lastIndex=0;
-	vostfr = '_VOSTFR';
-	txt = txt.replace(pattern,'.');
-}
+	var vostfr = '';
+	var pattern = new RegExp("\\.VOSTFR", "gi");
+	if( pattern.test(txt) ) {
+		pattern.lastIndex=0;
+		vostfr = '_VOSTFR';
+		txt = txt.replace(pattern,'.');
+	}
 
-var episode = '';
-pattern = new RegExp("\\.S[0-9]{1,2}E[0-9]{1,2}", "gi");
-var pattern1 = new RegExp("S[0-9]{1,2}E[0-9]{1,2}", "gi");
-if( pattern.test(txt) ) {
-	pattern.lastIndex=0;
-	episode = '_' + pattern1.exec(txt)[0];
-	txt = txt.replace(pattern,'');
-}
+	var episode = '';
+	pattern = new RegExp("\\.S[0-9]{1,2}E[0-9]{1,2}", "gi");
+	var pattern1 = new RegExp("S[0-9]{1,2}E[0-9]{1,2}", "gi");
+	if( pattern.test(txt) ) {
+		pattern.lastIndex=0;
+		episode = '_' + pattern1.exec(txt)[0];
+		txt = txt.replace(pattern,'');
+	}
 
 	var newfilename = txt.trim() + episode.trim() + vostfr.trim() +  extend.trim() + "." + extension.trim();
 	newfilename = newfilename.replace(/\.\./g,".");
@@ -580,33 +769,6 @@ $('#form_downloaded_files').on('submit', function(){
 
 
 $('#form_indexation_files').on('submit', function(){
-	/*var tab = $( this ).serializeArray();
-	var number = 1;
-	tab.forEach(function(entry) {
-	//$( '#indexation_files_movies').each(function() {
-		//if( $(this).attr('name') !== 'type' ) {
-		if( entry.name !== 'type' ) {
-			$.ajax({
-			type: "POST",
-			url: "/Videos/perso",
-			dataType: "json",
-			data: '{"type":"' + $('#type_indexation_action').val() + '","' + entry.name + '":"' + entry.value + '"}',
-		      	contentType: 'application/json; charset=utf-8',
-		    	cache: false,
-		    	timeout: 300000000,
-		    		crossDomain: true,
-				success: function (result) {
-					//alert ( JSON.stringify(result) );
-					number++;
-					//entry.html('');
-					if( number >= tab.length) {
-						updateIndexes();
-					}
-				}
-			});
-		}
-	});*/
-
 	var number = 0;
 	var tab = $( '#indexation_files_movies input' ).serializeArray();
 	//$( '#indexation_files_movies input').each(function() {
@@ -655,23 +817,44 @@ $('#form_indexation_files').on('submit', function(){
 });
 
 $('#films-genre-tab').on('click', function (e) {
-	updateOrder('genre');	
+	updateOrderFilms('genre');	
 });
 
 $('#films-year-tab').on('click', function (e) {
-        updateOrder('year');
+        updateOrderFilms('year');
 });
 
 $('#films-country-tab').on('click', function (e) {
-        updateOrder('country');
-});
-
-$('#indexes-tab').on('click', function (e) {
-        updateIndexes();
+        updateOrderFilms('country');
 });
 
 $('#films-group-tab').on('click', function (e) {
-	updateOrder('group');	
+	updateOrderFilms('group');	
+});
+
+$('#series-title-tab').on('click', function (e) {
+	updateOrderSeries('title');	
+});
+
+$('#series-genre-tab').on('click', function (e) {
+	updateOrderSeries('genre');	
+});
+
+$('#series-year-tab').on('click', function (e) {
+        updateOrderSeries('year');
+});
+
+$('#series-country-tab').on('click', function (e) {
+        updateOrderSeries('country');
+});
+
+$('#series-group-tab').on('click', function (e) {
+	updateOrderSeries('group');	
+});
+
+
+$('#indexes-tab').on('click', function (e) {
+        updateIndexes();
 });
 
 });

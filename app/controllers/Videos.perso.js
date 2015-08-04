@@ -8,77 +8,148 @@ module.exports = function(app, req, res) {
 
 	var userAuth = getSessionData( app, req, 'userAuth' );
 	if( req.method === 'GET' ) {
-	if( req.param('type') === 'films' ) {
-		if( req.param('order') === 'news' ) {
-			var localVideos = getSessionData(app,req,'localVideos');
-			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-			//deleteSessionData(app,req,'localVideos');	
-			//var localVideos = new LocalVideos("");
-			//setSessionData(app,req,'localVideos', localVideos);
-			var list = localVideos.getLastFilms(15);
-        		res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list, id : req.session.sessionID });
+		if( req.param('type') === 'listvideos'  &&  req.param('typevideo') === 'all' ) {
+			if( req.param('order') === 'news' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+				var list = localVideos.getLastFilms(10);
+				
+				var list1 = localVideos.getLastSeries(5);
+				//var newlist = new Array();
+			
+				//console.log('!!!!!!!!!!!!!!!!!!!!!!!!!! ' + list1.length);
+				for (var i = 0; i < list1.length; i++) {
+					list[list.length] = list1[i];
+				}
+				//for (var i = 0; i < list1.length; i++) {
+				//	newlist[newlist.length] = list1[i];
+				//}
+				res.render('Videos.perso.twig', { userAuth : userAuth, lastFilms : list, id : req.session.sessionID });
+			}
 		}
-		else if( req.param('order') === 'genre' ) {
-			var localVideos = getSessionData(app,req,'localVideos');
-			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-			var list = localVideos.getLastFilmsbyGenre(req.param('value'));
-			res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+		else if( req.param('type') === 'listvideos'  &&  req.param('typevideo') === 'movie' ) {
+			if( req.param('order') === 'genre' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+				var list = localVideos.getLastFilmsbyGenre(req.param('value'));
+				res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+			}
+			else if( req.param('order') === 'year' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		                var list = localVideos.getLastFilmsbyYear(req.param('value'));
+		                res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+		        }
+			else if( req.param('order') === 'country' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		                var list = localVideos.getLastFilmsbyCountry(req.param('value'));
+		                res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+		        }
+			else if( req.param('order') === 'group' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		                var list = localVideos.getLastFilmsbyGroup(req.param('value'));
+		                res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+		        }
+			else
+				res.redirect('/Videos');
 		}
-		else if( req.param('order') === 'year' ) {
-                        //var localVideos = getSessionData(app,req,'localVideos');
+		else if( req.param('type') === 'listgenres' &&  req.param('typevideo') === 'movie' ) {
 			var localVideos = getSessionData(app,req,'localVideos');
 			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-                        var list = localVideos.getLastFilmsbyYear(req.param('value'));
-                        res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
-                }
-		else if( req.param('order') === 'country' ) {
-                        //var localVideos = getSessionData(app,req,'localVideos');
+			var list = localVideos.getMovieListGenres();		
+			res.json(list);		
+		}
+		else if( req.param('type') === 'listyears' &&  req.param('typevideo') === 'movie' ) {
+		        var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		        var list = localVideos.getMovieListYears();
+		        res.json(list);
+		}
+		else if( req.param('type') === 'listcountrys' &&  req.param('typevideo') === 'movie' ) {
+		        var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		        var list = localVideos.getMovieListCountrys();
+		        res.json(list);
+		}
+		else if( req.param('type') === 'listgroups' &&  req.param('typevideo') === 'movie' ) {
+		        var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		        var list = localVideos.getMovieListGroups();
+		        res.json(list);
+		}
+		else if( req.param('type') === 'listvideos'  &&  req.param('typevideo') === 'tvserie' ) {
+			if( req.param('order') === 'title' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+				var list = localVideos.getLastSeriesbyTitle(req.param('value'));
+				res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+			}
+			else if( req.param('order') === 'genre' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+				var list = localVideos.getLastSeriesbyGenre(req.param('value'));
+				res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+			}
+			else if( req.param('order') === 'year' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		                var list = localVideos.getLastSeriesbyYear(req.param('value'));
+		                res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+		        }
+			else if( req.param('order') === 'country' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		                var list = localVideos.getLastSeriesbyCountry(req.param('value'));
+		                res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+		        }
+			else if( req.param('order') === 'group' ) {
+				var localVideos = getSessionData(app,req,'localVideos');
+				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		                var list = localVideos.getLastSeriesbyGroup(req.param('value'));
+		                res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
+		        }
+			else
+				res.redirect('/Videos');
+		}
+		else if( req.param('type') === 'listtitles' &&  req.param('typevideo') === 'tvserie' ) {
 			var localVideos = getSessionData(app,req,'localVideos');
 			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-                        var list = localVideos.getLastFilmsbyCountry(req.param('value'));
-                        res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
-                }
-		else if( req.param('order') === 'group' ) {
-                        //var localVideos = getSessionData(app,req,'localVideos');
+			var list = localVideos.getSerieListTitles();		
+			res.json(list);		
+		}
+		else if( req.param('type') === 'listgenres' &&  req.param('typevideo') === 'tvserie' ) {
 			var localVideos = getSessionData(app,req,'localVideos');
 			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-                        var list = localVideos.getLastFilmsbyGroup(req.param('value'));
-                        res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
-                }
+			var list = localVideos.getSerieListGenres();		
+			res.json(list);		
+		}
+		else if( req.param('type') === 'listyears' &&  req.param('typevideo') === 'tvserie' ) {
+		        var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		        var list = localVideos.getSerieListYears();
+		        res.json(list);
+		}
+		else if( req.param('type') === 'listcountrys' &&  req.param('typevideo') === 'tvserie' ) {
+		        var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		        var list = localVideos.getSerieListCountrys();
+		        res.json(list);
+		}
+		else if( req.param('type') === 'listgroups' &&  req.param('typevideo') === 'tvserie' ) {
+		        var localVideos = getSessionData(app,req,'localVideos');
+			if( localVideos == null ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+		        var list = localVideos.getSerieListGroups();
+		        res.json(list);
+		}		
+		else if( req.param('type') === 'listdownloads'  && userAuth.is_granted_role('ROLE_ADMIN') ) {
+			var localDownloads = new LocalDownloads();
+			localDownloads.readall();
+			res.json(localDownloads);
+		}
 		else
 			res.redirect('/Videos');
-	}
-	else if( req.param('type') === 'listgenres' ) {
-		var localVideos = getSessionData(app,req,'localVideos');
-		if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-		var list = localVideos.getListGenres();		
-		res.json(list);		
-	}
-	else if( req.param('type') === 'listyears' ) {
-                var localVideos = getSessionData(app,req,'localVideos');
-		if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-                var list = localVideos.getListYears();
-                res.json(list);
-        }
-	else if( req.param('type') === 'listcountrys' ) {
-                var localVideos = getSessionData(app,req,'localVideos');
-		if( localVideos == null ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-                var list = localVideos.getListCountrys();
-                res.json(list);
-        }
-	else if( req.param('type') === 'listgroups' ) {
-                var localVideos = getSessionData(app,req,'localVideos');
-		if( localVideos == null ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
-                var list = localVideos.getListGroups();
-                res.json(list);
-        }	
-	else if( req.param('type') === 'listdownloads'  && userAuth.is_granted_role('ROLE_ADMIN') ) {
-		var localDownloads = new LocalDownloads();
-		localDownloads.readall();
-		res.json(localDownloads);
-	}
-	else
-		res.redirect('/Videos');
 	}
 	else if (req.method === 'POST') {
 		var jsonParams = req.body;

@@ -9,6 +9,7 @@ var path = require('path');
 eval(fs.readFileSync(path.join(__dirname, '../../libraries/tools.js'))+'');
 
 var Film = require(path.join(__dirname, './film.js'));
+var Saison = require(path.join(__dirname, './serie.js'));
 
 var Videos = function() {
 
@@ -118,8 +119,54 @@ this.listfilms = function(staticdir,conf, keywordsfilter) {
                 if( patt.test(file) ) {
                 	var film = new Film();
 			film.read(file, currentpath, urlpath);
-			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.director) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title))
+			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.directors) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title))
 				list[list.length] = film;
+		}
+        }
+
+	return list;
+};
+
+var find = function(keywords, instring) {
+	if( keywords === "" )
+		return true;
+	var keywordslist = keywords.split(" ");
+	for(i in keywordslist) {
+		var patt = new RegExp( keywordslist[i], "gi");
+                if( !patt.test(instring) ) {
+			return false;	
+		}
+	}
+	return true;
+};
+
+this.listsaisons = function(staticdir,conf, keywordsfilter) {
+	//console.log('staticdir: ' + staticdir + ', conf: ' + conf + ', keywordsfilter: ' + keywordsfilter);
+	var currentpath = conf.path;
+	var urlpath = conf.urlpath;	
+	// A revoir ????
+	if( fs.existsSync(path.join(staticdir,urlpath)) ) 
+		fs.unlinkSync(path.join(staticdir,urlpath));
+	fs.symlinkSync(currentpath, path.join(staticdir,urlpath));	
+	// ----    ????
+	var list = new Array();
+	//console.log('!!!!!!! ' + currentpath);
+        var files = Finder.from(currentpath.toString()).showSystemFiles().findFiles('*.desc');
+	//console.log('!!!!!!!!!! ' + files.length);
+        for (var i = 0, len = files.length; i < len; i++) {
+		var file = files[i];
+		//console.log('!!!!!!!!!! ' + file);
+		var filterFound = false;
+		if( find(keywordsfilter, path.basename(file)) )
+			 filterFound = true;
+
+                var patt = new RegExp(/.desc$/gm);
+                if( patt.test(file) ) {
+                	var saison = new Saison();
+			//console.log('file: ' + file + ', currentpath: ' + currentpath + ', urlpath: ' + urlpath);
+			saison.read(file, currentpath, urlpath);
+			if( filterFound === true || find(keywordsfilter,saison.synopsis) || find(keywordsfilter,saison.actors) || find(keywordsfilter,saison.directors) ||  find(keywordsfilter,saison.country) ||  find(keywordsfilter,saison.title))
+				list[list.length] = saison;
 		}
         }
 
