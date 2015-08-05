@@ -342,7 +342,7 @@ function deleteVideoFile(filename, iddiv)
 
 function updateOrderTypeMovie(orderType, orderTypeValue)
 {
-var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '');
+var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '').replace(/\:/g, '');
 var orderTypeValueSelected = $('#nav-films' + orderType + ' .active').text();
 
 if( $('#films-' + orderType + trimOrderTypeValue).html() === '' ) { //(genreselected !== genre  || force) ) {
@@ -406,8 +406,7 @@ else
 
 function updateOrderTypeSerie(orderType, orderTypeValue)
 {
-//alert('orderType: ' + orderType + ', orderTypeValue: ' + orderTypeValue);
-var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '');
+var trimOrderTypeValue = orderTypeValue.replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '').replace(/\:/g, '');
 var orderTypeValueSelected = $('#nav-series' + orderType + ' .active').text();
 
 if( $('#series-' + orderType + trimOrderTypeValue).html() === '' ) { //(genreselected !== genre  || force) ) {
@@ -444,12 +443,25 @@ $.ajax({
                                  tabhtmldatahtml += '<B>Avec :</B> ' + value.actors + '<BR/>';
 			if( typeof value.country !== 'undefined' && value.country !== null && value.country !== '' )
 				tabhtmldatahtml += '<B>Pays :</B> ' + value.country + '<BR/>';
-			if( typeof value.runtime !== 'undefined' && value.runtime !== null && value.runtime !== '' )
+			/*if( typeof value.runtime !== 'undefined' && value.runtime !== null && value.runtime !== '' )
 				tabhtmldatahtml += '<B>Fichier :</B><a href="/Videos/perso/' + value.urlfile + '?id=' + id + '"> ' + value.urlfile + '</a> (' + value.runtime + ')<BR/><BR/>';
 			else
-				tabhtmldatahtml += '<B>Fichier :</B><a href="/Videos/perso/' + value.urlfile + '?id=' + id + '"> ' + value.urlfile + '</a><BR/><BR/>';
+				tabhtmldatahtml += '<B>Fichier :</B><a href="/Videos/perso/' + value.urlfile + '?id=' + id + '"> ' + value.urlfile + '</a><BR/><BR/>';*/
 			
-			tabhtmldatahtml += value.synopsis + '</div>';
+			tabhtmldatahtml += value.synopsis + '<BR/>';
+			//alert(value.episodes[0].number);
+			if( typeof value.episodes !== 'undefined' ) {
+			for (var j = 0; j < value.episodes.length; j++) {
+				var txttitle = '';
+				if( typeof value.episodes[j].title !== 'undefined' && value.episodes[j].title !== '' )
+					txttitle = ' : ' + value.episodes[j].title ;
+				if( typeof value.episodes[j].urlfile !== 'undefined' && value.episodes[j].urlfile !== '' )
+					tabhtmldatahtml += '<a href="/Videos/perso/' + value.episodes[j].urlfile + '?id=' + id + '"> ' + 'Episode ' +  value.episodes[j].number + txttitle + '</a><BR/>';
+				else
+					tabhtmldatahtml += 'Episode ' +  value.episodes[j].number + txttitle + '<BR/>';	
+			}
+			}
+			tabhtmldatahtml += '</div>';
 			if( typeof value.urlimagefile !== 'undefined' && value.urlimagefile !== null && value.urlimagefile !== '' )
 				tabhtmldatahtml += '<div class="col-md-4"><div class="fadeover"><img class="img-thumbnail" src="/Videos/perso/' + value.urlimagefile + '" width="160"/></div></div>';
 			tabhtmldatahtml += '</div></div>';	
@@ -509,7 +521,7 @@ $.ajax({
 		var tabhtmldata = '';
                 for (var i = 0; i < data.length; i++) {
                         var orderTypeValue = data[i];
-                        var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '');
+                        var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '').replace(/\:/g, '');
                         if( i === 0 ) {
                                 navhtmldata += '<li class="active" id="films-' + orderType + '-' + trimOrderTypeValue  +'" onclick="updateOrderTypeMovie(\'' + orderType  + '\', \'' + orderTypeValue.replace(/\'/g,'\\\'')  + '\')"><a href="#films-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
 				tabhtmldata += '<div class="tab-pane active" id="films-' + orderType + trimOrderTypeValue  + '"></div>';
@@ -547,7 +559,7 @@ $.ajax({
 		var tabhtmldata = '';
                 for (var i = 0; i < data.length; i++) {
                         var orderTypeValue = data[i];
-                        var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '');
+                        var trimOrderTypeValue = data[i].replace(/ /g, '').replace(/\./g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\'/g, '').replace(/\[/g, '').replace(/\]/g, '').replace(/\:/g, '');
                         if( i === 0 ) {
                                 navhtmldata += '<li class="active" id="series-' + orderType + '-' + trimOrderTypeValue  +'" onclick="updateOrderTypeSerie(\'' + orderType  + '\', \'' + orderTypeValue.replace(/\'/g,'\\\'')  + '\')"><a href="#series-' + orderType + trimOrderTypeValue  + '" data-toggle="tab">' + orderTypeValue + '</a></li>';
 				tabhtmldata += '<div class="tab-pane active" id="series-' + orderType + trimOrderTypeValue  + '"></div>';

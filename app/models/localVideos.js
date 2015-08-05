@@ -233,6 +233,7 @@ this.getLastSeries = function(number) {
 	arrayDate.sort().reverse();
 	for (var i = 0, len = arrayDate.length; i < len; i++) {
 		lastseries[lastseries.length] = seriesByDate[arrayDate[i]];
+		//lastseries[lastseries.length -1].episodes = seriesByDate[arrayDate[i]].episodes;
 		if( number !== -1 && i === number-1 )
 			break;
 		//console.log( arrayDate[i]);
@@ -242,21 +243,23 @@ this.getLastSeries = function(number) {
 
 this.getLastSeriesbyTitle = function(title) {
 	var lastSeriesbyTitle = [];
-	var lastSeries = this.getLastSeries(-1);	
+	var lastSeries = this.saisons; //this.getLastSeries(-1);	
 	
         for (var i = 0, len = lastSeries.length; i < len; i++) {
 		var mytitle = '';		
 		if( typeof lastSeries[i].title !== '' && lastSeries[i].title !== null )
 			mytitle = lastSeries[i].title;
-		if( mytitle.toLowerCase() === title.toLowerCase() )
+		if( mytitle.toLowerCase() === title.toLowerCase() ) {
                 	lastSeriesbyTitle[lastSeriesbyTitle.length] = lastSeries[i];
+			//lastSeriesbyTitle[lastSeriesbyTitle.length -1].episodes = lastSeries[i].episodes;
+		}
         }
         return lastSeriesbyTitle;
 }
 
 this.getLastSeriesbyGenre = function(genre) {
 	var lastSeriesbyGenre = [];
-	var lastSeries = this.getLastSeries(-1);	
+	var lastSeries = this.saisons; //this.getLastSeries(-1);	
 	
         for (var i = 0, len = lastSeries.length; i < len; i++) {
 		var mygenre = 'unclassed';		
@@ -270,7 +273,7 @@ this.getLastSeriesbyGenre = function(genre) {
 
 this.getLastSeriesbyYear = function(year) {
         var lastSeriesbyYear = [];
-        var lastSeries = this.getLastSeries(-1);
+        var lastSeries = this.saisons; //this.getLastSeries(-1);
 
         for (var i = 0, len = lastSeries.length; i < len; i++) {
                 var myyear = '';
@@ -284,7 +287,7 @@ this.getLastSeriesbyYear = function(year) {
 
 this.getLastSeriesbyCountry = function(country) {
         var lastSeriesbyCountry = [];
-        var lastSeries = this.getLastSeries(-1);
+        var lastSeries = this.saisons; //this.getLastSeries(-1);
 
         for (var i = 0, len = lastSeries.length; i < len; i++) {
                 var mycountry = '';
@@ -298,7 +301,7 @@ this.getLastSeriesbyCountry = function(country) {
 
 this.getLastSeriesbyGroup = function(group) {
         var lastSeriesbyGroup = [];
-        var lastSeries = this.getLastSeries(-1);
+        var lastSeries = this.saisons; //this.getLastSeries(-1);
 
         for (var i = 0, len = lastSeries.length; i < len; i++) {
                 var groups = '';
@@ -322,7 +325,7 @@ this.getLastSeriesbyGroup = function(group) {
 
 this.getLastFilmsbyGenre = function(genre) {
 	var lastFilmsbyGenre = [];
-	var lastFilms = this.getLastFilms(-1);	
+	var lastFilms = this.films; //this.getLastFilms(-1);	
 	
         for (var i = 0, len = lastFilms.length; i < len; i++) {
 		var mygenre = 'unclassed';		
@@ -336,7 +339,7 @@ this.getLastFilmsbyGenre = function(genre) {
 
 this.getLastFilmsbyYear = function(year) {
         var lastFilmsbyYear = [];
-        var lastFilms = this.getLastFilms(-1);
+        var lastFilms = this.films; //this.getLastFilms(-1);
 
         for (var i = 0, len = lastFilms.length; i < len; i++) {
                 var myyear = '';
@@ -350,7 +353,7 @@ this.getLastFilmsbyYear = function(year) {
 
 this.getLastFilmsbyCountry = function(country) {
         var lastFilmsbyCountry = [];
-        var lastFilms = this.getLastFilms(-1);
+        var lastFilms = this.films; //this.getLastFilms(-1);
 
         for (var i = 0, len = lastFilms.length; i < len; i++) {
                 var mycountry = '';
@@ -364,7 +367,7 @@ this.getLastFilmsbyCountry = function(country) {
 
 this.getLastFilmsbyGroup = function(group) {
         var lastFilmsbyGroup = [];
-        var lastFilms = this.getLastFilms(-1);
+        var lastFilms = this.films; //this.getLastFilms(-1);
 
         for (var i = 0, len = lastFilms.length; i < len; i++) {
                 var groups = '';

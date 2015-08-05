@@ -14,13 +14,14 @@ var EpisodeSaison = function() {
 	this.synopsisShort = '';
 	this.title = '';
 	this.file = '';
+	this.urlfile = '';
 	//this.runtime = '';
 }
 
 var Saison = function() {
 this.episodes = new Array();
 this.href = '';
-this.dir = '';
+//this.dir = '';
 this.code = 0;
 this.codeSerie = 0;
 this.number = 0;
@@ -42,7 +43,7 @@ this.write = function(dir, callback) {
 	if( patt.test(dir) ) 
 		vostfr = ' [VOSTFR]';
 	var destdescFile = path.join( dir, '.' + path.basename(dir) + '.desc');
-	this.dir = dir;
+	//this.dir = dir;
 	this.descfile = destdescFile;
 
 	var data = '';
@@ -103,10 +104,11 @@ this.write = function(dir, callback) {
 	});	
 };
 
-this.read = function(filename, filmsPath, urlfilmsPath) {
+this.read = function(filename, seriesPath, urlseriesPath) {
 
 /*var urlFile = url.format(filename.replace(filmsPath, urlfilmsPath));
 this.urlfile = urlFile;*/
+var dir = path.dirname(filename);
 if (fs.existsSync(filename)) {
 	var basefilename = path.basename(filename).replace(/^\.(.*)\.desc$/,'$1');
 	//console.log('!!!!!!!! basefilename : ' + basefilename);
@@ -115,12 +117,13 @@ if (fs.existsSync(filename)) {
 	var imageFile = path.join( path.dirname(filename), '.' + basefilename + '.jpg');
 	if( fs.existsSync(imageFile) ) {
 		this.imagefile = imageFile;
-		this.urlimagefile = url.format(imageFile.replace(filmsPath, urlfilmsPath));
+		this.urlimagefile = url.format(imageFile.replace(seriesPath, urlseriesPath));
 	}
 	var index = 1;
 	var descFile = filename;
 	if (fs.existsSync(descFile)) {
 		this.descfile=descFile;
+		
 		var lines = fs.readFileSync(descFile).toString().split('\n');
 		for(i in lines) {
 			var arr = lines[i].split("|");
@@ -174,6 +177,38 @@ if (fs.existsSync(filename)) {
 				                this.groups = arr[1];
 				                break;
 		    			default:
+						var patternepisodepos = new RegExp("Episode([0-9]{1,2})\..*", "gi");
+						var patternepisodemethod = new RegExp("Episode[0-9]{1,2}\.(.*)", "gi");
+						if( patternepisodepos.test(arr[0]) ) {
+							patternepisodepos.lastIndex=0;
+							patternepisodemethod.lastIndex=0;
+							var pos = patternepisodepos.exec(arr[0])[1];
+							var method = patternepisodemethod.exec(arr[0])[1];
+							if( typeof this.episodes[pos -1] == 'undefined' )
+								this.episodes[pos -1] = new EpisodeSaison();
+							switch(method) {
+								case 'Title':
+									this.episodes[pos -1].title = arr[1];
+									break;
+								case 'Synopis':
+									this.episodes[pos -1].synopsis = arr[1];
+									break;
+								case 'SynopisShort':
+									this.episodes[pos -1].synopsisShort = arr[1];
+									break;
+								case 'Code':
+									this.episodes[pos -1].code = arr[1];
+									break;
+								case 'File':
+									this.episodes[pos -1].file = path.join( dir, arr[1]);
+									this.episodes[pos -1].urlfile = url.format(this.episodes[pos -1].file.replace(seriesPath, urlseriesPath));
+									break;
+								case 'Number':
+									this.episodes[pos -1].number = arr[1];
+									break;
+								default:
+							}
+						}
 					} // case
 				} // if
 			} // for

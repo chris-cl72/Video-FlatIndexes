@@ -83,7 +83,10 @@ module.exports = function(app, req, res) {
 			if( req.param('order') === 'title' ) {
 				var localVideos = getSessionData(app,req,'localVideos');
 				if( localVideos == null || typeof localVideos === 'undefined' ) { localVideos = new LocalVideos(); localVideos.list(""); setSessionData(app,req,'localVideos', localVideos); }
+				/*var localVideos = new LocalVideos();
+				localVideos.list("");*/
 				var list = localVideos.getLastSeriesbyTitle(req.param('value'));
+				//console.log(list[0].episodes[0]);
 				res.json({ userAuth : userAuth, list : list, id : req.session.sessionID });
 			}
 			else if( req.param('order') === 'genre' ) {
