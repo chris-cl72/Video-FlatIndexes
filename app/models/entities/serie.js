@@ -36,6 +36,7 @@ this.directors='';
 this.actors='';
 this.country='';
 this.descfile = '';
+this.dir ='';
 
 this.write = function(dir, callback) {
 	var patt = new RegExp('^.*_(VOSTFR).*$','gi');
@@ -109,6 +110,7 @@ this.read = function(filename, seriesPath, urlseriesPath) {
 /*var urlFile = url.format(filename.replace(filmsPath, urlfilmsPath));
 this.urlfile = urlFile;*/
 var dir = path.dirname(filename);
+this.dir = dir;
 if (fs.existsSync(filename)) {
 	var basefilename = path.basename(filename).replace(/^\.(.*)\.desc$/,'$1');
 	//console.log('!!!!!!!! basefilename : ' + basefilename);
