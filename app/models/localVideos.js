@@ -135,7 +135,7 @@ this.getSerieListTitles = function() {
 	var listTitles = [];
 	for (var i = 0, len = this.saisons.length; i < len; i++) {
 		var title = '';
-		if( typeof this.saisons[i].title !== '' && this.saisons[i].title !== null )
+		if( typeof this.saisons[i].title !== 'undefined' && this.saisons[i].title !== null )
 			title = this.saisons[i].title;
 		listTitles[listTitles.length] = title;
 	}
