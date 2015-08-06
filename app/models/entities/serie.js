@@ -191,6 +191,7 @@ if (fs.existsSync(filename)) {
 									this.episodes[pos -1].title = arr[1];
 									break;
 								case 'Synopis':
+									//console.log('!!!!!!!!!!!!! ' + arr[1]);
 									this.episodes[pos -1].synopsis = arr[1];
 									break;
 								case 'SynopisShort':

@@ -273,6 +273,8 @@ width: 100%;
 
 <script>
 
+      //$('div').tipsy({delayIn: 500, delayOut: 1000,gravity: 'w'});
+
 function updateNews( selectdiv )
 {
 	var textYear = '';
@@ -447,18 +449,28 @@ $.ajax({
 				tabhtmldatahtml += '<B>Fichier :</B><a href="/Videos/perso/' + value.urlfile + '?id=' + id + '"> ' + value.urlfile + '</a> (' + value.runtime + ')<BR/><BR/>';
 			else
 				tabhtmldatahtml += '<B>Fichier :</B><a href="/Videos/perso/' + value.urlfile + '?id=' + id + '"> ' + value.urlfile + '</a><BR/><BR/>';*/
+			if( typeof value.episodeCount !== 'undefined' && value.episodeCount !== null && value.episodeCount !== ''  && value.episodeCount !== '0' )
+				tabhtmldatahtml += '<B>Nombre d\'épisodes :</B> ' + value.episodeCount + '<BR/>';
 			
-			tabhtmldatahtml += value.synopsis + '<BR/>';
-			//alert(value.episodes[0].number);
+			tabhtmldatahtml += '<BR/>';
+			
+			if( typeof value.synopsis !== 'undefined' && value.synopsis !== null && value.synopsis !== '' )
+				tabhtmldatahtml += value.synopsis + '<BR/>';
+			else
+				tabhtmldatahtml += '<BR/>';
+
 			if( typeof value.episodes !== 'undefined' ) {
 			for (var j = 0; j < value.episodes.length; j++) {
 				var txttitle = '';
+				var txtsynopsis = '';
 				if( typeof value.episodes[j].title !== 'undefined' && value.episodes[j].title !== '' )
 					txttitle = ' : ' + value.episodes[j].title ;
+				/*if( typeof value.episodes[j].sysnopis !== 'undefined' && value.episodes[j].sysnopis !== '' )
+					txtsynopsis = value.episodes[j].sysnopis ;*/
 				if( typeof value.episodes[j].urlfile !== 'undefined' && value.episodes[j].urlfile !== '' )
-					tabhtmldatahtml += '<a href="/Videos/perso/' + value.episodes[j].urlfile + '?id=' + id + '"> ' + 'Episode ' +  value.episodes[j].number + txttitle + '</a><BR/>';
+					tabhtmldatahtml += '<div title="' + txtsynopsis + '"><a href="/Videos/perso/' + value.episodes[j].urlfile + '?id=' + id + '"> ' + 'Episode ' +  value.episodes[j].number + txttitle + '</a></div>';
 				else
-					tabhtmldatahtml += 'Episode ' +  value.episodes[j].number + txttitle + '<BR/>';	
+					tabhtmldatahtml += '<div title="' + txtsynopsis + '">Episode ' +  value.episodes[j].number + txttitle + '</div>';	
 			}
 			}
 			tabhtmldatahtml += '</div>';

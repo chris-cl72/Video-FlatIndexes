@@ -197,7 +197,16 @@ this.getSerieListCountrys = function() {
 }
 	
 this.getLastFilms = function(number) {
+	if( number == -1 )
+		return this.films;
 	var lastFilms = [];
+        for (var i = 0, len = this.films.length; i < len; i++) {
+		lastFilms[lastFilms.length] = this.films[i];
+		if( number !== -1 && i === number-1 )
+			break;
+        }
+        return lastFilms; //removeDuplicates(listYears).sort().reverse();
+	/*var lastFilms = [];
 	var filmsByDate = {};
 	var arrayDate = [];
 	for (var i = 0, len = this.films.length; i < len; i++) {
@@ -214,30 +223,34 @@ this.getLastFilms = function(number) {
 			break;
 		//console.log( arrayDate[i]);
 	}
-	return lastFilms;
+	return lastFilms;*/
 }
 
 this.getLastSeries = function(number) {
+	if( number == -1 )
+		return this.films;
 	var lastseries = [];
+        for (var i = 0, len = this.saisons.length; i < len; i++) {
+		lastseries[lastseries.length] = this.saisons[i];
+		if( number !== -1 && i === number-1 )
+			break;
+        }
+        return lastseries; 
+	/*var lastseries = [];
 	var seriesByDate = {};
 	var arrayDate = [];
 	for (var i = 0, len = this.saisons.length; i < len; i++) {
-		//console.log('!!!!! this.saisons.length : ' + this.saisons.length);
 		if( fs.existsSync(this.saisons[i].descfile) ) {
-			//console.log('!!!!! this.saison[i].descfile : ' + this.saisons[i].descfile);
 			arrayDate[i] = new Date(fs.statSync(this.saisons[i].descfile).mtime).toISOString() + "-" + this.saisons[i].descfile;
 			seriesByDate[arrayDate[i]] = this.saisons[i];
 		}
-		//console.log(new Date(fs.statSync(films.list[i].file).mtime).toISOString().sort());
 	}
 	arrayDate.sort().reverse();
 	for (var i = 0, len = arrayDate.length; i < len; i++) {
 		lastseries[lastseries.length] = seriesByDate[arrayDate[i]];
-		//lastseries[lastseries.length -1].episodes = seriesByDate[arrayDate[i]].episodes;
 		if( number !== -1 && i === number-1 )
 			break;
-		//console.log( arrayDate[i]);
-	}
+	}*/
 	return lastseries;
 }
 

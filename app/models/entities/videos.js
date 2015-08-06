@@ -93,6 +93,9 @@ this.listfilms = function(staticdir,conf, keywordsfilter) {
 	fs.symlinkSync(currentpath, path.join(staticdir,urlpath));	
 	// ----    ????
 	var list = new Array();
+	var filmsByDate = {};
+	var arrayDate = [];
+
         var files = Finder.from(currentpath.toString()).findFiles('*.avi');
         for (var i = 0, len = files.length; i < len; i++) {
 		var file = files[i];
@@ -104,8 +107,13 @@ this.listfilms = function(staticdir,conf, keywordsfilter) {
                 if( patt.test(file) ) {
                 	var film = new Film();
 			film.read(file, currentpath, urlpath);
-			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.director) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title))
+			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.director) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title)) {
 				list[list.length] = film;
+				if( fs.existsSync(film.file) ) {
+					arrayDate[i] = new Date(fs.statSync(film.file).mtime).toISOString() + "-" + film.file;
+					filmsByDate[arrayDate[i]] = film;
+				}
+			}
 		}
         }
 	files = Finder.from(currentpath.toString()).findFiles('*.mkv');
@@ -119,12 +127,24 @@ this.listfilms = function(staticdir,conf, keywordsfilter) {
                 if( patt.test(file) ) {
                 	var film = new Film();
 			film.read(file, currentpath, urlpath);
-			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.directors) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title))
+			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.directors) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title)) {
 				list[list.length] = film;
+				if( fs.existsSync(film.file) ) {
+					arrayDate[i] = new Date(fs.statSync(film.file).mtime).toISOString() + "-" + film.file;
+					filmsByDate[arrayDate[i]] = film;
+				}
+			}
 		}
         }
+	var lastFilms = [];
 
-	return list;
+	arrayDate.sort().reverse();
+	for (var i = 0, len = arrayDate.length; i < len; i++) {
+		lastFilms[lastFilms.length] = filmsByDate[arrayDate[i]];
+	}
+	return lastFilms;
+
+	//return list;
 };
 
 var find = function(keywords, instring) {
@@ -150,6 +170,9 @@ this.listsaisons = function(staticdir,conf, keywordsfilter) {
 	fs.symlinkSync(currentpath, path.join(staticdir,urlpath));	
 	// ----    ????
 	var list = new Array();
+	var seriesByDate = {};
+	var arrayDate = [];
+
 	//console.log('!!!!!!! ' + currentpath);
         var files = Finder.from(currentpath.toString()).showSystemFiles().findFiles('*.desc');
 	//console.log('!!!!!!!!!! ' + files.length);
@@ -165,12 +188,22 @@ this.listsaisons = function(staticdir,conf, keywordsfilter) {
                 	var saison = new Saison();
 			//console.log('file: ' + file + ', currentpath: ' + currentpath + ', urlpath: ' + urlpath);
 			saison.read(file, currentpath, urlpath);
-			if( filterFound === true || find(keywordsfilter,saison.synopsis) || find(keywordsfilter,saison.actors) || find(keywordsfilter,saison.directors) ||  find(keywordsfilter,saison.country) ||  find(keywordsfilter,saison.title))
+			if( filterFound === true || find(keywordsfilter,saison.synopsis) || find(keywordsfilter,saison.actors) || find(keywordsfilter,saison.directors) ||  find(keywordsfilter,saison.country) ||  find(keywordsfilter,saison.title)) {
 				list[list.length] = saison;
+				if( fs.existsSync(saison.descfile) ) {
+					arrayDate[i] = new Date(fs.statSync(saison.descfile).mtime).toISOString() + "-" + saison.descfile;
+					seriesByDate[arrayDate[i]] = saison;
+				}
+			}
 		}
         }
-
-	return list;
+	var lastseries = [];
+	arrayDate.sort().reverse();
+	for (var i = 0, len = arrayDate.length; i < len; i++) {
+		lastseries[lastseries.length] = seriesByDate[arrayDate[i]];
+	}
+	return lastseries;
+	//return list;
 };
 
 var find = function(keywords, instring) {
