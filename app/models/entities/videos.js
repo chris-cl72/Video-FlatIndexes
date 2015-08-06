@@ -170,8 +170,8 @@ this.listsaisons = function(staticdir,conf, keywordsfilter) {
 	fs.symlinkSync(currentpath, path.join(staticdir,urlpath));	
 	// ----    ????
 	var list = new Array();
-	var seriesByDate = {};
-	var arrayDate = [];
+	/*var seriesByDate = {};
+	var arrayDate = [];*/
 
 	//console.log('!!!!!!! ' + currentpath);
         var files = Finder.from(currentpath.toString()).showSystemFiles().findFiles('*.desc');
@@ -190,24 +190,24 @@ this.listsaisons = function(staticdir,conf, keywordsfilter) {
 			saison.read(file, currentpath, urlpath);
 			if( filterFound === true || find(keywordsfilter,saison.synopsis) || find(keywordsfilter,saison.actors) || find(keywordsfilter,saison.directors) ||  find(keywordsfilter,saison.country) ||  find(keywordsfilter,saison.title)) {
 				list[list.length] = saison;
-				if( fs.existsSync(saison.descfile) ) {
+				/*if( fs.existsSync(saison.descfile) ) {
 					arrayDate[i] = new Date(fs.statSync(saison.descfile).mtime).toISOString() + "-" + saison.descfile;
 					seriesByDate[arrayDate[i]] = saison;
 				}
 				else if ( fs.existsSync( saison.dir ) ) {
 					arrayDate[i] = new Date(fs.statSync(saison.dir).mtime).toISOString() + "-" + saison.dir;
 					seriesByDate[arrayDate[i]] = saison;
-				}
+				}*/
 			}
 		}
         }
-	var lastseries = [];
+	/*var lastseries = [];
 	arrayDate.sort().reverse();
 	for (var i = 0, len = arrayDate.length; i < len; i++) {
 		lastseries[lastseries.length] = seriesByDate[arrayDate[i]];
 	}
-	return lastseries;
-	//return list;
+	return lastseries;*/
+	return list;
 };
 
 var find = function(keywords, instring) {
