@@ -194,7 +194,7 @@ this.listsaisons = function(staticdir,conf, keywordsfilter) {
 					arrayDate[i] = new Date(fs.statSync(saison.descfile).mtime).toISOString() + "-" + saison.descfile;
 					seriesByDate[arrayDate[i]] = saison;
 				}
-				else( fs.existsSync( saison.dir ) {
+				else if ( fs.existsSync( saison.dir ) ) {
 					arrayDate[i] = new Date(fs.statSync(saison.dir).mtime).toISOString() + "-" + saison.dir;
 					seriesByDate[arrayDate[i]] = saison;
 				}
