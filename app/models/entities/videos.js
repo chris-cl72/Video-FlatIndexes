@@ -85,6 +85,7 @@ var downloadfile = function(uri, filename, callback){
 
 
 this.listfilms = function(staticdir,conf, keywordsfilter) {
+	//console.log( '!!!! listfilms !!!!');
 	var currentpath = conf.path;
 	var urlpath = conf.urlpath;	
 	// A revoir ????
@@ -110,8 +111,8 @@ this.listfilms = function(staticdir,conf, keywordsfilter) {
 			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.director) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title)) {
 				list[list.length] = film;
 				if( fs.existsSync(film.file) ) {
-					arrayDate[i] = new Date(fs.statSync(film.file).mtime).toISOString() + "-" + film.file;
-					filmsByDate[arrayDate[i]] = film;
+					arrayDate[arrayDate.length] = new Date(fs.statSync(film.file).mtime).toISOString() + "-" + film.file;
+					filmsByDate[arrayDate[arrayDate.length -1]] = film;
 				}
 			}
 		}
@@ -130,8 +131,8 @@ this.listfilms = function(staticdir,conf, keywordsfilter) {
 			if( filterFound === true || find(keywordsfilter,film.synopsis) || find(keywordsfilter,film.actors) || find(keywordsfilter,film.directors) ||  find(keywordsfilter,film.country) ||  find(keywordsfilter,film.title)) {
 				list[list.length] = film;
 				if( fs.existsSync(film.file) ) {
-					arrayDate[i] = new Date(fs.statSync(film.file).mtime).toISOString() + "-" + film.file;
-					filmsByDate[arrayDate[i]] = film;
+					arrayDate[arrayDate.length] = new Date(fs.statSync(film.file).mtime).toISOString() + "-" + film.file;
+					filmsByDate[arrayDate[arrayDate.length -1]] = film;
 				}
 			}
 		}
@@ -161,6 +162,7 @@ var find = function(keywords, instring) {
 };
 
 this.listsaisons = function(staticdir,conf, keywordsfilter) {
+	//console.log( '!!!! listsaisons !!!!');
 	//console.log('staticdir: ' + staticdir + ', conf: ' + conf + ', keywordsfilter: ' + keywordsfilter);
 	var currentpath = conf.path;
 	var urlpath = conf.urlpath;	
@@ -170,8 +172,8 @@ this.listsaisons = function(staticdir,conf, keywordsfilter) {
 	fs.symlinkSync(currentpath, path.join(staticdir,urlpath));	
 	// ----    ????
 	var list = new Array();
-	/*var seriesByDate = {};
-	var arrayDate = [];*/
+	var seriesByDate = {};
+	var arrayDate = [];
 
 	//console.log('!!!!!!! ' + currentpath);
         var files = Finder.from(currentpath.toString()).showSystemFiles().findFiles('*.desc');
@@ -185,29 +187,40 @@ this.listsaisons = function(staticdir,conf, keywordsfilter) {
 
                 var patt = new RegExp(/.desc$/gm);
                 if( patt.test(file) ) {
+			//console.log(' !!!!!!!! 2OK !!!!!!!!! 2OK');
                 	var saison = new Saison();
 			//console.log('file: ' + file + ', currentpath: ' + currentpath + ', urlpath: ' + urlpath);
 			saison.read(file, currentpath, urlpath);
+			
 			if( filterFound === true || find(keywordsfilter,saison.synopsis) || find(keywordsfilter,saison.actors) || find(keywordsfilter,saison.directors) ||  find(keywordsfilter,saison.country) ||  find(keywordsfilter,saison.title)) {
 				list[list.length] = saison;
-				/*if( fs.existsSync(saison.descfile) ) {
-					arrayDate[i] = new Date(fs.statSync(saison.descfile).mtime).toISOString() + "-" + saison.descfile;
-					seriesByDate[arrayDate[i]] = saison;
+				if( fs.existsSync(saison.descfile) ) {
+					arrayDate[arrayDate.length] = new Date(fs.statSync(saison.descfile).mtime).toISOString() + "-" + saison.descfile;
+					seriesByDate[arrayDate[arrayDate.length -1]] = saison;
 				}
 				else if ( fs.existsSync( saison.dir ) ) {
-					arrayDate[i] = new Date(fs.statSync(saison.dir).mtime).toISOString() + "-" + saison.dir;
-					seriesByDate[arrayDate[i]] = saison;
-				}*/
+					arrayDate[arrayDate.length] = new Date(fs.statSync(saison.dir).mtime).toISOString() + "-" + saison.dir;
+					seriesByDate[arrayDate[arrayDate.length -1]] = saison;
+				}
+				/*else
+					console.log(' !!!!!!!! PB !!!!!!!!! PB');*/
 			}
+			/*else
+				console.log(' !!!!!!!! 1PB !!!!!!!!! 1PB');*/
 		}
+		/*else
+			console.log(' !!!!!!!! 2PB !!!!!!!!! 2PB');*/
         }
-	/*var lastseries = [];
+	var lastseries = [];
 	arrayDate.sort().reverse();
 	for (var i = 0, len = arrayDate.length; i < len; i++) {
 		lastseries[lastseries.length] = seriesByDate[arrayDate[i]];
 	}
-	return lastseries;*/
-	return list;
+
+	if( lastseries.length == 0 )
+		console.log('Aucune vidéos de serie indexée !');
+	return lastseries;
+	//return list;
 };
 
 var find = function(keywords, instring) {

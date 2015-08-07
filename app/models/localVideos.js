@@ -10,7 +10,15 @@ var LocalVideos = function() {
 
 	//this.films = require(path.join(__dirname, 'entities/videos.js')).films(staticdir, filter);
 	var videos = new Videos();
-	
+	this.objectMovieListGenres = null;
+	this.objectMovieListGroups = null;
+	this.objectMovieListCountrys = null;
+	this.objectMovieListYears = null;
+	this.objectSerieListCountrys = null;
+	this.objectSerieListYears = null;
+	this.objectSerieListGroups = null;
+	this.objectSerieListGenres = null;
+	this.objectSerieListTitles = null;
 	//this.filmspath = readConf(path.join(__dirname, '../models/entities/videos.json')).films.path;
 
 this.list = function (filter) {
@@ -78,122 +86,145 @@ this.deleteTvSerieFile = function(filename, callback) {
 
 
 this.getMovieListGenres = function() {
-	var listGenres = [];
-	for (var i = 0, len = this.films.length; i < len; i++) {
-		var genre = 'unclassed';
-		if( typeof this.films[i].genre !== 'undefined' && this.films[i].genre !== null )
-			genre = this.films[i].genre;
-		listGenres[listGenres.length] = genre;
-	}
-	return removeDuplicates(listGenres);
+	if( this.objectMovieListGenres == null ) {
+		var listGenres = [];
+		for (var i = 0, len = this.films.length; i < len; i++) {
+			var genre = 'unclassed';
+			if( typeof this.films[i].genre !== 'undefined' && this.films[i].genre !== null )
+				genre = this.films[i].genre;
+			listGenres[listGenres.length] = genre;
+		}
+		this.objectMovieListGenres = removeDuplicates(listGenres);
+		return this.objectMovieListGenres;
+	} else return this.objectMovieListGenres;
 }
 
-this.geMovietListGroups = function() {
-	var listGroups = [];
-	for (var i = 0, len = this.films.length; i < len; i++) {
-		var groups = '';
-		if( typeof this.films[i].groups !== 'undefined' && this.films[i].groups !== null && this.films[i].groups !== '' ) {
-			groups = this.films[i].groups;
-			//console.log(groups);
-			var groupslist = groups.split(",");
-			for(j in groupslist) {
-				//console.log(groupslist[i]);
-				listGroups[listGroups.length] = groupslist[j];
+this.getMovieListGroups = function() {
+	if( this.objectMovieListGroups == null ) {
+		var listGroups = [];
+		for (var i = 0, len = this.films.length; i < len; i++) {
+			var groups = '';
+			if( typeof this.films[i].groups !== 'undefined' && this.films[i].groups !== null && this.films[i].groups !== '' ) {
+				groups = this.films[i].groups;
+				var groupslist = groups.split(",");
+				for(j in groupslist) {
+					listGroups[listGroups.length] = groupslist[j];
+				}
 			}
 		}
-	}
-	return removeDuplicates(listGroups);
+		this.objectMovieListGroups =  removeDuplicates(listGroups);
+		return this.objectMovieListGroups;
+	} else return this.objectMovieListGroups;
 }
 
 this.getMovieListYears = function() {
-        var listYears = [];
-        for (var i = 0, len = this.films.length; i < len; i++) {
-                var year = '';
-                if( typeof this.films[i].year !== 'undefined' && this.films[i].year !== null && this.films[i].year !== ''  )
-		{
-                        year = this.films[i].year;
-                	listYears[listYears.length] = year;
+	if( this.objectMovieListYears == null ) {
+		var listYears = [];
+		for (var i = 0, len = this.films.length; i < len; i++) {
+		        var year = '';
+		        if( typeof this.films[i].year !== 'undefined' && this.films[i].year !== null && this.films[i].year !== ''  )
+			{
+		                year = this.films[i].year;
+		        	listYears[listYears.length] = year;
+			}
 		}
-        }
-        return removeDuplicates(listYears).sort().reverse();
+		this.objectMovieListYears = removeDuplicates(listYears).sort().reverse();
+		return this.objectMovieListYears;
+	} else return this.objectMovieListYears;
 }
 
 this.getMovieListCountrys = function() {
-        var listCountrys = [];
-        for (var i = 0, len = this.films.length; i < len; i++) {
-                var country = '';
-                if( typeof this.films[i].country !== 'undefined' && this.films[i].country !== null && this.films[i].country !== ''  )
-		{
-                        country = this.films[i].country;
-                	listCountrys[listCountrys.length] = country;
+	if( this.objectMovieListCountrys == null ) {
+		var listCountrys = [];
+		for (var i = 0, len = this.films.length; i < len; i++) {
+		        var country = '';
+		        if( typeof this.films[i].country !== 'undefined' && this.films[i].country !== null && this.films[i].country !== ''  )
+			{
+		                country = this.films[i].country;
+		        	listCountrys[listCountrys.length] = country;
+			}
 		}
-        }
-        return removeDuplicates(listCountrys);
+		this.objectMovieListCountrys = removeDuplicates(listCountrys);
+		return this.objectMovieListCountrys;
+	} else return this.objectMovieListCountrys;	
 }
 
 this.getSerieListTitles = function() {
-	var listTitles = [];
-	for (var i = 0, len = this.saisons.length; i < len; i++) {
-		var title = '';
-		if( typeof this.saisons[i].title !== 'undefined' && this.saisons[i].title !== null )
-			title = this.saisons[i].title;
-		listTitles[listTitles.length] = title;
-	}
-	return removeDuplicates(listTitles);
+	if( this.objectSerieListTitles == null ) {
+		var listTitles = [];
+		for (var i = 0, len = this.saisons.length; i < len; i++) {
+			var title = '';
+			if( typeof this.saisons[i].title !== 'undefined' && this.saisons[i].title !== null )
+				title = this.saisons[i].title;
+			listTitles[listTitles.length] = title;
+		}
+		this.objectSerieListTitles = removeDuplicates(listTitles);
+		return this.objectSerieListTitles;
+	} else return this.objectSerieListTitles;
 }
 
 this.getSerieListGenres = function() {
-	var listGenres = [];
-	for (var i = 0, len = this.saisons.length; i < len; i++) {
-		var genre = 'unclassed';
-		if( typeof this.saisons[i].genre !== 'undefined' && this.saisons[i].genre !== null )
-			genre = this.saisons[i].genre;
-		listGenres[listGenres.length] = genre;
-	}
-	return removeDuplicates(listGenres);
+	if( this.objectSerieListGenres == null ) {
+		var listGenres = [];
+		for (var i = 0, len = this.saisons.length; i < len; i++) {
+			var genre = 'unclassed';
+			if( typeof this.saisons[i].genre !== 'undefined' && this.saisons[i].genre !== null )
+				genre = this.saisons[i].genre;
+			listGenres[listGenres.length] = genre;
+		}
+		this.objectSerieListGenres = removeDuplicates(listGenres);
+		return this.objectSerieListGenres;
+	} else return this.objectSerieListGenres;
 }
 
 this.getSerieListGroups = function() {
-	var listGroups = [];
-	for (var i = 0, len = this.saisons.length; i < len; i++) {
-		var groups = '';
-		if( typeof this.saisons[i].groups !== 'undefined' && this.saisons[i].groups !== null && this.saisons[i].groups !== '' ) {
-			groups = this.saisons[i].groups;
-			//console.log(groups);
-			var groupslist = groups.split(",");
-			for(j in groupslist) {
-				//console.log(groupslist[i]);
-				listGroups[listGroups.length] = groupslist[j];
+	if( this.objectSerieListGroups == null ) {
+		var listGroups = [];
+		for (var i = 0, len = this.saisons.length; i < len; i++) {
+			var groups = '';
+			if( typeof this.saisons[i].groups !== 'undefined' && this.saisons[i].groups !== null && this.saisons[i].groups !== '' ) {
+				groups = this.saisons[i].groups;
+				var groupslist = groups.split(",");
+				for(j in groupslist) {
+					listGroups[listGroups.length] = groupslist[j];
+				}
 			}
 		}
-	}
-	return removeDuplicates(listGroups);
+		this.objectSerieListGroups = removeDuplicates(listGroups);
+		return this.objectSerieListGroups;
+	} else return this.objectSerieListGroups;
 }
 
 this.getSerieListYears = function() {
-        var listYears = [];
-        for (var i = 0, len = this.saisons.length; i < len; i++) {
-                var year = '';
-                if( typeof this.saisons[i].year !== 'undefined' && this.saisons[i].year !== null && this.saisons[i].year !== ''  )
-		{
-                        year = this.saisons[i].year;
-                	listYears[listYears.length] = year;
+	if( this.objectSerieListYears == null ) {
+		var listYears = [];
+		for (var i = 0, len = this.saisons.length; i < len; i++) {
+		        var year = '';
+		        if( typeof this.saisons[i].year !== 'undefined' && this.saisons[i].year !== null && this.saisons[i].year !== ''  )
+			{
+		                year = this.saisons[i].year;
+		        	listYears[listYears.length] = year;
+			}
 		}
-        }
-        return removeDuplicates(listYears).sort().reverse();
+		this.objectSerieListYears = removeDuplicates(listYears).sort().reverse();
+		return this.objectSerieListYears;
+	} else return this.objectSerieListYears;
 }
 
 this.getSerieListCountrys = function() {
-        var listCountrys = [];
-        for (var i = 0, len = this.saisons.length; i < len; i++) {
-                var country = '';
-                if( typeof this.saisons[i].country !== 'undefined' && this.saisons[i].country !== null && this.saisons[i].country !== ''  )
-		{
-                        country = this.saisons[i].country;
-                	listCountrys[listCountrys.length] = country;
+	if( this.objectSerieListCountrys == null ) {
+		var listCountrys = [];
+		for (var i = 0, len = this.saisons.length; i < len; i++) {
+		        var country = '';
+		        if( typeof this.saisons[i].country !== 'undefined' && this.saisons[i].country !== null && this.saisons[i].country !== ''  )
+			{
+		                country = this.saisons[i].country;
+		        	listCountrys[listCountrys.length] = country;
+			}
 		}
-        }
-        return removeDuplicates(listCountrys);
+		this.objectSerieListCountrys = removeDuplicates(listCountrys);
+		return this.objectSerieListCountrys;
+	} else return this.objectSerieListCountrys;
 }
 	
 this.getLastFilms = function(number) {
@@ -205,25 +236,7 @@ this.getLastFilms = function(number) {
 		if( number !== -1 && i === number-1 )
 			break;
         }
-        return lastFilms; //removeDuplicates(listYears).sort().reverse();
-	/*var lastFilms = [];
-	var filmsByDate = {};
-	var arrayDate = [];
-	for (var i = 0, len = this.films.length; i < len; i++) {
-		if( fs.existsSync(this.films[i].file) ) {
-			arrayDate[i] = new Date(fs.statSync(this.films[i].file).mtime).toISOString() + "-" + this.films[i].file;
-			filmsByDate[arrayDate[i]] = this.films[i];
-		}
-		//console.log(new Date(fs.statSync(films.list[i].file).mtime).toISOString().sort());
-	}
-	arrayDate.sort().reverse();
-	for (var i = 0, len = arrayDate.length; i < len; i++) {
-		lastFilms[lastFilms.length] = filmsByDate[arrayDate[i]];
-		if( number !== -1 && i === number-1 )
-			break;
-		//console.log( arrayDate[i]);
-	}
-	return lastFilms;*/
+        return lastFilms;
 }
 
 this.getLastSeries = function(number) {
@@ -236,22 +249,6 @@ this.getLastSeries = function(number) {
 			break;
         }
         return lastseries; 
-	/*var lastseries = [];
-	var seriesByDate = {};
-	var arrayDate = [];
-	for (var i = 0, len = this.saisons.length; i < len; i++) {
-		if( fs.existsSync(this.saisons[i].descfile) ) {
-			arrayDate[i] = new Date(fs.statSync(this.saisons[i].descfile).mtime).toISOString() + "-" + this.saisons[i].descfile;
-			seriesByDate[arrayDate[i]] = this.saisons[i];
-		}
-	}
-	arrayDate.sort().reverse();
-	for (var i = 0, len = arrayDate.length; i < len; i++) {
-		lastseries[lastseries.length] = seriesByDate[arrayDate[i]];
-		if( number !== -1 && i === number-1 )
-			break;
-	}*/
-	return lastseries;
 }
 
 this.getLastSeriesbyTitle = function(title) {
@@ -264,7 +261,6 @@ this.getLastSeriesbyTitle = function(title) {
 			mytitle = lastSeries[i].title;
 		if( mytitle.toLowerCase() === title.toLowerCase() ) {
                 	lastSeriesbyTitle[lastSeriesbyTitle.length] = lastSeries[i];
-			//lastSeriesbyTitle[lastSeriesbyTitle.length -1].episodes = lastSeries[i].episodes;
 		}
         }
         return lastSeriesbyTitle;
